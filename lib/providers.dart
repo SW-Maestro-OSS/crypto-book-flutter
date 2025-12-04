@@ -35,6 +35,18 @@ CoinRepository coinRepository(Ref ref) {
   );
 }
 
+@riverpod
+ExchangeRateDataSource exchangeRateDataSource(Ref ref) {
+  return ExchangeRateDataSource();
+}
+
+@riverpod
+ExchangeRateRepository exchangeRateRepository(Ref ref) {
+  return ExchangeRateRepositoryImpl(
+    dataSource: ref.watch(exchangeRateDataSourceProvider),
+  );
+}
+
 // ==================== Domain Layer ====================
 
 @riverpod

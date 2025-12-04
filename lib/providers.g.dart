@@ -51,7 +51,7 @@ final class BinanceRestDataSourceProvider extends $FunctionalProvider<
 }
 
 String _$binanceRestDataSourceHash() =>
-    r'9dc1356bb596249b47c3bb568976574ebab9ce8f';
+    r'c9585c3b43cb3625e8adc902c3ed7983139f0def';
 
 @ProviderFor(binanceWebSocketClient)
 const binanceWebSocketClientProvider = BinanceWebSocketClientProvider._();
@@ -95,7 +95,7 @@ final class BinanceWebSocketClientProvider extends $FunctionalProvider<
 }
 
 String _$binanceWebSocketClientHash() =>
-    r'09a6589fbcf1900a6b51b78295e147f2ec2e2540';
+    r'6b05511fa4d4c296759315f88c32097e10d48834';
 
 @ProviderFor(binanceWebSocketDataSource)
 const binanceWebSocketDataSourceProvider =
@@ -140,7 +140,7 @@ final class BinanceWebSocketDataSourceProvider extends $FunctionalProvider<
 }
 
 String _$binanceWebSocketDataSourceHash() =>
-    r'0dd1bce5cede95b7dee7712a335805df36343760';
+    r'3281aeafba062cb1ca6a04320bc025b2d4f44f48';
 
 @ProviderFor(coinRepository)
 const coinRepositoryProvider = CoinRepositoryProvider._();
@@ -181,7 +181,95 @@ final class CoinRepositoryProvider
   }
 }
 
-String _$coinRepositoryHash() => r'3f932b6e34a25ffaeb0033bee9dee38fca79b98c';
+String _$coinRepositoryHash() => r'b9660a79bbdc2eab57850969eec770a0be35267e';
+
+@ProviderFor(exchangeRateDataSource)
+const exchangeRateDataSourceProvider = ExchangeRateDataSourceProvider._();
+
+final class ExchangeRateDataSourceProvider extends $FunctionalProvider<
+    ExchangeRateDataSource,
+    ExchangeRateDataSource,
+    ExchangeRateDataSource> with $Provider<ExchangeRateDataSource> {
+  const ExchangeRateDataSourceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRateDataSourceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRateDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExchangeRateDataSource> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ExchangeRateDataSource create(Ref ref) {
+    return exchangeRateDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExchangeRateDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ExchangeRateDataSource>(value),
+    );
+  }
+}
+
+String _$exchangeRateDataSourceHash() =>
+    r'2fa215ae50db5dd2075643ce949b567930a3ac70';
+
+@ProviderFor(exchangeRateRepository)
+const exchangeRateRepositoryProvider = ExchangeRateRepositoryProvider._();
+
+final class ExchangeRateRepositoryProvider extends $FunctionalProvider<
+    ExchangeRateRepository,
+    ExchangeRateRepository,
+    ExchangeRateRepository> with $Provider<ExchangeRateRepository> {
+  const ExchangeRateRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRateRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRateRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExchangeRateRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ExchangeRateRepository create(Ref ref) {
+    return exchangeRateRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExchangeRateRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ExchangeRateRepository>(value),
+    );
+  }
+}
+
+String _$exchangeRateRepositoryHash() =>
+    r'9648bce9dda53b6328b07f3d4c41631c9ee8cf8f';
 
 @ProviderFor(getCoinListUseCase)
 const getCoinListUseCaseProvider = GetCoinListUseCaseProvider._();
@@ -225,7 +313,7 @@ final class GetCoinListUseCaseProvider extends $FunctionalProvider<
 }
 
 String _$getCoinListUseCaseHash() =>
-    r'7f0597c8f520fba04c5a41df6e51a90d2bf626c2';
+    r'83b78add7140d530a879826872594ff9424f661e';
 
 @ProviderFor(subscribeCoinTickerUseCase)
 const subscribeCoinTickerUseCaseProvider =
@@ -270,4 +358,4 @@ final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
 }
 
 String _$subscribeCoinTickerUseCaseHash() =>
-    r'1656b801486dc23f6246ada4ccde420c16494e53';
+    r'bd17a13d6be889c711077419b63ff2e5911c6981';
