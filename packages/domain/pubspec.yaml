@@ -1,0 +1,13 @@
+name: domain
+description: Domain layer - Business logic
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+
+dependencies:
+  # 순수 Dart만 사용 (Flutter 의존성 없음)
+
+dev_dependencies:
+  test: ^1.24.0
