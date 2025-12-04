@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:data/init_mappers.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/routing/app_router.dart';
 import 'package:presentation/providers/usecase_providers.dart';
 import 'providers.dart' as root_providers;
 
-void main() {
+Future<void> main() async {
+  // Flutter 엔진 초기화
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 환경 변수 로드
+  await dotenv.load(fileName: ".env");
+
   // Mapper 초기화
   initializeMappers();
 

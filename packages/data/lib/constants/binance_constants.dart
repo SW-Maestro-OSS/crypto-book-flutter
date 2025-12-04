@@ -1,10 +1,18 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class BinanceConstants {
   // REST API
-  static const String restApiBaseUrl = 'https://api.binance.com';
+  static String get restApiBaseUrl =>
+      dotenv.env['BINANCE_BASE_URL'] ?? 'https://api.binance.com';
 
   // WebSocket
-  static const String wsBaseUrl = 'wss://stream.binance.com:9443';
+  static String get wsBaseUrl =>
+      dotenv.env['BINANCE_WS_URL'] ?? 'wss://stream.binance.com:9443';
   static const String wsStreamPath = '/ws';
+
+  // API Keys (선택적 - 필요한 경우)
+  static String? get apiKey => dotenv.env['BINANCE_API_KEY'];
+  static String? get secretKey => dotenv.env['BINANCE_SECRET_KEY'];
 
   // API Endpoints
   static const String exchangeInfoEndpoint = '/api/v3/exchangeInfo';
