@@ -7,6 +7,7 @@ class CoinTickerEntity {
   final double high24h;
   final double low24h;
   final double volume24h;
+  final double quoteVolume24h;  // Total traded quote asset volume
   final DateTime timestamp;
   final String? imageUrl;
 
@@ -18,6 +19,7 @@ class CoinTickerEntity {
     required this.high24h,
     required this.low24h,
     required this.volume24h,
+    required this.quoteVolume24h,
     required this.timestamp,
     this.imageUrl,
   });
