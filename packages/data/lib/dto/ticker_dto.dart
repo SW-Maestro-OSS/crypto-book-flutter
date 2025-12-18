@@ -5,6 +5,7 @@ part 'ticker_dto.mapper.dart';
 
 @MappableClass()
 class TickerDTO with TickerDTOMappable {
+  @MappableField(key: 's')
   final String symbol;
   @MappableField(key: 'c')
   final String currentPrice;
@@ -18,6 +19,8 @@ class TickerDTO with TickerDTOMappable {
   final String low;
   @MappableField(key: 'v')
   final String volume;
+  @MappableField(key: 'q')
+  final String quoteVolume;
   final String? imageUrl;
 
   TickerDTO({
@@ -28,6 +31,7 @@ class TickerDTO with TickerDTOMappable {
     required this.high,
     required this.low,
     required this.volume,
+    required this.quoteVolume,
     this.imageUrl,
   });
 
@@ -41,6 +45,7 @@ class TickerDTO with TickerDTOMappable {
       high24h: double.tryParse(high) ?? 0.0,
       low24h: double.tryParse(low) ?? 0.0,
       volume24h: double.tryParse(volume) ?? 0.0,
+      quoteVolume24h: double.tryParse(quoteVolume) ?? 0.0,
       timestamp: DateTime.now(),
       imageUrl: imageUrl,
     );

@@ -8,8 +8,8 @@ class WebSocketRepositoryImpl implements WebSocketRepository {
 
   @override
   Future<void> connect() async {
-    // TODO: 실제 구현
-    await client.connect();
+    // WebSocket은 subscribeAllTickers() 호출 시 자동으로 연결됨
+    // 별도의 connect() 호출 불필요
   }
 
   @override

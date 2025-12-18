@@ -22,7 +22,11 @@ class TickerDTOMapper extends ClassMapperBase<TickerDTO> {
   final String id = 'TickerDTO';
 
   static String _$symbol(TickerDTO v) => v.symbol;
-  static const Field<TickerDTO, String> _f$symbol = Field('symbol', _$symbol);
+  static const Field<TickerDTO, String> _f$symbol = Field(
+    'symbol',
+    _$symbol,
+    key: r's',
+  );
   static String _$currentPrice(TickerDTO v) => v.currentPrice;
   static const Field<TickerDTO, String> _f$currentPrice = Field(
     'currentPrice',
@@ -55,6 +59,12 @@ class TickerDTOMapper extends ClassMapperBase<TickerDTO> {
     _$volume,
     key: r'v',
   );
+  static String _$quoteVolume(TickerDTO v) => v.quoteVolume;
+  static const Field<TickerDTO, String> _f$quoteVolume = Field(
+    'quoteVolume',
+    _$quoteVolume,
+    key: r'q',
+  );
   static String? _$imageUrl(TickerDTO v) => v.imageUrl;
   static const Field<TickerDTO, String> _f$imageUrl = Field(
     'imageUrl',
@@ -71,6 +81,7 @@ class TickerDTOMapper extends ClassMapperBase<TickerDTO> {
     #high: _f$high,
     #low: _f$low,
     #volume: _f$volume,
+    #quoteVolume: _f$quoteVolume,
     #imageUrl: _f$imageUrl,
   };
 
@@ -83,6 +94,7 @@ class TickerDTOMapper extends ClassMapperBase<TickerDTO> {
       high: data.dec(_f$high),
       low: data.dec(_f$low),
       volume: data.dec(_f$volume),
+      quoteVolume: data.dec(_f$quoteVolume),
       imageUrl: data.dec(_f$imageUrl),
     );
   }
@@ -154,6 +166,7 @@ abstract class TickerDTOCopyWith<$R, $In extends TickerDTO, $Out>
     String? high,
     String? low,
     String? volume,
+    String? quoteVolume,
     String? imageUrl,
   });
   TickerDTOCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
@@ -176,6 +189,7 @@ class _TickerDTOCopyWithImpl<$R, $Out>
     String? high,
     String? low,
     String? volume,
+    String? quoteVolume,
     Object? imageUrl = $none,
   }) => $apply(
     FieldCopyWithData({
@@ -186,6 +200,7 @@ class _TickerDTOCopyWithImpl<$R, $Out>
       if (high != null) #high: high,
       if (low != null) #low: low,
       if (volume != null) #volume: volume,
+      if (quoteVolume != null) #quoteVolume: quoteVolume,
       if (imageUrl != $none) #imageUrl: imageUrl,
     }),
   );
@@ -201,6 +216,7 @@ class _TickerDTOCopyWithImpl<$R, $Out>
     high: data.get(#high, or: $value.high),
     low: data.get(#low, or: $value.low),
     volume: data.get(#volume, or: $value.volume),
+    quoteVolume: data.get(#quoteVolume, or: $value.quoteVolume),
     imageUrl: data.get(#imageUrl, or: $value.imageUrl),
   );
 
