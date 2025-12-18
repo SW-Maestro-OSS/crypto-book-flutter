@@ -45,10 +45,14 @@ class HomeViewModel extends _$HomeViewModel {
 
       _tickerSubscription = tickerStream.listen(
         (tickers) {
+          print('[ViewModel] Received ${tickers.length} tickers from UseCase');
+
           // quoteVolume 기준 내림차순 정렬 후 상위 30개
           final sortedTickers = List<CoinTickerEntity>.from(tickers);
           sortedTickers.sort((a, b) => b.quoteVolume24h.compareTo(a.quoteVolume24h));
           final top30 = sortedTickers.take(30).toList();
+
+          print('[ViewModel] Top 30 by quoteVolume: ${top30.length} tickers');
 
           // 현재 State에서 정렬 설정 가져오기 (유지)
           final currentDisplayCount = state.maybeWhen(

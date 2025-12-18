@@ -8,7 +8,7 @@ export 'splash/splash_page.dart';
 export 'home/home_state.dart';
 export 'home/home_intent.dart';
 export 'home/home_viewmodel.dart';
-export 'home/home_page.dart';
+export 'home/home_view.dart';
 export 'home/widgets/coin_list_item.dart';
 
 // CoinDetail
