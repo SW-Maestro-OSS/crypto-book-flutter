@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:data/init_mappers.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/routing/app_router.dart';
@@ -10,6 +11,9 @@ import 'providers.dart' as root_providers;
 Future<void> main() async {
   // Flutter 엔진 초기화
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Hive 초기화 (캐싱을 위한 로컬 스토리지)
+  await Hive.initFlutter();
 
   // 환경 변수 로드
   await dotenv.load(fileName: ".env");

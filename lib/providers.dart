@@ -7,6 +7,14 @@ part 'providers.g.dart';
 // ==================== Data Layer ====================
 
 @riverpod
+TickerCacheDataSource tickerCacheDataSource(Ref ref) {
+  final cache = TickerCacheDataSource();
+  // Initialize asynchronously
+  cache.init();
+  return cache;
+}
+
+@riverpod
 BinanceRestDataSource binanceRestDataSource(Ref ref) {
   return BinanceRestDataSource(
     baseUrl: BinanceConstants.restApiBaseUrl,
@@ -32,6 +40,7 @@ CoinRepository coinRepository(Ref ref) {
   return CoinRepositoryImpl(
     restDataSource: ref.watch(binanceRestDataSourceProvider),
     wsDataSource: ref.watch(binanceWebSocketDataSourceProvider),
+    tickerCache: ref.watch(tickerCacheDataSourceProvider),
   );
 }
 

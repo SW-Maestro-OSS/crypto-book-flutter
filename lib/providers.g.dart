@@ -9,6 +9,50 @@ part of 'providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
+@ProviderFor(tickerCacheDataSource)
+const tickerCacheDataSourceProvider = TickerCacheDataSourceProvider._();
+
+final class TickerCacheDataSourceProvider extends $FunctionalProvider<
+    TickerCacheDataSource,
+    TickerCacheDataSource,
+    TickerCacheDataSource> with $Provider<TickerCacheDataSource> {
+  const TickerCacheDataSourceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'tickerCacheDataSourceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$tickerCacheDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<TickerCacheDataSource> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  TickerCacheDataSource create(Ref ref) {
+    return tickerCacheDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TickerCacheDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TickerCacheDataSource>(value),
+    );
+  }
+}
+
+String _$tickerCacheDataSourceHash() =>
+    r'9c88849dd8e663acf265275466e9e0419b312313';
+
 @ProviderFor(binanceRestDataSource)
 const binanceRestDataSourceProvider = BinanceRestDataSourceProvider._();
 
@@ -181,7 +225,7 @@ final class CoinRepositoryProvider
   }
 }
 
-String _$coinRepositoryHash() => r'b9660a79bbdc2eab57850969eec770a0be35267e';
+String _$coinRepositoryHash() => r'c3f9e97dd7cbdfed41745f332df9d13a2394f0ea';
 
 @ProviderFor(exchangeRateDataSource)
 const exchangeRateDataSourceProvider = ExchangeRateDataSourceProvider._();
