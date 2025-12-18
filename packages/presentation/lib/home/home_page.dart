@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:presentation/home/home_notifier.dart';
+import 'package:presentation/home/home_viewmodel.dart';
 import 'package:presentation/home/home_state.dart';
-import 'package:presentation/home/home_event.dart';
+import 'package:presentation/home/home_intent.dart';
 import 'package:presentation/home/widgets/coin_list_item.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -18,13 +18,13 @@ class _HomePageState extends ConsumerState<HomePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(homeProvider.notifier).onEvent(const HomeEvent.load());
+      ref.read(homeViewModelProvider.notifier).onIntent(const HomeIntent.load());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(homeProvider);
+    final state = ref.watch(homeViewModelProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,8 +33,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () {
-              ref.read(homeProvider.notifier).onEvent(
-                const HomeEvent.refresh(),
+              ref.read(homeViewModelProvider.notifier).onIntent(
+                const HomeIntent.refresh(),
               );
             },
           ),
@@ -72,8 +72,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  ref.read(homeProvider.notifier).onEvent(
-                    const HomeEvent.load(),
+                  ref.read(homeViewModelProvider.notifier).onIntent(
+                    const HomeIntent.load(),
                   );
                 },
                 child: const Text('재시도'),
@@ -117,12 +117,12 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: InkWell(
         onTap: () {
           if (isActive) {
-            ref.read(homeProvider.notifier).onEvent(
-              const HomeEvent.toggleSortOrder(),
+            ref.read(homeViewModelProvider.notifier).onIntent(
+              const HomeIntent.toggleSortOrder(),
             );
           } else {
-            ref.read(homeProvider.notifier).onEvent(
-              HomeEvent.sort(type),
+            ref.read(homeViewModelProvider.notifier).onIntent(
+              HomeIntent.sort(type),
             );
           }
         },

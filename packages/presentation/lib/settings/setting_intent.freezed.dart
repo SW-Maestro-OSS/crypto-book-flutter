@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'setting_event.dart';
+part of 'setting_intent.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,11 +13,11 @@ part of 'setting_event.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$SettingEvent {
+mixin _$SettingIntent {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is SettingEvent);
+        (other.runtimeType == runtimeType && other is SettingIntent);
   }
 
   @override
@@ -25,17 +25,17 @@ mixin _$SettingEvent {
 
   @override
   String toString() {
-    return 'SettingEvent()';
+    return 'SettingIntent()';
   }
 }
 
 /// @nodoc
-class $SettingEventCopyWith<$Res> {
-  $SettingEventCopyWith(SettingEvent _, $Res Function(SettingEvent) __);
+class $SettingIntentCopyWith<$Res> {
+  $SettingIntentCopyWith(SettingIntent _, $Res Function(SettingIntent) __);
 }
 
-/// Adds pattern-matching-related methods to [SettingEvent].
-extension SettingEventPatterns on SettingEvent {
+/// Adds pattern-matching-related methods to [SettingIntent].
+extension SettingIntentPatterns on SettingIntent {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -225,7 +225,7 @@ extension SettingEventPatterns on SettingEvent {
 
 /// @nodoc
 
-class _Load implements SettingEvent {
+class _Load implements SettingIntent {
   const _Load();
 
   @override
@@ -239,18 +239,18 @@ class _Load implements SettingEvent {
 
   @override
   String toString() {
-    return 'SettingEvent.load()';
+    return 'SettingIntent.load()';
   }
 }
 
 /// @nodoc
 
-class _ChangeCurrency implements SettingEvent {
+class _ChangeCurrency implements SettingIntent {
   const _ChangeCurrency(this.currency);
 
   final String currency;
 
-  /// Create a copy of SettingEvent
+  /// Create a copy of SettingIntent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
@@ -271,13 +271,13 @@ class _ChangeCurrency implements SettingEvent {
 
   @override
   String toString() {
-    return 'SettingEvent.changeCurrency(currency: $currency)';
+    return 'SettingIntent.changeCurrency(currency: $currency)';
   }
 }
 
 /// @nodoc
 abstract mixin class _$ChangeCurrencyCopyWith<$Res>
-    implements $SettingEventCopyWith<$Res> {
+    implements $SettingIntentCopyWith<$Res> {
   factory _$ChangeCurrencyCopyWith(
           _ChangeCurrency value, $Res Function(_ChangeCurrency) _then) =
       __$ChangeCurrencyCopyWithImpl;
@@ -293,7 +293,7 @@ class __$ChangeCurrencyCopyWithImpl<$Res>
   final _ChangeCurrency _self;
   final $Res Function(_ChangeCurrency) _then;
 
-  /// Create a copy of SettingEvent
+  /// Create a copy of SettingIntent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
@@ -310,12 +310,12 @@ class __$ChangeCurrencyCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _ChangeLanguage implements SettingEvent {
+class _ChangeLanguage implements SettingIntent {
   const _ChangeLanguage(this.language);
 
   final String language;
 
-  /// Create a copy of SettingEvent
+  /// Create a copy of SettingIntent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
@@ -336,13 +336,13 @@ class _ChangeLanguage implements SettingEvent {
 
   @override
   String toString() {
-    return 'SettingEvent.changeLanguage(language: $language)';
+    return 'SettingIntent.changeLanguage(language: $language)';
   }
 }
 
 /// @nodoc
 abstract mixin class _$ChangeLanguageCopyWith<$Res>
-    implements $SettingEventCopyWith<$Res> {
+    implements $SettingIntentCopyWith<$Res> {
   factory _$ChangeLanguageCopyWith(
           _ChangeLanguage value, $Res Function(_ChangeLanguage) _then) =
       __$ChangeLanguageCopyWithImpl;
@@ -358,7 +358,7 @@ class __$ChangeLanguageCopyWithImpl<$Res>
   final _ChangeLanguage _self;
   final $Res Function(_ChangeLanguage) _then;
 
-  /// Create a copy of SettingEvent
+  /// Create a copy of SettingIntent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({

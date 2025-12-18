@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:presentation/home/home_notifier.dart';
+import 'package:presentation/home/home_viewmodel.dart';
 import 'package:presentation/home/home_state.dart';
-import 'package:presentation/home/home_event.dart';
+import 'package:presentation/home/home_intent.dart';
 import 'package:presentation/home/widgets/coin_list_item.dart';
 
 class HomeView extends ConsumerStatefulWidget {
@@ -18,13 +18,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(homeProvider.notifier).onEvent(const HomeEvent.load());
+      ref.read(homeViewModelProvider.notifier).onIntent(const HomeIntent.load());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(homeProvider);
+    final state = ref.watch(homeViewModelProvider);
 
     return state.when(
       initial: () => const SizedBox.shrink(),
@@ -61,8 +61,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.read(homeProvider.notifier).onEvent(
-                  const HomeEvent.load(),
+                ref.read(homeViewModelProvider.notifier).onIntent(
+                  const HomeIntent.load(),
                 );
               },
               child: const Text('재시도'),
@@ -104,12 +104,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
       child: InkWell(
         onTap: () {
           if (isActive) {
-            ref.read(homeProvider.notifier).onEvent(
-              const HomeEvent.toggleSortOrder(),
+            ref.read(homeViewModelProvider.notifier).onIntent(
+              const HomeIntent.toggleSortOrder(),
             );
           } else {
-            ref.read(homeProvider.notifier).onEvent(
-              HomeEvent.sort(type),
+            ref.read(homeViewModelProvider.notifier).onIntent(
+              HomeIntent.sort(type),
             );
           }
         },

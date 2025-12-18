@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'splash_notifier.dart';
+part of 'splash_viewmodel.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,29 +8,32 @@ part of 'splash_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Splash 화면의 ViewModel (비즈니스 로직)
 
-@ProviderFor(SplashNotifier)
-const splashProvider = SplashNotifierProvider._();
+@ProviderFor(SplashViewModel)
+const splashViewModelProvider = SplashViewModelProvider._();
 
-final class SplashNotifierProvider
-    extends $NotifierProvider<SplashNotifier, SplashState> {
-  const SplashNotifierProvider._()
+/// Splash 화면의 ViewModel (비즈니스 로직)
+final class SplashViewModelProvider
+    extends $NotifierProvider<SplashViewModel, SplashState> {
+  /// Splash 화면의 ViewModel (비즈니스 로직)
+  const SplashViewModelProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
-          name: r'splashProvider',
+          name: r'splashViewModelProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$splashNotifierHash();
+  String debugGetCreateSourceHash() => _$splashViewModelHash();
 
   @$internal
   @override
-  SplashNotifier create() => SplashNotifier();
+  SplashViewModel create() => SplashViewModel();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(SplashState value) {
@@ -41,9 +44,11 @@ final class SplashNotifierProvider
   }
 }
 
-String _$splashNotifierHash() => r'a3bb48eb4aeaa76dd982f24cfc63d5b3945b1c72';
+String _$splashViewModelHash() => r'64960ccd3489c9a2957385f12a1028a956984abb';
 
-abstract class _$SplashNotifier extends $Notifier<SplashState> {
+/// Splash 화면의 ViewModel (비즈니스 로직)
+
+abstract class _$SplashViewModel extends $Notifier<SplashState> {
   SplashState build();
   @$mustCallSuper
   @override

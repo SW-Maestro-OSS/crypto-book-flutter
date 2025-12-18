@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'coin_detail_event.dart';
+part of 'coin_detail_intent.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,11 +13,11 @@ part of 'coin_detail_event.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$CoinDetailEvent {
+mixin _$CoinDetailIntent {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is CoinDetailEvent);
+        (other.runtimeType == runtimeType && other is CoinDetailIntent);
   }
 
   @override
@@ -25,18 +25,18 @@ mixin _$CoinDetailEvent {
 
   @override
   String toString() {
-    return 'CoinDetailEvent()';
+    return 'CoinDetailIntent()';
   }
 }
 
 /// @nodoc
-class $CoinDetailEventCopyWith<$Res> {
-  $CoinDetailEventCopyWith(
-      CoinDetailEvent _, $Res Function(CoinDetailEvent) __);
+class $CoinDetailIntentCopyWith<$Res> {
+  $CoinDetailIntentCopyWith(
+      CoinDetailIntent _, $Res Function(CoinDetailIntent) __);
 }
 
-/// Adds pattern-matching-related methods to [CoinDetailEvent].
-extension CoinDetailEventPatterns on CoinDetailEvent {
+/// Adds pattern-matching-related methods to [CoinDetailIntent].
+extension CoinDetailIntentPatterns on CoinDetailIntent {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -208,12 +208,12 @@ extension CoinDetailEventPatterns on CoinDetailEvent {
 
 /// @nodoc
 
-class _Load implements CoinDetailEvent {
+class _Load implements CoinDetailIntent {
   const _Load(this.symbol);
 
   final String symbol;
 
-  /// Create a copy of CoinDetailEvent
+  /// Create a copy of CoinDetailIntent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
@@ -233,13 +233,13 @@ class _Load implements CoinDetailEvent {
 
   @override
   String toString() {
-    return 'CoinDetailEvent.load(symbol: $symbol)';
+    return 'CoinDetailIntent.load(symbol: $symbol)';
   }
 }
 
 /// @nodoc
 abstract mixin class _$LoadCopyWith<$Res>
-    implements $CoinDetailEventCopyWith<$Res> {
+    implements $CoinDetailIntentCopyWith<$Res> {
   factory _$LoadCopyWith(_Load value, $Res Function(_Load) _then) =
       __$LoadCopyWithImpl;
   @useResult
@@ -253,7 +253,7 @@ class __$LoadCopyWithImpl<$Res> implements _$LoadCopyWith<$Res> {
   final _Load _self;
   final $Res Function(_Load) _then;
 
-  /// Create a copy of CoinDetailEvent
+  /// Create a copy of CoinDetailIntent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
@@ -270,12 +270,12 @@ class __$LoadCopyWithImpl<$Res> implements _$LoadCopyWith<$Res> {
 
 /// @nodoc
 
-class _TickerUpdated implements CoinDetailEvent {
+class _TickerUpdated implements CoinDetailIntent {
   const _TickerUpdated(this.ticker);
 
   final CoinTickerEntity ticker;
 
-  /// Create a copy of CoinDetailEvent
+  /// Create a copy of CoinDetailIntent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
@@ -295,13 +295,13 @@ class _TickerUpdated implements CoinDetailEvent {
 
   @override
   String toString() {
-    return 'CoinDetailEvent.tickerUpdated(ticker: $ticker)';
+    return 'CoinDetailIntent.tickerUpdated(ticker: $ticker)';
   }
 }
 
 /// @nodoc
 abstract mixin class _$TickerUpdatedCopyWith<$Res>
-    implements $CoinDetailEventCopyWith<$Res> {
+    implements $CoinDetailIntentCopyWith<$Res> {
   factory _$TickerUpdatedCopyWith(
           _TickerUpdated value, $Res Function(_TickerUpdated) _then) =
       __$TickerUpdatedCopyWithImpl;
@@ -317,7 +317,7 @@ class __$TickerUpdatedCopyWithImpl<$Res>
   final _TickerUpdated _self;
   final $Res Function(_TickerUpdated) _then;
 
-  /// Create a copy of CoinDetailEvent
+  /// Create a copy of CoinDetailIntent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({

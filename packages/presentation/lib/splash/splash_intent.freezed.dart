@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'splash_event.dart';
+part of 'splash_intent.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,11 +13,11 @@ part of 'splash_event.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$SplashEvent {
+mixin _$SplashIntent {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is SplashEvent);
+        (other.runtimeType == runtimeType && other is SplashIntent);
   }
 
   @override
@@ -25,17 +25,17 @@ mixin _$SplashEvent {
 
   @override
   String toString() {
-    return 'SplashEvent()';
+    return 'SplashIntent()';
   }
 }
 
 /// @nodoc
-class $SplashEventCopyWith<$Res> {
-  $SplashEventCopyWith(SplashEvent _, $Res Function(SplashEvent) __);
+class $SplashIntentCopyWith<$Res> {
+  $SplashIntentCopyWith(SplashIntent _, $Res Function(SplashIntent) __);
 }
 
-/// Adds pattern-matching-related methods to [SplashEvent].
-extension SplashEventPatterns on SplashEvent {
+/// Adds pattern-matching-related methods to [SplashIntent].
+extension SplashIntentPatterns on SplashIntent {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -207,7 +207,7 @@ extension SplashEventPatterns on SplashEvent {
 
 /// @nodoc
 
-class _Initialize implements SplashEvent {
+class _Initialize implements SplashIntent {
   const _Initialize();
 
   @override
@@ -221,13 +221,13 @@ class _Initialize implements SplashEvent {
 
   @override
   String toString() {
-    return 'SplashEvent.initialize()';
+    return 'SplashIntent.initialize()';
   }
 }
 
 /// @nodoc
 
-class _Retry implements SplashEvent {
+class _Retry implements SplashIntent {
   const _Retry();
 
   @override
@@ -241,7 +241,7 @@ class _Retry implements SplashEvent {
 
   @override
   String toString() {
-    return 'SplashEvent.retry()';
+    return 'SplashIntent.retry()';
   }
 }
 

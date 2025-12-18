@@ -1,19 +1,21 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/coin_detail/coin_detail_state.dart';
-import 'package:presentation/coin_detail/coin_detail_event.dart';
+import 'package:presentation/coin_detail/coin_detail_intent.dart';
 
-part 'coin_detail_notifier.g.dart';
+part 'coin_detail_viewmodel.g.dart';
 
+/// Coin Detail 화면의 ViewModel (비즈니스 로직)
 @riverpod
-class CoinDetailNotifier extends _$CoinDetailNotifier {
+class CoinDetailViewModel extends _$CoinDetailViewModel {
   @override
   CoinDetailState build(String symbol) {
     return const CoinDetailState.initial();
   }
 
-  void onEvent(CoinDetailEvent event) {
-    event.when(
+  /// Intent 처리
+  void onIntent(CoinDetailIntent intent) {
+    intent.when(
       load: _handleLoad,
       tickerUpdated: _handleTickerUpdated,
     );

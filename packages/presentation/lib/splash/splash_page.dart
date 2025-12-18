@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:presentation/splash/splash_notifier.dart';
+import 'package:presentation/splash/splash_viewmodel.dart';
 import 'package:presentation/splash/splash_state.dart';
-import 'package:presentation/splash/splash_event.dart';
+import 'package:presentation/splash/splash_intent.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -18,18 +18,18 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     super.initState();
     // 초기화 이벤트 발생
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(splashProvider.notifier).onEvent(
-            const SplashEvent.initialize(),
+      ref.read(splashViewModelProvider.notifier).onIntent(
+            const SplashIntent.initialize(),
           );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(splashProvider);
+    final state = ref.watch(splashViewModelProvider);
 
     // State에 따라 화면 전환
-    ref.listen(splashProvider, (previous, next) {
+    ref.listen(splashViewModelProvider, (previous, next) {
       next.whenOrNull(
         completed: () => context.go('/main'),
       );
@@ -60,8 +60,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  ref.read(splashProvider.notifier).onEvent(
-                        const SplashEvent.retry(),
+                  ref.read(splashViewModelProvider.notifier).onIntent(
+                        const SplashIntent.retry(),
                       );
                 },
                 child: const Text('재시도'),

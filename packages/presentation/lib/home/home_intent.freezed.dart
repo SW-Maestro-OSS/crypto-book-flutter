@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'home_event.dart';
+part of 'home_intent.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,11 +13,11 @@ part of 'home_event.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$HomeEvent {
+mixin _$HomeIntent {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is HomeEvent);
+        (other.runtimeType == runtimeType && other is HomeIntent);
   }
 
   @override
@@ -25,17 +25,17 @@ mixin _$HomeEvent {
 
   @override
   String toString() {
-    return 'HomeEvent()';
+    return 'HomeIntent()';
   }
 }
 
 /// @nodoc
-class $HomeEventCopyWith<$Res> {
-  $HomeEventCopyWith(HomeEvent _, $Res Function(HomeEvent) __);
+class $HomeIntentCopyWith<$Res> {
+  $HomeIntentCopyWith(HomeIntent _, $Res Function(HomeIntent) __);
 }
 
-/// Adds pattern-matching-related methods to [HomeEvent].
-extension HomeEventPatterns on HomeEvent {
+/// Adds pattern-matching-related methods to [HomeIntent].
+extension HomeIntentPatterns on HomeIntent {
   /// A variant of `map` that fallback to returning `orElse`.
   ///
   /// It is equivalent to doing:
@@ -297,7 +297,7 @@ extension HomeEventPatterns on HomeEvent {
 
 /// @nodoc
 
-class _Load implements HomeEvent {
+class _Load implements HomeIntent {
   const _Load();
 
   @override
@@ -311,13 +311,13 @@ class _Load implements HomeEvent {
 
   @override
   String toString() {
-    return 'HomeEvent.load()';
+    return 'HomeIntent.load()';
   }
 }
 
 /// @nodoc
 
-class _Refresh implements HomeEvent {
+class _Refresh implements HomeIntent {
   const _Refresh();
 
   @override
@@ -331,18 +331,18 @@ class _Refresh implements HomeEvent {
 
   @override
   String toString() {
-    return 'HomeEvent.refresh()';
+    return 'HomeIntent.refresh()';
   }
 }
 
 /// @nodoc
 
-class _Sort implements HomeEvent {
+class _Sort implements HomeIntent {
   const _Sort(this.sortType);
 
   final SortType sortType;
 
-  /// Create a copy of HomeEvent
+  /// Create a copy of HomeIntent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
@@ -363,12 +363,12 @@ class _Sort implements HomeEvent {
 
   @override
   String toString() {
-    return 'HomeEvent.sort(sortType: $sortType)';
+    return 'HomeIntent.sort(sortType: $sortType)';
   }
 }
 
 /// @nodoc
-abstract mixin class _$SortCopyWith<$Res> implements $HomeEventCopyWith<$Res> {
+abstract mixin class _$SortCopyWith<$Res> implements $HomeIntentCopyWith<$Res> {
   factory _$SortCopyWith(_Sort value, $Res Function(_Sort) _then) =
       __$SortCopyWithImpl;
   @useResult
@@ -382,7 +382,7 @@ class __$SortCopyWithImpl<$Res> implements _$SortCopyWith<$Res> {
   final _Sort _self;
   final $Res Function(_Sort) _then;
 
-  /// Create a copy of HomeEvent
+  /// Create a copy of HomeIntent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
@@ -399,7 +399,7 @@ class __$SortCopyWithImpl<$Res> implements _$SortCopyWith<$Res> {
 
 /// @nodoc
 
-class _ToggleSortOrder implements HomeEvent {
+class _ToggleSortOrder implements HomeIntent {
   const _ToggleSortOrder();
 
   @override
@@ -413,18 +413,18 @@ class _ToggleSortOrder implements HomeEvent {
 
   @override
   String toString() {
-    return 'HomeEvent.toggleSortOrder()';
+    return 'HomeIntent.toggleSortOrder()';
   }
 }
 
 /// @nodoc
 
-class _Search implements HomeEvent {
+class _Search implements HomeIntent {
   const _Search(this.query);
 
   final String query;
 
-  /// Create a copy of HomeEvent
+  /// Create a copy of HomeIntent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
@@ -444,13 +444,13 @@ class _Search implements HomeEvent {
 
   @override
   String toString() {
-    return 'HomeEvent.search(query: $query)';
+    return 'HomeIntent.search(query: $query)';
   }
 }
 
 /// @nodoc
 abstract mixin class _$SearchCopyWith<$Res>
-    implements $HomeEventCopyWith<$Res> {
+    implements $HomeIntentCopyWith<$Res> {
   factory _$SearchCopyWith(_Search value, $Res Function(_Search) _then) =
       __$SearchCopyWithImpl;
   @useResult
@@ -464,7 +464,7 @@ class __$SearchCopyWithImpl<$Res> implements _$SearchCopyWith<$Res> {
   final _Search _self;
   final $Res Function(_Search) _then;
 
-  /// Create a copy of HomeEvent
+  /// Create a copy of HomeIntent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
@@ -481,7 +481,7 @@ class __$SearchCopyWithImpl<$Res> implements _$SearchCopyWith<$Res> {
 
 /// @nodoc
 
-class _TickerUpdated implements HomeEvent {
+class _TickerUpdated implements HomeIntent {
   const _TickerUpdated(final List<CoinTickerEntity> tickers)
       : _tickers = tickers;
 
@@ -492,7 +492,7 @@ class _TickerUpdated implements HomeEvent {
     return EqualUnmodifiableListView(_tickers);
   }
 
-  /// Create a copy of HomeEvent
+  /// Create a copy of HomeIntent
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @pragma('vm:prefer-inline')
@@ -513,13 +513,13 @@ class _TickerUpdated implements HomeEvent {
 
   @override
   String toString() {
-    return 'HomeEvent.tickerUpdated(tickers: $tickers)';
+    return 'HomeIntent.tickerUpdated(tickers: $tickers)';
   }
 }
 
 /// @nodoc
 abstract mixin class _$TickerUpdatedCopyWith<$Res>
-    implements $HomeEventCopyWith<$Res> {
+    implements $HomeIntentCopyWith<$Res> {
   factory _$TickerUpdatedCopyWith(
           _TickerUpdated value, $Res Function(_TickerUpdated) _then) =
       __$TickerUpdatedCopyWithImpl;
@@ -535,7 +535,7 @@ class __$TickerUpdatedCopyWithImpl<$Res>
   final _TickerUpdated _self;
   final $Res Function(_TickerUpdated) _then;
 
-  /// Create a copy of HomeEvent
+  /// Create a copy of HomeIntent
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
@@ -552,7 +552,7 @@ class __$TickerUpdatedCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _LoadMore implements HomeEvent {
+class _LoadMore implements HomeIntent {
   const _LoadMore();
 
   @override
@@ -566,7 +566,7 @@ class _LoadMore implements HomeEvent {
 
   @override
   String toString() {
-    return 'HomeEvent.loadMore()';
+    return 'HomeIntent.loadMore()';
   }
 }
 

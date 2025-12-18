@@ -48,11 +48,11 @@ class ExchangeRateDataSource {
 
       // API 응답이 List 형태로 옴
       final List<dynamic> jsonList = response.data is List
-          ? response.data
+          ? response.data as List<dynamic>
           : [response.data];
 
       return jsonList
-          .map((json) => ExchangeRateDTOMapper.fromMap(json))
+          .map((json) => ExchangeRateDTOMapper.fromMap(json as Map<String, dynamic>))
           .where((dto) => dto.isSuccess) // 성공한 응답만 필터링
           .toList();
     } on DioException catch (e) {

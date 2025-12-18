@@ -1,20 +1,21 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:presentation/splash/splash_state.dart';
-import 'package:presentation/splash/splash_event.dart';
+import 'package:presentation/splash/splash_intent.dart';
 
-part 'splash_notifier.g.dart';
+part 'splash_viewmodel.g.dart';
 
+/// Splash 화면의 ViewModel (비즈니스 로직)
 @riverpod
-class SplashNotifier extends _$SplashNotifier {
+class SplashViewModel extends _$SplashViewModel {
   @override
   SplashState build() {
     // 초기 상태
     return const SplashState.initial();
   }
 
-  /// 이벤트 처리
-  void onEvent(SplashEvent event) {
-    event.when(
+  /// Intent 처리
+  void onIntent(SplashIntent intent) {
+    intent.when(
       initialize: _handleInitialize,
       retry: _handleRetry,
     );

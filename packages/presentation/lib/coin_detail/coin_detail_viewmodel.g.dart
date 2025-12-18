@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'coin_detail_notifier.dart';
+part of 'coin_detail_viewmodel.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,36 +8,39 @@ part of 'coin_detail_notifier.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Coin Detail 화면의 ViewModel (비즈니스 로직)
 
-@ProviderFor(CoinDetailNotifier)
-const coinDetailProvider = CoinDetailNotifierFamily._();
+@ProviderFor(CoinDetailViewModel)
+const coinDetailViewModelProvider = CoinDetailViewModelFamily._();
 
-final class CoinDetailNotifierProvider
-    extends $NotifierProvider<CoinDetailNotifier, CoinDetailState> {
-  const CoinDetailNotifierProvider._(
-      {required CoinDetailNotifierFamily super.from,
+/// Coin Detail 화면의 ViewModel (비즈니스 로직)
+final class CoinDetailViewModelProvider
+    extends $NotifierProvider<CoinDetailViewModel, CoinDetailState> {
+  /// Coin Detail 화면의 ViewModel (비즈니스 로직)
+  const CoinDetailViewModelProvider._(
+      {required CoinDetailViewModelFamily super.from,
       required String super.argument})
       : super(
           retry: null,
-          name: r'coinDetailProvider',
+          name: r'coinDetailViewModelProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$coinDetailNotifierHash();
+  String debugGetCreateSourceHash() => _$coinDetailViewModelHash();
 
   @override
   String toString() {
-    return r'coinDetailProvider'
+    return r'coinDetailViewModelProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  CoinDetailNotifier create() => CoinDetailNotifier();
+  CoinDetailViewModel create() => CoinDetailViewModel();
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(CoinDetailState value) {
@@ -49,7 +52,7 @@ final class CoinDetailNotifierProvider
 
   @override
   bool operator ==(Object other) {
-    return other is CoinDetailNotifierProvider && other.argument == argument;
+    return other is CoinDetailViewModelProvider && other.argument == argument;
   }
 
   @override
@@ -58,32 +61,38 @@ final class CoinDetailNotifierProvider
   }
 }
 
-String _$coinDetailNotifierHash() =>
-    r'bda2a993cd4440f138fc7cbf1d1b41ea3824a48c';
+String _$coinDetailViewModelHash() =>
+    r'de1c5876284f87c9aa3f3761bdf5d22de81bfad7';
 
-final class CoinDetailNotifierFamily extends $Family
+/// Coin Detail 화면의 ViewModel (비즈니스 로직)
+
+final class CoinDetailViewModelFamily extends $Family
     with
-        $ClassFamilyOverride<CoinDetailNotifier, CoinDetailState,
+        $ClassFamilyOverride<CoinDetailViewModel, CoinDetailState,
             CoinDetailState, CoinDetailState, String> {
-  const CoinDetailNotifierFamily._()
+  const CoinDetailViewModelFamily._()
       : super(
           retry: null,
-          name: r'coinDetailProvider',
+          name: r'coinDetailViewModelProvider',
           dependencies: null,
           $allTransitiveDependencies: null,
           isAutoDispose: true,
         );
 
-  CoinDetailNotifierProvider call(
+  /// Coin Detail 화면의 ViewModel (비즈니스 로직)
+
+  CoinDetailViewModelProvider call(
     String symbol,
   ) =>
-      CoinDetailNotifierProvider._(argument: symbol, from: this);
+      CoinDetailViewModelProvider._(argument: symbol, from: this);
 
   @override
-  String toString() => r'coinDetailProvider';
+  String toString() => r'coinDetailViewModelProvider';
 }
 
-abstract class _$CoinDetailNotifier extends $Notifier<CoinDetailState> {
+/// Coin Detail 화면의 ViewModel (비즈니스 로직)
+
+abstract class _$CoinDetailViewModel extends $Notifier<CoinDetailState> {
   late final _$args = ref.$arg as String;
   String get symbol => _$args;
 

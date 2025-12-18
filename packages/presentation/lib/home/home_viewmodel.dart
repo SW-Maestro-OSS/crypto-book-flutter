@@ -1,21 +1,22 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/home/home_state.dart';
-import 'package:presentation/home/home_event.dart';
+import 'package:presentation/home/home_intent.dart';
 import 'package:presentation/providers/usecase_providers.dart';
 
-part 'home_notifier.g.dart';
+part 'home_viewmodel.g.dart';
 
+/// Home 화면의 ViewModel (비즈니스 로직)
 @riverpod
-class HomeNotifier extends _$HomeNotifier {
+class HomeViewModel extends _$HomeViewModel {
   @override
   HomeState build() {
     return const HomeState.initial();
   }
 
-  /// 이벤트 처리
-  void onEvent(HomeEvent event) {
-    event.when(
+  /// Intent 처리
+  void onIntent(HomeIntent intent) {
+    intent.when(
       load: _handleLoad,
       refresh: _handleRefresh,
       sort: _handleSort,
@@ -141,28 +142,17 @@ class HomeNotifier extends _$HomeNotifier {
     );
   }
 
+  // Dart 3: Enhanced enum의 comparator 사용
   List<CoinTickerEntity> _sortTickers(
     List<CoinTickerEntity> tickers,
     SortType sortType,
     bool isAscending,
   ) {
     final sorted = List<CoinTickerEntity>.from(tickers);
+    final comparator = sortType.comparator;
 
-    switch (sortType) {
-      case SortType.none:
-        break;
-      case SortType.symbol:
-        sorted.sort((a, b) => a.symbol.compareTo(b.symbol));
-        break;
-      case SortType.price:
-        sorted.sort((a, b) => a.currentPrice.compareTo(b.currentPrice));
-        break;
-      case SortType.changePercent:
-        sorted.sort((a, b) => a.priceChangePercent24h.compareTo(b.priceChangePercent24h));
-        break;
-      case SortType.volume:
-        sorted.sort((a, b) => a.volume24h.compareTo(b.volume24h));
-        break;
+    if (comparator != null) {
+      sorted.sort(comparator);
     }
 
     return isAscending ? sorted : sorted.reversed.toList();
