@@ -26,7 +26,10 @@ dependencies:
   go_router: ^14.0.0
 
   # 환경 변수
-  flutter_dotenv: ^5.2.1
+  flutter_dotenv: ^6.0.0
+
+  # Local Storage
+  hive_flutter: ^1.1.0
 
   cupertino_icons: ^1.0.8
 
