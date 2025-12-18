@@ -44,7 +44,7 @@ final class HomeViewModelProvider
   }
 }
 
-String _$homeViewModelHash() => r'f89cfbc9d1d31b2de03ac40b69a224ba89a62b62';
+String _$homeViewModelHash() => r'ff670e762f30c8919a426385c5b0522a406be2c2';
 
 /// Home 화면의 ViewModel (비즈니스 로직)
 

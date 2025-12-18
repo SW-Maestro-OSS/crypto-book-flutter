@@ -15,16 +15,7 @@ class CoinListItem extends StatelessWidget {
     final changeColor = isPositive ? Colors.green : Colors.red;
 
     return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: Colors.orange.shade100,
-        child: Text(
-          ticker.symbol.substring(0, 1),
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.orange,
-          ),
-        ),
-      ),
+      leading: _buildCoinImage(),
       title: Text(
         ticker.symbol,
         style: const TextStyle(fontWeight: FontWeight.bold),
@@ -50,6 +41,31 @@ class CoinListItem extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// 코인 이미지 (이미지 URL이 있으면 표시, 없으면 placeholder)
+  Widget _buildCoinImage() {
+    if (ticker.imageUrl != null && ticker.imageUrl!.isNotEmpty) {
+      return CircleAvatar(
+        backgroundImage: NetworkImage(ticker.imageUrl!),
+        backgroundColor: Colors.grey.shade200,
+        onBackgroundImageError: (_, __) {
+          // 이미지 로드 실패시 placeholder 표시
+        },
+      );
+    }
+
+    // Placeholder 이미지
+    return CircleAvatar(
+      backgroundColor: Colors.orange.shade100,
+      child: Text(
+        ticker.symbol.substring(0, 1),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.orange,
+        ),
       ),
     );
   }

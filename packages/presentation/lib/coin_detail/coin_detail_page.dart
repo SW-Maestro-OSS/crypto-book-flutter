@@ -10,6 +10,7 @@ class CoinDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: true,
         title: Text(symbol),
       ),
       body: Center(

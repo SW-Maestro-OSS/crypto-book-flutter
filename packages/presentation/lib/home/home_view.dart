@@ -14,12 +14,35 @@ class HomeView extends ConsumerStatefulWidget {
 }
 
 class _HomeViewState extends ConsumerState<HomeView> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(homeViewModelProvider.notifier).onIntent(const HomeIntent.load());
+      ref
+          .read(homeViewModelProvider.notifier)
+          .onIntent(const HomeIntent.load());
     });
+
+    // 스크롤 리스너 추가 (페이징 처리)
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.8) {
+      // 스크롤이 80% 이상 내려갔을 때 더 로드
+      ref
+          .read(homeViewModelProvider.notifier)
+          .onIntent(const HomeIntent.loadMore());
+    }
   }
 
   @override
@@ -29,20 +52,34 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return state.when(
       initial: () => const SizedBox.shrink(),
       loading: () => const Center(child: CircularProgressIndicator()),
-      loaded: (allTickers, displayedTickers, displayCount, sortType, isAscending) {
+      loaded:
+          (allTickers, displayedTickers, displayCount, sortType, isAscending) {
         return Column(
           children: [
-            AppBar(
-              title: const Text('Crypto Tracker'),
-            ),
             _buildSortHeader(sortType, isAscending),
             Expanded(
               child: ListView.builder(
-                itemCount: displayedTickers.length,
+                controller: _scrollController,
+                itemCount: displayedTickers.length + 1,
                 itemBuilder: (context, index) {
+                  // 더보기 인디케이터
+                  if (index == displayedTickers.length) {
+                    return displayCount < 30
+                        ? const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(
+                              child: Text(
+                                'Scroll down for more...',
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink();
+                  }
+
                   final ticker = displayedTickers[index];
                   return InkWell(
-                    onTap: () => context.go('/coin/${ticker.symbol}'),
+                    onTap: () => context.push('/coin/${ticker.symbol}'),
                     child: CoinListItem(ticker: ticker),
                   );
                 },
@@ -62,8 +99,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ElevatedButton(
               onPressed: () {
                 ref.read(homeViewModelProvider.notifier).onIntent(
-                  const HomeIntent.load(),
-                );
+                      const HomeIntent.load(),
+                    );
               },
               child: const Text('재시도'),
             ),
@@ -86,7 +123,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
         children: [
           _buildSortTab('Symbol', SortType.symbol, currentSort, isAscending),
           _buildSortTab('Price (\$)', SortType.price, currentSort, isAscending),
-          _buildSortTab('24h Change %', SortType.changePercent, currentSort, isAscending),
+          _buildSortTab(
+              '24h Change %', SortType.changePercent, currentSort, isAscending),
         ],
       ),
     );
@@ -105,12 +143,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
         onTap: () {
           if (isActive) {
             ref.read(homeViewModelProvider.notifier).onIntent(
-              const HomeIntent.toggleSortOrder(),
-            );
+                  const HomeIntent.toggleSortOrder(),
+                );
           } else {
             ref.read(homeViewModelProvider.notifier).onIntent(
-              HomeIntent.sort(type),
-            );
+                  HomeIntent.sort(type),
+                );
           }
         },
         child: Row(
