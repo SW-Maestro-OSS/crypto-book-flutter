@@ -41,7 +41,7 @@ class HomeViewModel extends _$HomeViewModel {
     try {
       // WebSocket으로 실시간 티커 구독
       final useCase = ref.read(subscribeCoinTickerUseCaseProvider);
-      final tickerStream = useCase.execute([]);  // 빈 배열 = 모든 USDT 페어
+      final tickerStream = useCase.execute([]); // 빈 배열 = 모든 USDT 페어
 
       _tickerSubscription = tickerStream.listen(
         (tickers) {
@@ -49,7 +49,8 @@ class HomeViewModel extends _$HomeViewModel {
 
           // quoteVolume 기준 내림차순 정렬 후 상위 30개
           final sortedTickers = List<CoinTickerEntity>.from(tickers);
-          sortedTickers.sort((a, b) => b.quoteVolume24h.compareTo(a.quoteVolume24h));
+          sortedTickers
+              .sort((a, b) => b.quoteVolume24h.compareTo(a.quoteVolume24h));
           final top30 = sortedTickers.take(30).toList();
 
           print('[ViewModel] Top 30 by quoteVolume: ${top30.length} tickers');
@@ -57,7 +58,7 @@ class HomeViewModel extends _$HomeViewModel {
           // 현재 State에서 정렬 설정 가져오기 (유지)
           final currentDisplayCount = state.maybeWhen(
             loaded: (_, __, displayCount, ___, ____) => displayCount,
-            orElse: () => 10,
+            orElse: () => 20,
           );
           final currentSortType = state.maybeWhen(
             loaded: (_, __, ___, sortType, ____) => sortType,
@@ -69,7 +70,8 @@ class HomeViewModel extends _$HomeViewModel {
           );
 
           // 현재 정렬 적용
-          final sortedForDisplay = _sortTickers(top30, currentSortType, currentIsAscending);
+          final sortedForDisplay =
+              _sortTickers(top30, currentSortType, currentIsAscending);
           final displayed = sortedForDisplay.take(currentDisplayCount).toList();
 
           state = HomeState.loaded(
@@ -112,7 +114,8 @@ class HomeViewModel extends _$HomeViewModel {
 
   void _handleToggleSortOrder() {
     state.whenOrNull(
-      loaded: (allTickers, displayedTickers, displayCount, sortType, isAscending) {
+      loaded:
+          (allTickers, displayedTickers, displayCount, sortType, isAscending) {
         final newOrder = !isAscending;
         final sorted = _sortTickers(displayedTickers, sortType, newOrder);
         state = HomeState.loaded(
@@ -146,11 +149,15 @@ class HomeViewModel extends _$HomeViewModel {
 
   void _handleLoadMore() {
     state.whenOrNull(
-      loaded: (allTickers, displayedTickers, displayCount, sortType, isAscending) {
+      loaded:
+          (allTickers, displayedTickers, displayCount, sortType, isAscending) {
         if (displayCount >= 30) return;
 
         final newCount = (displayCount + 10).clamp(0, 30);
-        final newDisplayed = allTickers.take(newCount).toList();
+
+        // 정렬을 적용한 후 표시
+        final sorted = _sortTickers(allTickers, sortType, isAscending);
+        final newDisplayed = sorted.take(newCount).toList();
 
         state = HomeState.loaded(
           allTickers: allTickers,
