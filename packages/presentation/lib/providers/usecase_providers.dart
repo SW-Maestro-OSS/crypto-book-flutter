@@ -20,3 +20,21 @@ SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
     'subscribeCoinTickerUseCaseProvider must be overridden in main app',
   );
 }
+
+/// GetThemeSettingUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+@riverpod
+GetThemeSettingUseCase getThemeSettingUseCase(Ref ref) {
+  throw UnimplementedError(
+    'getThemeSettingUseCaseProvider must be overridden in main app',
+  );
+}
+
+/// UpdateThemeSettingUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+@riverpod
+UpdateThemeSettingUseCase updateThemeSettingUseCase(Ref ref) {
+  throw UnimplementedError(
+    'updateThemeSettingUseCaseProvider must be overridden in main app',
+  );
+}

@@ -17,6 +17,9 @@ Future<void> main() async {
   // Hive 초기화 (캐싱을 위한 로컬 스토리지)
   await Hive.initFlutter();
 
+  // Settings box 미리 열기 (테마 로드를 위해)
+  await Hive.openBox<String>('app_settings');
+
   // 환경 변수 로드
   await dotenv.load(fileName: ".env");
 
@@ -35,6 +38,16 @@ Future<void> main() async {
         subscribeCoinTickerUseCaseProvider.overrideWith((ref) {
           return SubscribeCoinTickerUseCaseImpl(
             repository: ref.watch(root_providers.coinRepositoryProvider),
+          );
+        }),
+        getThemeSettingUseCaseProvider.overrideWith((ref) {
+          return GetThemeSettingUseCaseImpl(
+            repository: ref.watch(root_providers.settingsRepositoryProvider),
+          );
+        }),
+        updateThemeSettingUseCaseProvider.overrideWith((ref) {
+          return UpdateThemeSettingUseCaseImpl(
+            repository: ref.watch(root_providers.settingsRepositoryProvider),
           );
         }),
       ],

@@ -1,38 +1,65 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as flutter;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:presentation/theme/persistence/theme_preference_service.dart';
+import 'package:domain/domain.dart';
+import 'package:presentation/providers/usecase_providers.dart';
 
 part 'theme_mode_provider.g.dart';
-
-// Theme Preference Service Provider
-@riverpod
-ThemePreferenceService themePreferenceService(Ref ref) {
-  final service = ThemePreferenceService();
-  service.init();
-  return service;
-}
 
 // Theme Mode State Provider
 @riverpod
 class ThemeModeNotifier extends _$ThemeModeNotifier {
   @override
-  ThemeMode build() {
+  flutter.ThemeMode build() {
     // Load saved preference or default to system
-    final service = ref.read(themePreferenceServiceProvider);
-    return service.getSavedThemeMode() ?? ThemeMode.system;
+    try {
+      final useCase = ref.read(getThemeSettingUseCaseProvider);
+      final setting = useCase();
+      return _toFlutterThemeMode(setting.themeMode);
+    } catch (e) {
+      // Default to system on error
+      return flutter.ThemeMode.system;
+    }
   }
 
-  // Set theme mode
-  Future<void> setThemeMode(ThemeMode mode) async {
+  /// Set theme mode
+  Future<void> setThemeMode(flutter.ThemeMode mode) async {
     state = mode;
-    final service = ref.read(themePreferenceServiceProvider);
-    await service.saveThemeMode(mode);
+
+    // Save via UseCase
+    final useCase = ref.read(updateThemeSettingUseCaseProvider);
+    final domainMode = _toDomainThemeMode(mode);
+    await useCase(ThemeSettingEntity(themeMode: domainMode));
   }
 
-  // Toggle between light/dark (ignores system)
+  /// Toggle between light/dark (ignores system)
   Future<void> toggleTheme() async {
-    final newMode =
-        state == ThemeMode.light ? ThemeMode.dark : ThemeMode.light;
+    final newMode = state == flutter.ThemeMode.light
+        ? flutter.ThemeMode.dark
+        : flutter.ThemeMode.light;
     await setThemeMode(newMode);
+  }
+
+  /// Convert Domain ThemeMode to Flutter ThemeMode
+  flutter.ThemeMode _toFlutterThemeMode(ThemeMode domainMode) {
+    switch (domainMode) {
+      case ThemeMode.light:
+        return flutter.ThemeMode.light;
+      case ThemeMode.dark:
+        return flutter.ThemeMode.dark;
+      case ThemeMode.system:
+        return flutter.ThemeMode.system;
+    }
+  }
+
+  /// Convert Flutter ThemeMode to Domain ThemeMode
+  ThemeMode _toDomainThemeMode(flutter.ThemeMode flutterMode) {
+    switch (flutterMode) {
+      case flutter.ThemeMode.light:
+        return ThemeMode.light;
+      case flutter.ThemeMode.dark:
+        return ThemeMode.dark;
+      case flutter.ThemeMode.system:
+        return ThemeMode.system;
+    }
   }
 }
