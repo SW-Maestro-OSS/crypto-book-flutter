@@ -41,30 +41,29 @@ class CoinListItem extends StatelessWidget {
     );
   }
 
-  /// 코인 이미지 (이미지 URL이 있으면 표시, 없으면 placeholder)
+  /// 코인 아이콘 URL 생성 (cryptocurrency-icons 레포지토리)
+  String _getCoinIconUrl() {
+    // BTCUSDT -> BTC -> btc
+    final coinSymbol = ticker.symbol.replaceAll('USDT', '').toLowerCase();
+    return 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/32/icon/$coinSymbol.png';
+  }
+
+  /// 코인 이미지 (cryptocurrency-icons 사용, 실패시 placeholder)
   Widget _buildCoinImage() {
     return Builder(
       builder: (context) {
-        if (ticker.imageUrl != null && ticker.imageUrl!.isNotEmpty) {
-          return CircleAvatar(
-            backgroundImage: NetworkImage(ticker.imageUrl!),
-            backgroundColor: context.colorScheme.surfaceContainerHighest,
-            onBackgroundImageError: (_, __) {
-              // 이미지 로드 실패시 placeholder 표시
-            },
-          );
-        }
+        // Entity의 imageUrl이 있으면 우선 사용, 없으면 cryptocurrency-icons 사용
+        final imageUrl = ticker.imageUrl?.isNotEmpty == true
+            ? ticker.imageUrl!
+            : _getCoinIconUrl();
 
-        // Placeholder 이미지
         return CircleAvatar(
-          backgroundColor: context.colorScheme.primaryContainer,
-          child: Text(
-            ticker.symbol.substring(0, 1),
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: context.colorScheme.onPrimaryContainer,
-            ),
-          ),
+          backgroundImage: NetworkImage(imageUrl),
+          backgroundColor: context.colorScheme.surfaceContainerHighest,
+          onBackgroundImageError: (_, __) {
+            // 이미지 로드 실패시 placeholder가 보임
+          },
+          child: null, // 이미지 로드 중이거나 실패하면 backgroundColor만 보임
         );
       },
     );
