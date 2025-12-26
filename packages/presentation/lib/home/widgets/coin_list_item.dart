@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
+import 'package:presentation/theme/extensions/context_extensions.dart';
 
 class CoinListItem extends StatelessWidget {
   final CoinTickerEntity ticker;
@@ -12,13 +13,14 @@ class CoinListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPositive = ticker.priceChangePercent24h >= 0;
-    final changeColor = isPositive ? Colors.green : Colors.red;
+    final changeColor = context.priceChangeColor(ticker.priceChangePercent24h);
 
     return ListTile(
       leading: _buildCoinImage(),
       title: Text(
         ticker.symbol.replaceAll("USDT", ""),
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: context.textTheme.titleMedium
+            ?.copyWith(fontWeight: FontWeight.bold),
       ),
       subtitle: Text('Vol: ${_formatVolume(ticker.volume24h)}'),
       trailing: Column(
@@ -27,46 +29,43 @@ class CoinListItem extends StatelessWidget {
         children: [
           Text(
             '\$${_formatPrice(ticker.currentPrice)}',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: context.cryptoTheme.priceTextStyle,
           ),
           Text(
             '${isPositive ? '+' : ''}${ticker.priceChangePercent24h.toStringAsFixed(2)}%',
-            style: TextStyle(
-              color: changeColor,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
+            style: context.cryptoTheme.percentChangeTextStyle
+                .copyWith(color: changeColor),
           ),
         ],
       ),
     );
   }
 
-  /// 코인 이미지 (이미지 URL이 있으면 표시, 없으면 placeholder)
-  Widget _buildCoinImage() {
-    if (ticker.imageUrl != null && ticker.imageUrl!.isNotEmpty) {
-      return CircleAvatar(
-        backgroundImage: NetworkImage(ticker.imageUrl!),
-        backgroundColor: Colors.grey.shade200,
-        onBackgroundImageError: (_, __) {
-          // 이미지 로드 실패시 placeholder 표시
-        },
-      );
-    }
+  /// 코인 아이콘 URL 생성 (cryptocurrency-icons 레포지토리)
+  String _getCoinIconUrl() {
+    // BTCUSDT -> BTC -> btc
+    final coinSymbol = ticker.symbol.replaceAll('USDT', '').toLowerCase();
+    return 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/32/icon/$coinSymbol.png';
+  }
 
-    // Placeholder 이미지
-    return CircleAvatar(
-      backgroundColor: Colors.orange.shade100,
-      child: Text(
-        ticker.symbol.substring(0, 1),
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.orange,
-        ),
-      ),
+  /// 코인 이미지 (cryptocurrency-icons 사용, 실패시 placeholder)
+  Widget _buildCoinImage() {
+    return Builder(
+      builder: (context) {
+        // Entity의 imageUrl이 있으면 우선 사용, 없으면 cryptocurrency-icons 사용
+        final imageUrl = ticker.imageUrl?.isNotEmpty == true
+            ? ticker.imageUrl!
+            : _getCoinIconUrl();
+
+        return CircleAvatar(
+          backgroundImage: NetworkImage(imageUrl),
+          backgroundColor: context.colorScheme.surfaceContainerHighest,
+          onBackgroundImageError: (_, __) {
+            // 이미지 로드 실패시 placeholder가 보임
+          },
+          child: null, // 이미지 로드 중이거나 실패하면 backgroundColor만 보임
+        );
+      },
     );
   }
 

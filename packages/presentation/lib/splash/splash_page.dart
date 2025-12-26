@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:presentation/splash/splash_viewmodel.dart';
 import 'package:presentation/splash/splash_state.dart';
 import 'package:presentation/splash/splash_intent.dart';
+import 'package:presentation/theme/extensions/context_extensions.dart';
+import 'package:presentation/theme/spacing/app_spacing.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -42,11 +44,13 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           loading: () => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.paid, size: 160, color: Colors.grey),
-              const SizedBox(height: 24),
+              Icon(Icons.paid,
+                  size: 160,
+                  color: context.colorScheme.primary.withOpacity(0.5)),
+              SizedBox(height: AppSpacing.lg),
               Text(
                 'Coin Viewer',
-                style: Theme.of(context).textTheme.headlineLarge,
+                style: context.textTheme.headlineLarge,
               ),
             ],
           ),
@@ -54,10 +58,11 @@ class _SplashPageState extends ConsumerState<SplashPage> {
           error: (message) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.error_outline, size: 80, color: Colors.red),
-              const SizedBox(height: 16),
+              Icon(Icons.error_outline,
+                  size: 80, color: context.colorScheme.error),
+              SizedBox(height: AppSpacing.md),
               Text(message),
-              const SizedBox(height: 16),
+              SizedBox(height: AppSpacing.md),
               ElevatedButton(
                 onPressed: () {
                   ref.read(splashViewModelProvider.notifier).onIntent(

@@ -5,6 +5,8 @@ import 'package:presentation/home/home_viewmodel.dart';
 import 'package:presentation/home/home_state.dart';
 import 'package:presentation/home/home_intent.dart';
 import 'package:presentation/home/widgets/coin_list_item.dart';
+import 'package:presentation/theme/extensions/context_extensions.dart';
+import 'package:presentation/theme/spacing/app_spacing.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -65,12 +67,17 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   // 더보기 인디케이터
                   if (index == displayedTickers.length) {
                     return displayCount < 30
-                        ? const Padding(
-                            padding: EdgeInsets.all(16.0),
+                        ? Padding(
+                            padding: const EdgeInsets.all(16.0),
                             child: Center(
-                              child: Text(
-                                'Scroll down for more...',
-                                style: TextStyle(color: Colors.grey),
+                              child: Builder(
+                                builder: (context) => Text(
+                                  'Scroll down for more...',
+                                  style: TextStyle(
+                                    color: context.colorScheme.onSurface
+                                        .withOpacity(0.6),
+                                  ),
+                                ),
                               ),
                             ),
                           )
@@ -88,14 +95,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
           ],
         );
       },
-      error: (message) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 80, color: Colors.red),
-            const SizedBox(height: 16),
-            Text(message),
-            const SizedBox(height: 16),
+      error: (message) => Builder(
+        builder: (context) => Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline,
+                  size: 80, color: context.colorScheme.error),
+              SizedBox(height: AppSpacing.md),
+              Text(message),
+              SizedBox(height: AppSpacing.md),
             ElevatedButton(
               onPressed: () {
                 ref.read(homeViewModelProvider.notifier).onIntent(
@@ -103,8 +112,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     );
               },
               child: const Text('재시도'),
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -112,11 +122,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
   Widget _buildSortHeader(SortType currentSort, bool isAscending) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      padding: AppSpacing.allMd,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colorScheme.surface,
         border: Border(
-          bottom: BorderSide(color: Colors.grey.shade300),
+          bottom:
+              BorderSide(color: context.colorScheme.outline.withOpacity(0.3)),
         ),
       ),
       child: Row(
@@ -166,12 +177,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ),
             ),
             const SizedBox(width: 4),
-            Icon(
-              isActive
-                  ? (isAscending ? Icons.arrow_upward : Icons.arrow_downward)
-                  : Icons.unfold_more,
-              size: 16,
-              color: isActive ? Colors.blue : Colors.grey,
+            Builder(
+              builder: (context) => Icon(
+                isActive
+                    ? (isAscending ? Icons.arrow_upward : Icons.arrow_downward)
+                    : Icons.unfold_more,
+                size: 16,
+                color: isActive
+                    ? context.colorScheme.primary
+                    : context.colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
           ],
         ),
