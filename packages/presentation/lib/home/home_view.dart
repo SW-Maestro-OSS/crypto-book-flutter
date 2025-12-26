@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import 'package:domain/domain.dart';
 import 'package:presentation/home/home_viewmodel.dart';
 import 'package:presentation/home/home_state.dart';
 import 'package:presentation/home/home_intent.dart';
 import 'package:presentation/home/widgets/coin_list_item.dart';
+import 'package:presentation/main/main_viewmodel.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -79,7 +80,12 @@ class _HomeViewState extends ConsumerState<HomeView> {
 
                   final ticker = displayedTickers[index];
                   return InkWell(
-                    onTap: () => context.push('/coin/${ticker.symbol}'),
+                    onTap: () {
+                      ref.read(routingHelperProvider).pushTo(
+                            PageType.coinDetail,
+                            pathParams: {'symbol': ticker.symbol},
+                          );
+                    },
                     child: CoinListItem(ticker: ticker),
                   );
                 },

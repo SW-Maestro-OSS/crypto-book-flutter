@@ -44,7 +44,7 @@ final class SplashViewModelProvider
   }
 }
 
-String _$splashViewModelHash() => r'64960ccd3489c9a2957385f12a1028a956984abb';
+String _$splashViewModelHash() => r'184671d0ed263ff97f2cddcdc3672597ee8b3b67';
 
 /// Splash 화면의 ViewModel (비즈니스 로직)
 

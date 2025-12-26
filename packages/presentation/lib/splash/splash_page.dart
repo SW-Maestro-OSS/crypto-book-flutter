@@ -29,6 +29,8 @@ class _SplashPageState extends ConsumerState<SplashPage> {
     final state = ref.watch(splashViewModelProvider);
 
     // State에 따라 화면 전환
+    // NOTE: Splash는 앱 최초 진입이라 context.go() 직접 사용
+    // MainViewModel이 아직 초기화되지 않았을 수 있음
     ref.listen(splashViewModelProvider, (previous, next) {
       next.whenOrNull(
         completed: () => context.go('/main'),

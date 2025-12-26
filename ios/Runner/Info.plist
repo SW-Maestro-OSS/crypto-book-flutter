@@ -45,5 +45,25 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Deep Link Support -->
+	<!-- Custom URL Scheme -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.swm.crypto</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>crypto</string>
+			</array>
+		</dict>
+	</array>
+	<!-- Universal Links (https) -->
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>applinks:crypto.example.com</string>
+	</array>
 </dict>
 </plist>
