@@ -315,6 +315,94 @@ final class ExchangeRateRepositoryProvider extends $FunctionalProvider<
 String _$exchangeRateRepositoryHash() =>
     r'9648bce9dda53b6328b07f3d4c41631c9ee8cf8f';
 
+@ProviderFor(settingsLocalDataSource)
+const settingsLocalDataSourceProvider = SettingsLocalDataSourceProvider._();
+
+final class SettingsLocalDataSourceProvider extends $FunctionalProvider<
+    SettingsLocalDataSource,
+    SettingsLocalDataSource,
+    SettingsLocalDataSource> with $Provider<SettingsLocalDataSource> {
+  const SettingsLocalDataSourceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'settingsLocalDataSourceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$settingsLocalDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<SettingsLocalDataSource> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SettingsLocalDataSource create(Ref ref) {
+    return settingsLocalDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SettingsLocalDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SettingsLocalDataSource>(value),
+    );
+  }
+}
+
+String _$settingsLocalDataSourceHash() =>
+    r'0b7b6099e8beeb95738355f18e3cd2eb38036a22';
+
+@ProviderFor(settingsRepository)
+const settingsRepositoryProvider = SettingsRepositoryProvider._();
+
+final class SettingsRepositoryProvider extends $FunctionalProvider<
+    SettingsRepository,
+    SettingsRepository,
+    SettingsRepository> with $Provider<SettingsRepository> {
+  const SettingsRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'settingsRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$settingsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<SettingsRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SettingsRepository create(Ref ref) {
+    return settingsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SettingsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SettingsRepository>(value),
+    );
+  }
+}
+
+String _$settingsRepositoryHash() =>
+    r'8b8a5cd52917d536c77b5c7ee9fbdcc809daa6e1';
+
 @ProviderFor(getCoinListUseCase)
 const getCoinListUseCaseProvider = GetCoinListUseCaseProvider._();
 
@@ -403,3 +491,91 @@ final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
 
 String _$subscribeCoinTickerUseCaseHash() =>
     r'bd17a13d6be889c711077419b63ff2e5911c6981';
+
+@ProviderFor(getThemeSettingUseCase)
+const getThemeSettingUseCaseProvider = GetThemeSettingUseCaseProvider._();
+
+final class GetThemeSettingUseCaseProvider extends $FunctionalProvider<
+    GetThemeSettingUseCase,
+    GetThemeSettingUseCase,
+    GetThemeSettingUseCase> with $Provider<GetThemeSettingUseCase> {
+  const GetThemeSettingUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getThemeSettingUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getThemeSettingUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetThemeSettingUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetThemeSettingUseCase create(Ref ref) {
+    return getThemeSettingUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetThemeSettingUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetThemeSettingUseCase>(value),
+    );
+  }
+}
+
+String _$getThemeSettingUseCaseHash() =>
+    r'62843ae3eff921e652aaf2ceb664fdca35adab2b';
+
+@ProviderFor(updateThemeSettingUseCase)
+const updateThemeSettingUseCaseProvider = UpdateThemeSettingUseCaseProvider._();
+
+final class UpdateThemeSettingUseCaseProvider extends $FunctionalProvider<
+    UpdateThemeSettingUseCase,
+    UpdateThemeSettingUseCase,
+    UpdateThemeSettingUseCase> with $Provider<UpdateThemeSettingUseCase> {
+  const UpdateThemeSettingUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'updateThemeSettingUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$updateThemeSettingUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<UpdateThemeSettingUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  UpdateThemeSettingUseCase create(Ref ref) {
+    return updateThemeSettingUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(UpdateThemeSettingUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<UpdateThemeSettingUseCase>(value),
+    );
+  }
+}
+
+String _$updateThemeSettingUseCaseHash() =>
+    r'79e3d49ece13ab9cbb2b8e980d56d546c4b2218d';
