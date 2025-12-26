@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
+import 'package:presentation/theme/extensions/context_extensions.dart';
 
 class CoinListItem extends StatelessWidget {
   final CoinTickerEntity ticker;
@@ -12,13 +13,14 @@ class CoinListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isPositive = ticker.priceChangePercent24h >= 0;
-    final changeColor = isPositive ? Colors.green : Colors.red;
+    final changeColor = context.priceChangeColor(ticker.priceChangePercent24h);
 
     return ListTile(
       leading: _buildCoinImage(),
       title: Text(
         ticker.symbol.replaceAll("USDT", ""),
-        style: const TextStyle(fontWeight: FontWeight.bold),
+        style: context.textTheme.titleMedium
+            ?.copyWith(fontWeight: FontWeight.bold),
       ),
       subtitle: Text('Vol: ${_formatVolume(ticker.volume24h)}'),
       trailing: Column(
@@ -27,18 +29,12 @@ class CoinListItem extends StatelessWidget {
         children: [
           Text(
             '\$${_formatPrice(ticker.currentPrice)}',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: context.cryptoTheme.priceTextStyle,
           ),
           Text(
             '${isPositive ? '+' : ''}${ticker.priceChangePercent24h.toStringAsFixed(2)}%',
-            style: TextStyle(
-              color: changeColor,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
+            style: context.cryptoTheme.percentChangeTextStyle
+                .copyWith(color: changeColor),
           ),
         ],
       ),
@@ -47,26 +43,30 @@ class CoinListItem extends StatelessWidget {
 
   /// 코인 이미지 (이미지 URL이 있으면 표시, 없으면 placeholder)
   Widget _buildCoinImage() {
-    if (ticker.imageUrl != null && ticker.imageUrl!.isNotEmpty) {
-      return CircleAvatar(
-        backgroundImage: NetworkImage(ticker.imageUrl!),
-        backgroundColor: Colors.grey.shade200,
-        onBackgroundImageError: (_, __) {
-          // 이미지 로드 실패시 placeholder 표시
-        },
-      );
-    }
+    return Builder(
+      builder: (context) {
+        if (ticker.imageUrl != null && ticker.imageUrl!.isNotEmpty) {
+          return CircleAvatar(
+            backgroundImage: NetworkImage(ticker.imageUrl!),
+            backgroundColor: context.colorScheme.surfaceContainerHighest,
+            onBackgroundImageError: (_, __) {
+              // 이미지 로드 실패시 placeholder 표시
+            },
+          );
+        }
 
-    // Placeholder 이미지
-    return CircleAvatar(
-      backgroundColor: Colors.orange.shade100,
-      child: Text(
-        ticker.symbol.substring(0, 1),
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.orange,
-        ),
-      ),
+        // Placeholder 이미지
+        return CircleAvatar(
+          backgroundColor: context.colorScheme.primaryContainer,
+          child: Text(
+            ticker.symbol.substring(0, 1),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: context.colorScheme.onPrimaryContainer,
+            ),
+          ),
+        );
+      },
     );
   }
 

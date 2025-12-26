@@ -6,6 +6,8 @@ import 'package:data/init_mappers.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/routing/app_router.dart';
 import 'package:presentation/providers/usecase_providers.dart';
+import 'package:presentation/theme/app_theme.dart';
+import 'package:presentation/theme/theme_mode_provider.dart';
 import 'providers.dart' as root_providers;
 
 Future<void> main() async {
@@ -41,18 +43,19 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Crypto Tracker',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: themeMode,
       routerConfig: appRouter,
     );
   }
