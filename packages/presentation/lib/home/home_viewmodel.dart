@@ -83,11 +83,17 @@ class HomeViewModel extends _$HomeViewModel {
           );
         },
         onError: (error) {
-          state = HomeState.error('실시간 데이터 수신 실패: $error');
+          final appError = error is AppError
+              ? error
+              : GenericNetworkError(error.toString());
+          state = HomeState.error(appError);
         },
       );
     } catch (e) {
-      state = HomeState.error('데이터 로드 실패: $e');
+      final appError = e is AppError
+          ? e
+          : GenericNetworkError(e.toString());
+      state = HomeState.error(appError);
     }
   }
 
