@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:developer' as dev;
 import 'package:data/dto/ticker_dto.dart';
 import 'package:data/websocket/websocket_client.dart';
+import 'package:domain/domain.dart';
 
 /// Centralized WebSocket data hub with hot stream and Map-based symbol lookup.
 ///
@@ -24,11 +26,20 @@ class WSDataHub {
   /// Hot broadcast stream controller
   late final StreamController<Map<String, TickerDTO>> _controller;
 
+  /// Connection state stream controller
+  late final StreamController<WebSocketConnectionState> _connectionStateController;
+
   /// WebSocket subscription
   StreamSubscription? _wsSubscription;
 
   /// Whether the hub is currently connected
   bool _isConnected = false;
+
+  /// Reconnection attempt counter
+  int _reconnectAttempt = 0;
+
+  /// Reconnection timer
+  Timer? _reconnectTimer;
 
   WSDataHub({required BinanceWebSocketClient client}) : _client = client {
     _controller = StreamController<Map<String, TickerDTO>>.broadcast(
@@ -43,6 +54,8 @@ class WSDataHub {
         // Keep connection alive for quick re-subscription
       },
     );
+    _connectionStateController = StreamController<WebSocketConnectionState>.broadcast();
+    _connectionStateController.add(WebSocketConnectionState.disconnected);
   }
 
   /// Initialize WebSocket connection
@@ -53,10 +66,19 @@ class WSDataHub {
     }
 
     dev.log('[WSDataHub] Connecting to WebSocket...');
+    _connectionStateController.add(WebSocketConnectionState.connecting);
 
     _wsSubscription = _client.subscribeAllTickers().listen(
       (tickersJson) {
         try {
+          // First data received - we're connected!
+          if (!_isConnected) {
+            _isConnected = true;
+            _reconnectAttempt = 0;
+            _connectionStateController.add(WebSocketConnectionState.connected);
+            dev.log('[WSDataHub] Connected successfully');
+          }
+
           // Parse and update symbol map
           for (final json in tickersJson) {
             try {
@@ -79,23 +101,46 @@ class WSDataHub {
       onError: (error) {
         dev.log('[WSDataHub] WebSocket error: $error');
         _isConnected = false;
+        _connectionStateController.add(WebSocketConnectionState.error);
         _controller.addError(error);
 
-        // Auto-reconnect after 3 seconds
-        Future.delayed(const Duration(seconds: 3), () {
-          if (!_isConnected && !_controller.isClosed) {
-            dev.log('[WSDataHub] Attempting reconnection...');
-            connect();
-          }
-        });
+        // Schedule reconnection with exponential backoff
+        _scheduleReconnect();
       },
       onDone: () {
         dev.log('[WSDataHub] WebSocket connection closed');
         _isConnected = false;
+        _connectionStateController.add(WebSocketConnectionState.disconnected);
+
+        // Schedule reconnection with exponential backoff
+        _scheduleReconnect();
       },
     );
+  }
 
-    _isConnected = true;
+  /// Schedule reconnection with exponential backoff
+  void _scheduleReconnect() {
+    // Cancel any pending reconnection timer
+    _reconnectTimer?.cancel();
+
+    if (_controller.isClosed) {
+      dev.log('[WSDataHub] Controller closed, skipping reconnection');
+      return;
+    }
+
+    _connectionStateController.add(WebSocketConnectionState.reconnecting);
+
+    // Exponential backoff: 2^attempt seconds, capped at 30 seconds
+    final delay = Duration(seconds: min(pow(2, _reconnectAttempt).toInt(), 30));
+    dev.log('[WSDataHub] Scheduling reconnection in ${delay.inSeconds}s (attempt ${_reconnectAttempt + 1})');
+
+    _reconnectTimer = Timer(delay, () {
+      if (!_isConnected && !_controller.isClosed) {
+        _reconnectAttempt++;
+        dev.log('[WSDataHub] Attempting reconnection (attempt $_reconnectAttempt)');
+        connect();
+      }
+    });
   }
 
   /// Get live stream for a specific symbol
@@ -169,8 +214,10 @@ class WSDataHub {
   Future<void> disconnect() async {
     dev.log('[WSDataHub] Disconnecting...');
     _isConnected = false;
+    _reconnectTimer?.cancel();
     await _wsSubscription?.cancel();
     await _controller.close();
+    await _connectionStateController.close();
     await _client.disconnect();
     _symbolMap.clear();
   }
@@ -180,4 +227,7 @@ class WSDataHub {
 
   /// Get number of symbols currently cached
   int get symbolCount => _symbolMap.length;
+
+  /// Get connection state stream
+  Stream<WebSocketConnectionState> get connectionState => _connectionStateController.stream;
 }
