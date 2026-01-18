@@ -156,7 +156,7 @@ extension CoinDetailStatePatterns on CoinDetailState {
     TResult Function()? initial,
     TResult Function()? loading,
     TResult Function(CoinTickerEntity ticker)? loaded,
-    TResult Function(String message)? error,
+    TResult Function(AppError error)? error,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -168,7 +168,7 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loaded() when loaded != null:
         return loaded(_that.ticker);
       case _Error() when error != null:
-        return error(_that.message);
+        return error(_that.error);
       case _:
         return orElse();
     }
@@ -192,7 +192,7 @@ extension CoinDetailStatePatterns on CoinDetailState {
     required TResult Function() initial,
     required TResult Function() loading,
     required TResult Function(CoinTickerEntity ticker) loaded,
-    required TResult Function(String message) error,
+    required TResult Function(AppError error) error,
   }) {
     final _that = this;
     switch (_that) {
@@ -203,7 +203,7 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loaded():
         return loaded(_that.ticker);
       case _Error():
-        return error(_that.message);
+        return error(_that.error);
     }
   }
 
@@ -224,7 +224,7 @@ extension CoinDetailStatePatterns on CoinDetailState {
     TResult? Function()? initial,
     TResult? Function()? loading,
     TResult? Function(CoinTickerEntity ticker)? loaded,
-    TResult? Function(String message)? error,
+    TResult? Function(AppError error)? error,
   }) {
     final _that = this;
     switch (_that) {
@@ -235,7 +235,7 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loaded() when loaded != null:
         return loaded(_that.ticker);
       case _Error() when error != null:
-        return error(_that.message);
+        return error(_that.error);
       case _:
         return null;
     }
@@ -347,9 +347,9 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
 /// @nodoc
 
 class _Error implements CoinDetailState {
-  const _Error(this.message);
+  const _Error(this.error);
 
-  final String message;
+  final AppError error;
 
   /// Create a copy of CoinDetailState
   /// with the given fields replaced by the non-null parameter values.
@@ -363,15 +363,15 @@ class _Error implements CoinDetailState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Error &&
-            (identical(other.message, message) || other.message == message));
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, message);
+  int get hashCode => Object.hash(runtimeType, error);
 
   @override
   String toString() {
-    return 'CoinDetailState.error(message: $message)';
+    return 'CoinDetailState.error(error: $error)';
   }
 }
 
@@ -381,7 +381,7 @@ abstract mixin class _$ErrorCopyWith<$Res>
   factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) =
       __$ErrorCopyWithImpl;
   @useResult
-  $Res call({String message});
+  $Res call({AppError error});
 }
 
 /// @nodoc
@@ -395,13 +395,13 @@ class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? message = null,
+    Object? error = null,
   }) {
     return _then(_Error(
-      null == message
-          ? _self.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
+      null == error
+          ? _self.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as AppError,
     ));
   }
 }

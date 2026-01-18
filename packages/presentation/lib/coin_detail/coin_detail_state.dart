@@ -12,5 +12,5 @@ sealed class CoinDetailState with _$CoinDetailState {
     required CoinTickerEntity ticker,
     // TODO: 차트 데이터, 거래 내역 등
   }) = _Loaded;
-  const factory CoinDetailState.error(String message) = _Error;
+  const factory CoinDetailState.error(AppError error) = _Error;
 }

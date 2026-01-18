@@ -161,7 +161,7 @@ extension HomeStatePatterns on HomeState {
             SortType sortType,
             bool isAscending)?
         loaded,
-    TResult Function(String message)? error,
+    TResult Function(AppError error)? error,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -174,7 +174,7 @@ extension HomeStatePatterns on HomeState {
         return loaded(_that.allTickers, _that.displayedTickers,
             _that.displayCount, _that.sortType, _that.isAscending);
       case _Error() when error != null:
-        return error(_that.message);
+        return error(_that.error);
       case _:
         return orElse();
     }
@@ -204,7 +204,7 @@ extension HomeStatePatterns on HomeState {
             SortType sortType,
             bool isAscending)
         loaded,
-    required TResult Function(String message) error,
+    required TResult Function(AppError error) error,
   }) {
     final _that = this;
     switch (_that) {
@@ -216,7 +216,7 @@ extension HomeStatePatterns on HomeState {
         return loaded(_that.allTickers, _that.displayedTickers,
             _that.displayCount, _that.sortType, _that.isAscending);
       case _Error():
-        return error(_that.message);
+        return error(_that.error);
     }
   }
 
@@ -243,7 +243,7 @@ extension HomeStatePatterns on HomeState {
             SortType sortType,
             bool isAscending)?
         loaded,
-    TResult? Function(String message)? error,
+    TResult? Function(AppError error)? error,
   }) {
     final _that = this;
     switch (_that) {
@@ -255,7 +255,7 @@ extension HomeStatePatterns on HomeState {
         return loaded(_that.allTickers, _that.displayedTickers,
             _that.displayCount, _that.sortType, _that.isAscending);
       case _Error() when error != null:
-        return error(_that.message);
+        return error(_that.error);
       case _:
         return null;
     }
@@ -434,9 +434,9 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
 /// @nodoc
 
 class _Error implements HomeState {
-  const _Error(this.message);
+  const _Error(this.error);
 
-  final String message;
+  final AppError error;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
@@ -450,15 +450,15 @@ class _Error implements HomeState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Error &&
-            (identical(other.message, message) || other.message == message));
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, message);
+  int get hashCode => Object.hash(runtimeType, error);
 
   @override
   String toString() {
-    return 'HomeState.error(message: $message)';
+    return 'HomeState.error(error: $error)';
   }
 }
 
@@ -467,7 +467,7 @@ abstract mixin class _$ErrorCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
   factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) =
       __$ErrorCopyWithImpl;
   @useResult
-  $Res call({String message});
+  $Res call({AppError error});
 }
 
 /// @nodoc
@@ -481,13 +481,13 @@ class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? message = null,
+    Object? error = null,
   }) {
     return _then(_Error(
-      null == message
-          ? _self.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
+      null == error
+          ? _self.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as AppError,
     ));
   }
 }

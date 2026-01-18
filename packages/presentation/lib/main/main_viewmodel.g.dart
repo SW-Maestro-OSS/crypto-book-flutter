@@ -56,7 +56,7 @@ final class MainViewModelProvider
   }
 }
 
-String _$mainViewModelHash() => r'66a270d81370d37a04eef2c4a9489c9e6bb7fcbd';
+String _$mainViewModelHash() => r'ac3c4c38fbdd674ae18a7ae9e04bf209558c5e9b';
 
 /// Main screen ViewModel
 ///
