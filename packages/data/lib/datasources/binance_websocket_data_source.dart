@@ -1,5 +1,6 @@
 import 'package:data/dto/ticker_dto.dart';
 import 'package:data/websocket/websocket_client.dart';
+import 'package:domain/domain.dart';
 
 /// 바이낸스 WebSocket DataSource
 class BinanceWebSocketDataSource {
@@ -22,6 +23,12 @@ class BinanceWebSocketDataSource {
           })
           .whereType<TickerDTO>()
           .toList();
+    }).handleError((error) {
+      // WebSocket 에러는 그대로 전달
+      if (error is AppError) {
+        throw error;
+      }
+      throw WebSocketConnectionError(error.toString());
     });
   }
 }

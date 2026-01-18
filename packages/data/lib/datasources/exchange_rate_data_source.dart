@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:data/dto/exchange_rate_dto.dart';
 import 'package:data/constants/exchange_rate_constants.dart';
+import 'package:data/mappers/error_mapper.dart';
+import 'package:domain/domain.dart';
 
 /// 한국수출입은행 환율 API DataSource
 class ExchangeRateDataSource {
@@ -29,7 +31,7 @@ class ExchangeRateDataSource {
     final apiKey = ExchangeRateConstants.apiKey;
 
     if (apiKey == null || apiKey.isEmpty) {
-      throw Exception('EXCHANGE_RATE_API_KEY is not configured in .env file');
+      throw const GenericNetworkError('EXCHANGE_RATE_API_KEY is not configured in .env file');
     }
 
     try {
@@ -43,7 +45,7 @@ class ExchangeRateDataSource {
       );
 
       if (response.data == null) {
-        throw Exception('No data returned from API');
+        throw const GenericNetworkError('No data returned from API');
       }
 
       // API 응답이 List 형태로 옴
@@ -56,9 +58,9 @@ class ExchangeRateDataSource {
           .where((dto) => dto.isSuccess) // 성공한 응답만 필터링
           .toList();
     } on DioException catch (e) {
-      throw Exception('Failed to fetch exchange rates: ${e.message}');
+      throw ErrorMapper.fromDioException(e);
     } catch (e) {
-      throw Exception('Unexpected error: $e');
+      throw GenericNetworkError('Unexpected error: $e');
     }
   }
 

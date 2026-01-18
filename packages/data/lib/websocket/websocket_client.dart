@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:domain/domain.dart';
 
 /// 바이낸스 WebSocket 클라이언트
 class BinanceWebSocketClient {
@@ -30,18 +31,18 @@ class BinanceWebSocketClient {
               _controller?.add(tickers);
             }
           } catch (e) {
-            _controller?.addError('Failed to parse WebSocket data: $e');
+            _controller?.addError(WebSocketParseError('Failed to parse WebSocket data: $e'));
           }
         },
         onError: (error) {
-          _controller?.addError('WebSocket error: $error');
+          _controller?.addError(WebSocketDisconnectedError(error.toString()));
         },
         onDone: () {
           _controller?.close();
         },
       );
     } catch (e) {
-      _controller?.addError('Failed to connect to WebSocket: $e');
+      _controller?.addError(WebSocketConnectionError('Failed to connect to WebSocket: $e'));
     }
 
     return _controller!.stream;
