@@ -16,7 +16,7 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
     final dto = await dataSource.getExchangeRate(currencyCode);
 
     if (dto == null) {
-      throw Exception('Exchange rate not found for $currencyCode');
+      throw SymbolNotFoundError('Exchange rate not found for $currencyCode');
     }
 
     return dto.toEntity();

@@ -32,7 +32,7 @@ class CoinRepositoryImpl implements CoinRepository {
     return wsDataSource.subscribeAllTickers().map((tickers) {
       final ticker = tickers.firstWhere(
         (t) => t.symbol == symbol,
-        orElse: () => throw Exception('Ticker not found: $symbol'),
+        orElse: () => throw SymbolNotFoundError(symbol),
       );
       return ticker.toEntity();
     });
