@@ -6,6 +6,7 @@ import 'package:presentation/home/home_state.dart';
 import 'package:presentation/home/home_intent.dart';
 import 'package:presentation/home/widgets/coin_list_item.dart';
 import 'package:presentation/main/main_viewmodel.dart';
+import 'package:presentation/core/widgets/error_handler.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -94,24 +95,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
           ],
         );
       },
-      error: (message) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 80, color: Colors.red),
-            const SizedBox(height: 16),
-            Text(message),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(homeViewModelProvider.notifier).onIntent(
-                      const HomeIntent.load(),
-                    );
-              },
-              child: const Text('재시도'),
-            ),
-          ],
-        ),
+      error: (appError) => ErrorHandler(
+        error: appError,
+        onRetry: () {
+          ref.read(homeViewModelProvider.notifier).onIntent(
+                const HomeIntent.load(),
+              );
+        },
       ),
     );
   }
