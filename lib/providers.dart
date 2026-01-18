@@ -29,6 +29,19 @@ BinanceWebSocketClient binanceWebSocketClient(Ref ref) {
 }
 
 @riverpod
+WSDataHub wsDataHub(Ref ref) {
+  final client = ref.watch(binanceWebSocketClientProvider);
+  final cache = ref.watch(tickerCacheDataSourceProvider);
+
+  final hub = WSDataHub(client: client);
+  hub.loadInitialData(cache.getAll());
+  hub.connect();
+
+  ref.onDispose(() => hub.disconnect());
+  return hub;
+}
+
+@riverpod
 BinanceWebSocketDataSource binanceWebSocketDataSource(Ref ref) {
   return BinanceWebSocketDataSource(
     client: ref.watch(binanceWebSocketClientProvider),

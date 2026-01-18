@@ -141,6 +141,47 @@ final class BinanceWebSocketClientProvider extends $FunctionalProvider<
 String _$binanceWebSocketClientHash() =>
     r'6b05511fa4d4c296759315f88c32097e10d48834';
 
+@ProviderFor(wsDataHub)
+const wsDataHubProvider = WsDataHubProvider._();
+
+final class WsDataHubProvider
+    extends $FunctionalProvider<WSDataHub, WSDataHub, WSDataHub>
+    with $Provider<WSDataHub> {
+  const WsDataHubProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'wsDataHubProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$wsDataHubHash();
+
+  @$internal
+  @override
+  $ProviderElement<WSDataHub> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  WSDataHub create(Ref ref) {
+    return wsDataHub(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WSDataHub value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WSDataHub>(value),
+    );
+  }
+}
+
+String _$wsDataHubHash() => r'a40f74d7273aeb48c874903d5dd98549fa9df6d6';
+
 @ProviderFor(binanceWebSocketDataSource)
 const binanceWebSocketDataSourceProvider =
     BinanceWebSocketDataSourceProvider._();
