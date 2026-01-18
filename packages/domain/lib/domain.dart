@@ -3,6 +3,12 @@ export 'entities/coin_entity.dart';
 export 'entities/coin_ticker_entity.dart';
 export 'entities/exchange_rate_entity.dart';
 
+// Errors
+export 'errors/app_error.dart';
+export 'errors/coin_error.dart';
+export 'errors/network_error.dart';
+export 'errors/websocket_error.dart';
+
 // Repositories
 export 'repositories/coin_repository.dart';
 export 'repositories/exchange_rate_repository.dart';
