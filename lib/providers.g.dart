@@ -620,6 +620,50 @@ final class GetExchangeRateUseCaseProvider extends $FunctionalProvider<
 String _$getExchangeRateUseCaseHash() =>
     r'6cdce56538faa5691f804a609468201037c9f847';
 
+@ProviderFor(getChartDataUseCase)
+const getChartDataUseCaseProvider = GetChartDataUseCaseProvider._();
+
+final class GetChartDataUseCaseProvider extends $FunctionalProvider<
+    GetChartDataUseCase,
+    GetChartDataUseCase,
+    GetChartDataUseCase> with $Provider<GetChartDataUseCase> {
+  const GetChartDataUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getChartDataUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getChartDataUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetChartDataUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetChartDataUseCase create(Ref ref) {
+    return getChartDataUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetChartDataUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetChartDataUseCase>(value),
+    );
+  }
+}
+
+String _$getChartDataUseCaseHash() =>
+    r'783c21b8198ad4fb886f251bf03cc3ae31436c6a';
+
 @ProviderFor(wsConnectionState)
 const wsConnectionStateProvider = WsConnectionStateProvider._();
 

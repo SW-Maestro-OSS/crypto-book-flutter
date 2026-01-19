@@ -268,3 +268,55 @@ final class GetExchangeRateUseCaseProvider extends $FunctionalProvider<
 
 String _$getExchangeRateUseCaseHash() =>
     r'2276d6d6a3682a1313c6c2bb97f3a9e734272bdd';
+
+/// GetChartDataUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+@ProviderFor(getChartDataUseCase)
+const getChartDataUseCaseProvider = GetChartDataUseCaseProvider._();
+
+/// GetChartDataUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+final class GetChartDataUseCaseProvider extends $FunctionalProvider<
+    GetChartDataUseCase,
+    GetChartDataUseCase,
+    GetChartDataUseCase> with $Provider<GetChartDataUseCase> {
+  /// GetChartDataUseCase Provider
+  /// 실제 구현체는 root app에서 override됨
+  const GetChartDataUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getChartDataUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getChartDataUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetChartDataUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetChartDataUseCase create(Ref ref) {
+    return getChartDataUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetChartDataUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetChartDataUseCase>(value),
+    );
+  }
+}
+
+String _$getChartDataUseCaseHash() =>
+    r'a411e3cba89c40fa1b9aed4686b90bf052d81b31';

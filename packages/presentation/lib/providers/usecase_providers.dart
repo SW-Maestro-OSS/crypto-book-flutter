@@ -47,3 +47,12 @@ GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
     'getExchangeRateUseCaseProvider must be overridden in main app',
   );
 }
+
+/// GetChartDataUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+@riverpod
+GetChartDataUseCase getChartDataUseCase(Ref ref) {
+  throw UnimplementedError(
+    'getChartDataUseCaseProvider must be overridden in main app',
+  );
+}

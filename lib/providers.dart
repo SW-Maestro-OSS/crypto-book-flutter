@@ -111,6 +111,13 @@ GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
   );
 }
 
+@riverpod
+GetChartDataUseCase getChartDataUseCase(Ref ref) {
+  return GetChartDataUseCaseImpl(
+    repository: ref.watch(coinRepositoryProvider),
+  );
+}
+
 // ==================== WebSocket Connection State ====================
 
 @riverpod
