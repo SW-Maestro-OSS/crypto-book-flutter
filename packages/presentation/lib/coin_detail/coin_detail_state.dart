@@ -10,7 +10,9 @@ sealed class CoinDetailState with _$CoinDetailState {
   const factory CoinDetailState.loading() = _Loading;
   const factory CoinDetailState.loaded({
     required CoinTickerEntity ticker,
-    // TODO: 차트 데이터, 거래 내역 등
+    ChartDataEntity? chartData,
+    @Default(ChartTimeframe.h24) ChartTimeframe selectedTimeframe,
+    @Default(false) bool isLoadingChart,
   }) = _Loaded;
   const factory CoinDetailState.error(AppError error) = _Error;
 }

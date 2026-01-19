@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/core/widgets/coin_icon.dart';
 import 'package:presentation/coin_detail/widgets/price_change_indicator.dart';
+import 'package:presentation/core/utils/price_formatter.dart';
+import 'package:presentation/providers/app_settings_provider.dart';
 
 /// Header widget that displays coin icon, name, current price, and change
-class PriceHeader extends StatelessWidget {
+class PriceHeader extends ConsumerWidget {
   final CoinTickerEntity ticker;
 
   const PriceHeader({
@@ -13,14 +16,19 @@ class PriceHeader extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Get global settings
+    final appSettings = ref.watch(appSettingsProvider);
+    final currency = appSettings.currency;
+    final exchangeRate = appSettings.exchangeRate;
+
     return Container(
       padding: const EdgeInsets.all(24),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CoinIcon(
-            symbol: ticker.symbol,
+            symbol: ticker.baseAsset,
             imageUrl: ticker.imageUrl,
             size: 56,
           ),
@@ -30,7 +38,7 @@ class PriceHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _getCoinName(ticker.symbol),
+                  _getCoinName(ticker.baseAsset),
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -47,7 +55,11 @@ class PriceHeader extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  '\$${ticker.currentPrice.toStringAsFixed(2)}',
+                  PriceFormatter.format(
+                    priceInUSD: ticker.currentPrice,
+                    currency: currency,
+                    exchangeRate: exchangeRate,
+                  ),
                   style: const TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
@@ -67,11 +79,8 @@ class PriceHeader extends StatelessWidget {
     );
   }
 
-  /// Extract coin name from symbol (simplified)
-  String _getCoinName(String symbol) {
-    // Remove USDT suffix
-    final base = symbol.replaceAll('USDT', '');
-
+  /// Get coin name from base asset (simplified)
+  String _getCoinName(String baseAsset) {
     // Map common symbols to names
     const nameMap = {
       'BTC': 'Bitcoin',
@@ -84,8 +93,12 @@ class PriceHeader extends StatelessWidget {
       'DOGE': 'Dogecoin',
       'AVAX': 'Avalanche',
       'MATIC': 'Polygon',
+      'LTC': 'Litecoin',
+      'LINK': 'Chainlink',
+      'UNI': 'Uniswap',
+      'ATOM': 'Cosmos',
     };
 
-    return nameMap[base] ?? base;
+    return nameMap[baseAsset] ?? baseAsset;
   }
 }

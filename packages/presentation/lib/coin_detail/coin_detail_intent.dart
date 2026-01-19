@@ -8,4 +8,5 @@ part 'coin_detail_intent.freezed.dart';
 sealed class CoinDetailIntent with _$CoinDetailIntent {
   const factory CoinDetailIntent.load(String symbol) = _Load;
   const factory CoinDetailIntent.tickerUpdated(CoinTickerEntity ticker) = _TickerUpdated;
+  const factory CoinDetailIntent.changeTimeframe(ChartTimeframe timeframe) = _ChangeTimeframe;
 }
