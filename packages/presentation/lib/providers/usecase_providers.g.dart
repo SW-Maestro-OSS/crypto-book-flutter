@@ -112,3 +112,159 @@ final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
 
 String _$subscribeCoinTickerUseCaseHash() =>
     r'3583fe7bc3ca2ab28ad21d4b9e2cfc9a3f53f0b9';
+
+/// GetSettingsUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+@ProviderFor(getSettingsUseCase)
+const getSettingsUseCaseProvider = GetSettingsUseCaseProvider._();
+
+/// GetSettingsUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+final class GetSettingsUseCaseProvider extends $FunctionalProvider<
+    GetSettingsUseCase,
+    GetSettingsUseCase,
+    GetSettingsUseCase> with $Provider<GetSettingsUseCase> {
+  /// GetSettingsUseCase Provider
+  /// 실제 구현체는 root app에서 override됨
+  const GetSettingsUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getSettingsUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getSettingsUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetSettingsUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetSettingsUseCase create(Ref ref) {
+    return getSettingsUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetSettingsUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetSettingsUseCase>(value),
+    );
+  }
+}
+
+String _$getSettingsUseCaseHash() =>
+    r'46bcf6d15133e23a1358f9d150abc1d1c88dc7cf';
+
+/// SaveSettingsUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+@ProviderFor(saveSettingsUseCase)
+const saveSettingsUseCaseProvider = SaveSettingsUseCaseProvider._();
+
+/// SaveSettingsUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+final class SaveSettingsUseCaseProvider extends $FunctionalProvider<
+    SaveSettingsUseCase,
+    SaveSettingsUseCase,
+    SaveSettingsUseCase> with $Provider<SaveSettingsUseCase> {
+  /// SaveSettingsUseCase Provider
+  /// 실제 구현체는 root app에서 override됨
+  const SaveSettingsUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'saveSettingsUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$saveSettingsUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<SaveSettingsUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SaveSettingsUseCase create(Ref ref) {
+    return saveSettingsUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SaveSettingsUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SaveSettingsUseCase>(value),
+    );
+  }
+}
+
+String _$saveSettingsUseCaseHash() =>
+    r'bdb53f1b60c5a9628cee57f9dbc624a36094d995';
+
+/// GetExchangeRateUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+@ProviderFor(getExchangeRateUseCase)
+const getExchangeRateUseCaseProvider = GetExchangeRateUseCaseProvider._();
+
+/// GetExchangeRateUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+final class GetExchangeRateUseCaseProvider extends $FunctionalProvider<
+    GetExchangeRateUseCase,
+    GetExchangeRateUseCase,
+    GetExchangeRateUseCase> with $Provider<GetExchangeRateUseCase> {
+  /// GetExchangeRateUseCase Provider
+  /// 실제 구현체는 root app에서 override됨
+  const GetExchangeRateUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getExchangeRateUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getExchangeRateUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetExchangeRateUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetExchangeRateUseCase create(Ref ref) {
+    return getExchangeRateUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetExchangeRateUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetExchangeRateUseCase>(value),
+    );
+  }
+}
+
+String _$getExchangeRateUseCaseHash() =>
+    r'2276d6d6a3682a1313c6c2bb97f3a9e734272bdd';

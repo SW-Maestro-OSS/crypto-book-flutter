@@ -7,7 +7,6 @@ import 'package:presentation/main/main_state.dart';
 import 'package:presentation/main/main_viewmodel.dart';
 import 'package:presentation/main/main_intent.dart';
 import 'package:presentation/routing/navigation_state.dart';
-import 'package:presentation/core/theme/app_spacing.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});

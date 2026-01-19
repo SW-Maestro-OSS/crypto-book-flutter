@@ -1,12 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/domain.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 import '../../core/widgets/coin_icon.dart';
+import '../../core/utils/price_formatter.dart';
+import '../../providers/app_settings_provider.dart';
 
-class PriceRow extends StatelessWidget {
+class PriceRow extends ConsumerWidget {
   final CoinTickerEntity ticker;
   final VoidCallback? onTap;
 
@@ -17,10 +20,15 @@ class PriceRow extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final changePercent = ticker.priceChangePercent24h;
     final changeColor = AppColors.getPriceChangeColor(changePercent);
     final badgeBackground = AppColors.getBadgeBackgroundColor(changePercent);
+
+    // Get global settings
+    final appSettings = ref.watch(appSettingsProvider);
+    final currency = appSettings.currency;
+    final exchangeRate = appSettings.exchangeRate;
 
     return InkWell(
       onTap: onTap,
@@ -80,7 +88,11 @@ class PriceRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '\$${_formatPrice(ticker.currentPrice)}',
+                    PriceFormatter.format(
+                      priceInUSD: ticker.currentPrice,
+                      currency: currency,
+                      exchangeRate: exchangeRate,
+                    ),
                     style: AppTypography.priceMedium,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -139,20 +151,5 @@ class PriceRow extends StatelessWidget {
     };
 
     return coinNames[baseAsset] ?? baseAsset;
-  }
-
-  /// Format price based on value (dynamic decimal places)
-  String _formatPrice(double price) {
-    if (price >= 100) {
-      return price.toStringAsFixed(2); // $100+: 2 decimal places
-    } else if (price >= 10) {
-      return price.toStringAsFixed(3); // $10-100: 3 decimal places
-    } else if (price >= 1) {
-      return price.toStringAsFixed(4); // $1-10: 4 decimal places
-    } else if (price >= 0.01) {
-      return price.toStringAsFixed(5); // $0.01-1: 5 decimal places
-    } else {
-      return price.toStringAsFixed(6); // <$0.01: 6 decimal places
-    }
   }
 }

@@ -20,3 +20,30 @@ SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
     'subscribeCoinTickerUseCaseProvider must be overridden in main app',
   );
 }
+
+/// GetSettingsUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+@riverpod
+GetSettingsUseCase getSettingsUseCase(Ref ref) {
+  throw UnimplementedError(
+    'getSettingsUseCaseProvider must be overridden in main app',
+  );
+}
+
+/// SaveSettingsUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+@riverpod
+SaveSettingsUseCase saveSettingsUseCase(Ref ref) {
+  throw UnimplementedError(
+    'saveSettingsUseCaseProvider must be overridden in main app',
+  );
+}
+
+/// GetExchangeRateUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+@riverpod
+GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
+  throw UnimplementedError(
+    'getExchangeRateUseCaseProvider must be overridden in main app',
+  );
+}
