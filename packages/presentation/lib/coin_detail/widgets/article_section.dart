@@ -1,45 +1,107 @@
 import 'package:flutter/material.dart';
+import 'package:domain/domain.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
 
-/// Placeholder section for future news/articles
+/// Related articles/news section
 class ArticleSection extends StatelessWidget {
-  const ArticleSection({super.key});
+  final List<NewsArticleEntity> articles;
+
+  const ArticleSection({
+    super.key,
+    required this.articles,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.surfaceElevated,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.article_outlined,
-            size: 48,
-            color: Color(0xFFBDBDBD),
+          // Section title
+          Row(
+            children: [
+              Icon(
+                Icons.article_outlined,
+                size: AppSpacing.iconMd,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                'Related Articles',
+                style: AppTypography.labelLarge,
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Article list
+          ...articles.map((article) => _buildArticleRow(article)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildArticleRow(NewsArticleEntity article) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
           Text(
-            '뉴스 준비중...',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
+            article.title,
+            style: AppTypography.bodyMedium.copyWith(
+              fontWeight: FontWeight.w600,
             ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
-          const SizedBox(height: 8),
-          Text(
-            '곧 관련 뉴스와 기사를 제공할 예정입니다',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[500],
-            ),
-            textAlign: TextAlign.center,
+          const SizedBox(height: AppSpacing.xs),
+          Row(
+            children: [
+              Text(
+                article.source,
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.primary,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                '•',
+                style: AppTypography.bodySmall,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                _getTimeAgo(article.publishedAt),
+                style: AppTypography.bodySmall,
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+
+  String _getTimeAgo(DateTime dateTime) {
+    final now = DateTime.now();
+    final difference = now.difference(dateTime);
+
+    if (difference.inHours < 1) {
+      return '${difference.inMinutes} minutes ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hours ago';
+    } else {
+      return '${difference.inDays} days ago';
+    }
+  }
 }
+

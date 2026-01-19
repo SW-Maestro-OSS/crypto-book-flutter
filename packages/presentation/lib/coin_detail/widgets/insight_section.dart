@@ -1,45 +1,154 @@
 import 'package:flutter/material.dart';
+import 'package:domain/domain.dart';
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_spacing.dart';
+import '../../core/theme/app_typography.dart';
 
-/// Placeholder section for future chart implementation
+/// AI Insight section displaying analysis and buy/sell pressure
 class InsightSection extends StatelessWidget {
-  const InsightSection({super.key});
+  final AiInsightEntity insight;
+
+  const InsightSection({
+    super.key,
+    required this.insight,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5F5F5),
-        borderRadius: BorderRadius.circular(10),
+        color: AppColors.surfaceElevated,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.show_chart,
-            size: 48,
-            color: Color(0xFFBDBDBD),
+          // Section title
+          Row(
+            children: [
+              Icon(
+                Icons.auto_awesome,
+                size: AppSpacing.iconMd,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Text(
+                'AI Insight',
+                style: AppTypography.labelLarge,
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Insight bullet points
+          ...insight.insights.map((text) => Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      '• ',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    Expanded(
+                      child: Text(
+                        text,
+                        style: AppTypography.bodyMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              )),
+
+          const SizedBox(height: AppSpacing.lg),
+
+          // Buy vs Sell Pressure
           Text(
-            '차트 준비중...',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.grey[600],
-              fontWeight: FontWeight.w500,
-            ),
+            'Market Pressure',
+            style: AppTypography.labelMedium,
           ),
-          const SizedBox(height: 8),
-          Text(
-            '곧 가격 차트와 인사이트를 제공할 예정입니다',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[500],
-            ),
-            textAlign: TextAlign.center,
+          const SizedBox(height: AppSpacing.sm),
+
+          // Pressure bars
+          Row(
+            children: [
+              Expanded(
+                flex: (insight.buyPressure * 100).toInt(),
+                child: Container(
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AppColors.priceUp,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(4),
+                      bottomLeft: Radius.circular(4),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: (insight.sellPressure * 100).toInt(),
+                child: Container(
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AppColors.priceDown,
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(4),
+                      bottomRight: Radius.circular(4),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.sm),
+
+          // Pressure labels
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: const BoxDecoration(
+                      color: AppColors.priceUp,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    'Buy ${(insight.buyPressure * 100).toInt()}%',
+                    style: AppTypography.bodySmall,
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Container(
+                    width: 12,
+                    height: 12,
+                    decoration: const BoxDecoration(
+                      color: AppColors.priceDown,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    'Sell ${(insight.sellPressure * 100).toInt()}%',
+                    style: AppTypography.bodySmall,
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 }
+
