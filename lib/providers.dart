@@ -62,6 +62,18 @@ ExchangeRateRepository exchangeRateRepository(Ref ref) {
   );
 }
 
+@riverpod
+SettingsDataSource settingsDataSource(Ref ref) {
+  return SettingsDataSource();
+}
+
+@riverpod
+SettingsRepository settingsRepository(Ref ref) {
+  return SettingsRepositoryImpl(
+    dataSource: ref.watch(settingsDataSourceProvider),
+  );
+}
+
 // ==================== Domain Layer ====================
 
 @riverpod
@@ -75,6 +87,27 @@ GetCoinListUseCase getCoinListUseCase(Ref ref) {
 SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
   return SubscribeCoinTickerUseCaseImpl(
     repository: ref.watch(coinRepositoryProvider),
+  );
+}
+
+@riverpod
+GetSettingsUseCase getSettingsUseCase(Ref ref) {
+  return GetSettingsUseCaseImpl(
+    repository: ref.watch(settingsRepositoryProvider),
+  );
+}
+
+@riverpod
+SaveSettingsUseCase saveSettingsUseCase(Ref ref) {
+  return SaveSettingsUseCaseImpl(
+    repository: ref.watch(settingsRepositoryProvider),
+  );
+}
+
+@riverpod
+GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
+  return GetExchangeRateUseCaseImpl(
+    repository: ref.watch(exchangeRateRepositoryProvider),
   );
 }
 
