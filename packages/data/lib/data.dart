@@ -9,6 +9,7 @@ export 'websocket/websocket_client.dart';
 export 'dto/coin_dto.dart';
 export 'dto/ticker_dto.dart';
 export 'dto/exchange_rate_dto.dart';
+export 'dto/kline_dto.dart';
 
 // DataSources
 export 'datasources/binance_rest_data_source.dart';

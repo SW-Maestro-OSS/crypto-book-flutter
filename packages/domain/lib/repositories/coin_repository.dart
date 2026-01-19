@@ -1,5 +1,6 @@
 import 'package:domain/entities/coin_entity.dart';
 import 'package:domain/entities/coin_ticker_entity.dart';
+import 'package:domain/entities/chart_data_entity.dart';
 
 /// 코인 데이터 Repository 인터페이스
 abstract interface class CoinRepository {
@@ -14,4 +15,7 @@ abstract interface class CoinRepository {
 
   /// 여러 코인 실시간 시세 구독
   Stream<List<CoinTickerEntity>> subscribeToTickers(List<String> symbols);
+
+  /// 차트 데이터 조회 (REST API)
+  Future<ChartDataEntity> getChartData(String symbol, ChartTimeframe timeframe);
 }

@@ -2,6 +2,7 @@ import 'package:domain/domain.dart';
 import 'package:data/datasources/binance_rest_data_source.dart';
 import 'package:data/datasources/ws_data_hub.dart';
 import 'package:data/datasources/ticker_cache_data_source.dart';
+import 'package:data/dto/kline_dto.dart';
 
 class CoinRepositoryImpl implements CoinRepository {
   final BinanceRestDataSource restDataSource;
@@ -56,6 +57,33 @@ class CoinRepositoryImpl implements CoinRepository {
 
       // Emit filtered result
       yield usdtPairs;
+    }
+  }
+
+  @override
+  Future<ChartDataEntity> getChartData(
+    String symbol,
+    ChartTimeframe timeframe,
+  ) async {
+    try {
+      // Fetch klines from Binance API
+      final klines = await restDataSource.fetchKlines(
+        symbol: symbol,
+        interval: timeframe.interval,
+        limit: timeframe.dataPointCount,
+      );
+
+      // Convert to ChartDataPoint list
+      final dataPoints = klines
+          .map((klineData) => KlineDTO.fromList(klineData).toChartDataPoint())
+          .toList();
+
+      return ChartDataEntity(
+        dataPoints: dataPoints,
+        timeframe: timeframe,
+      );
+    } catch (e) {
+      throw GenericNetworkError('Failed to fetch chart data: $e');
     }
   }
 }
