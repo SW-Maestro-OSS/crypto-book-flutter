@@ -35,6 +35,21 @@ Future<void> main() async {
             repository: ref.watch(root_providers.coinRepositoryProvider),
           );
         }),
+        getSettingsUseCaseProvider.overrideWith((ref) {
+          return GetSettingsUseCaseImpl(
+            repository: ref.watch(root_providers.settingsRepositoryProvider),
+          );
+        }),
+        saveSettingsUseCaseProvider.overrideWith((ref) {
+          return SaveSettingsUseCaseImpl(
+            repository: ref.watch(root_providers.settingsRepositoryProvider),
+          );
+        }),
+        getExchangeRateUseCaseProvider.overrideWith((ref) {
+          return GetExchangeRateUseCaseImpl(
+            repository: ref.watch(root_providers.exchangeRateRepositoryProvider),
+          );
+        }),
       ],
       child: const MyApp(),
     ),

@@ -311,6 +311,94 @@ final class ExchangeRateRepositoryProvider extends $FunctionalProvider<
 String _$exchangeRateRepositoryHash() =>
     r'9648bce9dda53b6328b07f3d4c41631c9ee8cf8f';
 
+@ProviderFor(settingsDataSource)
+const settingsDataSourceProvider = SettingsDataSourceProvider._();
+
+final class SettingsDataSourceProvider extends $FunctionalProvider<
+    SettingsDataSource,
+    SettingsDataSource,
+    SettingsDataSource> with $Provider<SettingsDataSource> {
+  const SettingsDataSourceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'settingsDataSourceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$settingsDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<SettingsDataSource> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SettingsDataSource create(Ref ref) {
+    return settingsDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SettingsDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SettingsDataSource>(value),
+    );
+  }
+}
+
+String _$settingsDataSourceHash() =>
+    r'8835d4eec30aad5a1b0937f55a15d816fe5d9837';
+
+@ProviderFor(settingsRepository)
+const settingsRepositoryProvider = SettingsRepositoryProvider._();
+
+final class SettingsRepositoryProvider extends $FunctionalProvider<
+    SettingsRepository,
+    SettingsRepository,
+    SettingsRepository> with $Provider<SettingsRepository> {
+  const SettingsRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'settingsRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$settingsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<SettingsRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SettingsRepository create(Ref ref) {
+    return settingsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SettingsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SettingsRepository>(value),
+    );
+  }
+}
+
+String _$settingsRepositoryHash() =>
+    r'a32800987c5ee747692feb9f86a7e9bfc3b2be2c';
+
 @ProviderFor(getCoinListUseCase)
 const getCoinListUseCaseProvider = GetCoinListUseCaseProvider._();
 
@@ -399,6 +487,138 @@ final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
 
 String _$subscribeCoinTickerUseCaseHash() =>
     r'bd17a13d6be889c711077419b63ff2e5911c6981';
+
+@ProviderFor(getSettingsUseCase)
+const getSettingsUseCaseProvider = GetSettingsUseCaseProvider._();
+
+final class GetSettingsUseCaseProvider extends $FunctionalProvider<
+    GetSettingsUseCase,
+    GetSettingsUseCase,
+    GetSettingsUseCase> with $Provider<GetSettingsUseCase> {
+  const GetSettingsUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getSettingsUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getSettingsUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetSettingsUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetSettingsUseCase create(Ref ref) {
+    return getSettingsUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetSettingsUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetSettingsUseCase>(value),
+    );
+  }
+}
+
+String _$getSettingsUseCaseHash() =>
+    r'e74dcf480c81851b1e645a757e631054535df985';
+
+@ProviderFor(saveSettingsUseCase)
+const saveSettingsUseCaseProvider = SaveSettingsUseCaseProvider._();
+
+final class SaveSettingsUseCaseProvider extends $FunctionalProvider<
+    SaveSettingsUseCase,
+    SaveSettingsUseCase,
+    SaveSettingsUseCase> with $Provider<SaveSettingsUseCase> {
+  const SaveSettingsUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'saveSettingsUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$saveSettingsUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<SaveSettingsUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SaveSettingsUseCase create(Ref ref) {
+    return saveSettingsUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SaveSettingsUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SaveSettingsUseCase>(value),
+    );
+  }
+}
+
+String _$saveSettingsUseCaseHash() =>
+    r'ebcc1b501e087bc31dd9e965ac536ceeb2acca69';
+
+@ProviderFor(getExchangeRateUseCase)
+const getExchangeRateUseCaseProvider = GetExchangeRateUseCaseProvider._();
+
+final class GetExchangeRateUseCaseProvider extends $FunctionalProvider<
+    GetExchangeRateUseCase,
+    GetExchangeRateUseCase,
+    GetExchangeRateUseCase> with $Provider<GetExchangeRateUseCase> {
+  const GetExchangeRateUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getExchangeRateUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getExchangeRateUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetExchangeRateUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetExchangeRateUseCase create(Ref ref) {
+    return getExchangeRateUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetExchangeRateUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetExchangeRateUseCase>(value),
+    );
+  }
+}
+
+String _$getExchangeRateUseCaseHash() =>
+    r'6cdce56538faa5691f804a609468201037c9f847';
 
 @ProviderFor(wsConnectionState)
 const wsConnectionStateProvider = WsConnectionStateProvider._();
