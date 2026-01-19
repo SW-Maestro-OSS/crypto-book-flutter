@@ -55,45 +55,8 @@ class HomeViewModel extends _$HomeViewModel {
 
           print('[ViewModel] Top 30 by quoteVolume: ${top30.length} tickers');
 
-          // 현재 State에서 정렬 설정 가져오기 (유지)
-          final currentDisplayCount = state.maybeWhen(
-            loaded: (_, __, displayCount, ___, ____, _____) => displayCount,
-            orElse: () => 20,
-          );
-          final currentSortType = state.maybeWhen(
-            loaded: (_, __, ___, sortType, ____, _____) => sortType,
-            orElse: () => SortType.none,
-          );
-          final currentIsAscending = state.maybeWhen(
-            loaded: (_, __, ___, ____, isAscending, _____) => isAscending,
-            orElse: () => false,
-          );
-          final currentSearchQuery = state.maybeWhen(
-            loaded: (_, __, ___, ____, _____, searchQuery) => searchQuery,
-            orElse: () => '',
-          );
-
-          // 검색 필터링 적용
-          final filtered = currentSearchQuery.isEmpty
-              ? top30
-              : top30.where((ticker) {
-                  final symbol = ticker.symbol.toLowerCase();
-                  return symbol.contains(currentSearchQuery.toLowerCase());
-                }).toList();
-
-          // 현재 정렬 적용
-          final sortedForDisplay =
-              _sortTickers(filtered, currentSortType, currentIsAscending);
-          final displayed = sortedForDisplay.take(currentDisplayCount).toList();
-
-          state = HomeState.loaded(
-            allTickers: top30,
-            displayedTickers: displayed,
-            displayCount: currentDisplayCount,
-            sortType: currentSortType,
-            isAscending: currentIsAscending,
-            searchQuery: currentSearchQuery,
-          );
+          // ✅ MVI 패턴: Intent를 통해 상태 변경
+          onIntent(HomeIntent.tickerUpdated(top30));
         },
         onError: (error) {
           final appError = error is AppError
@@ -206,29 +169,43 @@ class HomeViewModel extends _$HomeViewModel {
   }
 
   void _handleTickerUpdated(List<CoinTickerEntity> tickers) {
-    state.whenOrNull(
-      loaded: (_, __, displayCount, sortType, isAscending, searchQuery) {
-        // Apply search filter
-        final filtered = searchQuery.isEmpty
-            ? tickers
-            : tickers.where((ticker) {
-                final symbol = ticker.symbol.toLowerCase();
-                return symbol.contains(searchQuery.toLowerCase());
-              }).toList();
+    // Get current settings or use defaults
+    final currentDisplayCount = state.maybeWhen(
+      loaded: (_, __, displayCount, ___, ____, _____) => displayCount,
+      orElse: () => 20,
+    );
+    final currentSortType = state.maybeWhen(
+      loaded: (_, __, ___, sortType, ____, _____) => sortType,
+      orElse: () => SortType.none,
+    );
+    final currentIsAscending = state.maybeWhen(
+      loaded: (_, __, ___, ____, isAscending, _____) => isAscending,
+      orElse: () => false,
+    );
+    final currentSearchQuery = state.maybeWhen(
+      loaded: (_, __, ___, ____, _____, searchQuery) => searchQuery,
+      orElse: () => '',
+    );
 
-        // Apply sorting
-        final sorted = _sortTickers(filtered, sortType, isAscending);
-        final displayed = sorted.take(displayCount).toList();
+    // Apply search filter
+    final filtered = currentSearchQuery.isEmpty
+        ? tickers
+        : tickers.where((ticker) {
+            final symbol = ticker.symbol.toLowerCase();
+            return symbol.contains(currentSearchQuery.toLowerCase());
+          }).toList();
 
-        state = HomeState.loaded(
-          allTickers: tickers,
-          displayedTickers: displayed,
-          displayCount: displayCount,
-          sortType: sortType,
-          isAscending: isAscending,
-          searchQuery: searchQuery,
-        );
-      },
+    // Apply sorting
+    final sorted = _sortTickers(filtered, currentSortType, currentIsAscending);
+    final displayed = sorted.take(currentDisplayCount).toList();
+
+    state = HomeState.loaded(
+      allTickers: tickers,
+      displayedTickers: displayed,
+      displayCount: currentDisplayCount,
+      sortType: currentSortType,
+      isAscending: currentIsAscending,
+      searchQuery: currentSearchQuery,
     );
   }
 

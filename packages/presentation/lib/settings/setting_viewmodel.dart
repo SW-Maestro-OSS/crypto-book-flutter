@@ -81,15 +81,17 @@ class SettingViewModel extends _$SettingViewModel {
             exchangeRate: exchangeRate,
           );
 
-      state.whenOrNull(
-        loaded: (_, language, __, ___) {
-          state = SettingState.loaded(
-            currency: currency,
-            language: language,
-            exchangeRate: exchangeRate,
-            lastUpdated: DateTime.now(),
-          );
-        },
+      // Get current language from state or use default
+      final currentLanguage = state.maybeWhen(
+        loaded: (_, language, __, ___) => language,
+        orElse: () => 'en',
+      );
+
+      state = SettingState.loaded(
+        currency: currency,
+        language: currentLanguage,
+        exchangeRate: exchangeRate,
+        lastUpdated: DateTime.now(),
       );
     } catch (e) {
       final appError = e is AppError ? e : GenericNetworkError(e.toString());
@@ -106,15 +108,25 @@ class SettingViewModel extends _$SettingViewModel {
       // Update global app settings
       ref.read(appSettingsProvider.notifier).updateLanguage(language);
 
-      state.whenOrNull(
-        loaded: (currency, _, exchangeRate, lastUpdated) {
-          state = SettingState.loaded(
-            currency: currency,
-            language: language,
-            exchangeRate: exchangeRate,
-            lastUpdated: lastUpdated,
-          );
-        },
+      // Get current values from state or use defaults
+      final currentCurrency = state.maybeWhen(
+        loaded: (currency, _, __, ___) => currency,
+        orElse: () => 'USD',
+      );
+      final currentExchangeRate = state.maybeWhen(
+        loaded: (_, __, exchangeRate, ___) => exchangeRate,
+        orElse: () => null,
+      );
+      final currentLastUpdated = state.maybeWhen(
+        loaded: (_, __, ___, lastUpdated) => lastUpdated,
+        orElse: () => null,
+      );
+
+      state = SettingState.loaded(
+        currency: currentCurrency,
+        language: language,
+        exchangeRate: currentExchangeRate,
+        lastUpdated: currentLastUpdated,
       );
     } catch (e) {
       final appError = e is AppError ? e : GenericNetworkError(e.toString());
@@ -123,28 +135,34 @@ class SettingViewModel extends _$SettingViewModel {
   }
 
   Future<void> _handleRefreshExchangeRate() async {
-    state.whenOrNull(
-      loaded: (currency, language, _, __) async {
-        if (currency != 'KRW') return;
-
-        try {
-          final getExchangeRateUseCase = ref.read(getExchangeRateUseCaseProvider);
-          final exchangeRate = await getExchangeRateUseCase.execute('USD', 'KRW');
-
-          // Update global app settings
-          ref.read(appSettingsProvider.notifier).updateExchangeRate(exchangeRate);
-
-          state = SettingState.loaded(
-            currency: currency,
-            language: language,
-            exchangeRate: exchangeRate,
-            lastUpdated: DateTime.now(),
-          );
-        } catch (e) {
-          final appError = e is AppError ? e : GenericNetworkError(e.toString());
-          state = SettingState.error(appError);
-        }
-      },
+    // Get current values from state
+    final currentCurrency = state.maybeWhen(
+      loaded: (currency, _, __, ___) => currency,
+      orElse: () => 'USD',
     );
+    final currentLanguage = state.maybeWhen(
+      loaded: (_, language, __, ___) => language,
+      orElse: () => 'en',
+    );
+
+    if (currentCurrency != 'KRW') return;
+
+    try {
+      final getExchangeRateUseCase = ref.read(getExchangeRateUseCaseProvider);
+      final exchangeRate = await getExchangeRateUseCase.execute('USD', 'KRW');
+
+      // Update global app settings
+      ref.read(appSettingsProvider.notifier).updateExchangeRate(exchangeRate);
+
+      state = SettingState.loaded(
+        currency: currentCurrency,
+        language: currentLanguage,
+        exchangeRate: exchangeRate,
+        lastUpdated: DateTime.now(),
+      );
+    } catch (e) {
+      final appError = e is AppError ? e : GenericNetworkError(e.toString());
+      state = SettingState.error(appError);
+    }
   }
 }
