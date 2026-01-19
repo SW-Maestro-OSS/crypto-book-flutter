@@ -153,7 +153,7 @@ final class WsDataHubProvider
           argument: null,
           retry: null,
           name: r'wsDataHubProvider',
-          isAutoDispose: true,
+          isAutoDispose: false,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
@@ -180,52 +180,7 @@ final class WsDataHubProvider
   }
 }
 
-String _$wsDataHubHash() => r'a40f74d7273aeb48c874903d5dd98549fa9df6d6';
-
-@ProviderFor(binanceWebSocketDataSource)
-const binanceWebSocketDataSourceProvider =
-    BinanceWebSocketDataSourceProvider._();
-
-final class BinanceWebSocketDataSourceProvider extends $FunctionalProvider<
-    BinanceWebSocketDataSource,
-    BinanceWebSocketDataSource,
-    BinanceWebSocketDataSource> with $Provider<BinanceWebSocketDataSource> {
-  const BinanceWebSocketDataSourceProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'binanceWebSocketDataSourceProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
-
-  @override
-  String debugGetCreateSourceHash() => _$binanceWebSocketDataSourceHash();
-
-  @$internal
-  @override
-  $ProviderElement<BinanceWebSocketDataSource> $createElement(
-          $ProviderPointer pointer) =>
-      $ProviderElement(pointer);
-
-  @override
-  BinanceWebSocketDataSource create(Ref ref) {
-    return binanceWebSocketDataSource(ref);
-  }
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(BinanceWebSocketDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<BinanceWebSocketDataSource>(value),
-    );
-  }
-}
-
-String _$binanceWebSocketDataSourceHash() =>
-    r'3281aeafba062cb1ca6a04320bc025b2d4f44f48';
+String _$wsDataHubHash() => r'3c3850b6a998d306c661cd31e2e1b01bdc09796a';
 
 @ProviderFor(coinRepository)
 const coinRepositoryProvider = CoinRepositoryProvider._();
@@ -266,7 +221,7 @@ final class CoinRepositoryProvider
   }
 }
 
-String _$coinRepositoryHash() => r'c3f9e97dd7cbdfed41745f332df9d13a2394f0ea';
+String _$coinRepositoryHash() => r'8ea261e3b633bf56729bee551dbb6576e18252e2';
 
 @ProviderFor(exchangeRateDataSource)
 const exchangeRateDataSourceProvider = ExchangeRateDataSourceProvider._();
@@ -444,3 +399,41 @@ final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
 
 String _$subscribeCoinTickerUseCaseHash() =>
     r'bd17a13d6be889c711077419b63ff2e5911c6981';
+
+@ProviderFor(wsConnectionState)
+const wsConnectionStateProvider = WsConnectionStateProvider._();
+
+final class WsConnectionStateProvider extends $FunctionalProvider<
+        AsyncValue<WebSocketConnectionState>,
+        WebSocketConnectionState,
+        Stream<WebSocketConnectionState>>
+    with
+        $FutureModifier<WebSocketConnectionState>,
+        $StreamProvider<WebSocketConnectionState> {
+  const WsConnectionStateProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'wsConnectionStateProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$wsConnectionStateHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<WebSocketConnectionState> $createElement(
+          $ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<WebSocketConnectionState> create(Ref ref) {
+    return wsConnectionState(ref);
+  }
+}
+
+String _$wsConnectionStateHash() => r'a1adf9ed11bd4b545ed966988b9f8be5e9834efe';

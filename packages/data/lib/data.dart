@@ -12,7 +12,6 @@ export 'dto/exchange_rate_dto.dart';
 
 // DataSources
 export 'datasources/binance_rest_data_source.dart';
-export 'datasources/binance_websocket_data_source.dart';
 export 'datasources/exchange_rate_data_source.dart';
 export 'datasources/ticker_cache_data_source.dart';
 export 'datasources/ws_data_hub.dart';

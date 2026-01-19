@@ -7,6 +7,7 @@ import 'package:presentation/main/main_state.dart';
 import 'package:presentation/main/main_viewmodel.dart';
 import 'package:presentation/main/main_intent.dart';
 import 'package:presentation/routing/navigation_state.dart';
+import 'package:presentation/core/theme/app_spacing.dart';
 
 class MainPage extends ConsumerStatefulWidget {
   const MainPage({super.key});
@@ -29,6 +30,15 @@ class _MainPageState extends ConsumerState<MainPage> {
     );
 
     return Scaffold(
+      // appBar: state.currentTabIndex == 0
+      //     ? AppBar(
+      //         title: const Text('Market'),
+      //         // Connection indicator will be added in Phase 3 completion
+      //         actions: const [
+      //           SizedBox(width: AppSpacing.lg),
+      //         ],
+      //       )
+      //     : null,
       body: SafeArea(
         child: IndexedStack(
           index: state.currentTabIndex,
@@ -127,4 +137,3 @@ class _MainPageState extends ConsumerState<MainPage> {
     );
   }
 }
-

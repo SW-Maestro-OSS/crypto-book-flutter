@@ -28,7 +28,7 @@ BinanceWebSocketClient binanceWebSocketClient(Ref ref) {
   );
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 WSDataHub wsDataHub(Ref ref) {
   final client = ref.watch(binanceWebSocketClientProvider);
   final cache = ref.watch(tickerCacheDataSourceProvider);
@@ -42,17 +42,10 @@ WSDataHub wsDataHub(Ref ref) {
 }
 
 @riverpod
-BinanceWebSocketDataSource binanceWebSocketDataSource(Ref ref) {
-  return BinanceWebSocketDataSource(
-    client: ref.watch(binanceWebSocketClientProvider),
-  );
-}
-
-@riverpod
 CoinRepository coinRepository(Ref ref) {
   return CoinRepositoryImpl(
     restDataSource: ref.watch(binanceRestDataSourceProvider),
-    wsDataSource: ref.watch(binanceWebSocketDataSourceProvider),
+    wsDataHub: ref.watch(wsDataHubProvider),
     tickerCache: ref.watch(tickerCacheDataSourceProvider),
   );
 }
@@ -83,4 +76,14 @@ SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
   return SubscribeCoinTickerUseCaseImpl(
     repository: ref.watch(coinRepositoryProvider),
   );
+}
+
+// ==================== WebSocket Connection State ====================
+
+@riverpod
+Stream<WebSocketConnectionState> wsConnectionState(Ref ref) async* {
+  final wsDataHub = ref.watch(wsDataHubProvider);
+  await for (final state in wsDataHub.connectionState) {
+    yield state;
+  }
 }

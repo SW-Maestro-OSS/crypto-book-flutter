@@ -159,7 +159,8 @@ extension HomeStatePatterns on HomeState {
             List<CoinTickerEntity> displayedTickers,
             int displayCount,
             SortType sortType,
-            bool isAscending)?
+            bool isAscending,
+            String searchQuery)?
         loaded,
     TResult Function(AppError error)? error,
     required TResult orElse(),
@@ -171,8 +172,13 @@ extension HomeStatePatterns on HomeState {
       case _Loading() when loading != null:
         return loading();
       case _Loaded() when loaded != null:
-        return loaded(_that.allTickers, _that.displayedTickers,
-            _that.displayCount, _that.sortType, _that.isAscending);
+        return loaded(
+            _that.allTickers,
+            _that.displayedTickers,
+            _that.displayCount,
+            _that.sortType,
+            _that.isAscending,
+            _that.searchQuery);
       case _Error() when error != null:
         return error(_that.error);
       case _:
@@ -202,7 +208,8 @@ extension HomeStatePatterns on HomeState {
             List<CoinTickerEntity> displayedTickers,
             int displayCount,
             SortType sortType,
-            bool isAscending)
+            bool isAscending,
+            String searchQuery)
         loaded,
     required TResult Function(AppError error) error,
   }) {
@@ -213,8 +220,13 @@ extension HomeStatePatterns on HomeState {
       case _Loading():
         return loading();
       case _Loaded():
-        return loaded(_that.allTickers, _that.displayedTickers,
-            _that.displayCount, _that.sortType, _that.isAscending);
+        return loaded(
+            _that.allTickers,
+            _that.displayedTickers,
+            _that.displayCount,
+            _that.sortType,
+            _that.isAscending,
+            _that.searchQuery);
       case _Error():
         return error(_that.error);
     }
@@ -241,7 +253,8 @@ extension HomeStatePatterns on HomeState {
             List<CoinTickerEntity> displayedTickers,
             int displayCount,
             SortType sortType,
-            bool isAscending)?
+            bool isAscending,
+            String searchQuery)?
         loaded,
     TResult? Function(AppError error)? error,
   }) {
@@ -252,8 +265,13 @@ extension HomeStatePatterns on HomeState {
       case _Loading() when loading != null:
         return loading();
       case _Loaded() when loaded != null:
-        return loaded(_that.allTickers, _that.displayedTickers,
-            _that.displayCount, _that.sortType, _that.isAscending);
+        return loaded(
+            _that.allTickers,
+            _that.displayedTickers,
+            _that.displayCount,
+            _that.sortType,
+            _that.isAscending,
+            _that.searchQuery);
       case _Error() when error != null:
         return error(_that.error);
       case _:
@@ -310,7 +328,8 @@ class _Loaded implements HomeState {
       required final List<CoinTickerEntity> displayedTickers,
       this.displayCount = 10,
       this.sortType = SortType.none,
-      this.isAscending = false})
+      this.isAscending = false,
+      this.searchQuery = ''})
       : _allTickers = allTickers,
         _displayedTickers = displayedTickers;
 
@@ -335,6 +354,8 @@ class _Loaded implements HomeState {
   final SortType sortType;
   @JsonKey()
   final bool isAscending;
+  @JsonKey()
+  final String searchQuery;
 
   /// Create a copy of HomeState
   /// with the given fields replaced by the non-null parameter values.
@@ -357,7 +378,9 @@ class _Loaded implements HomeState {
             (identical(other.sortType, sortType) ||
                 other.sortType == sortType) &&
             (identical(other.isAscending, isAscending) ||
-                other.isAscending == isAscending));
+                other.isAscending == isAscending) &&
+            (identical(other.searchQuery, searchQuery) ||
+                other.searchQuery == searchQuery));
   }
 
   @override
@@ -367,11 +390,12 @@ class _Loaded implements HomeState {
       const DeepCollectionEquality().hash(_displayedTickers),
       displayCount,
       sortType,
-      isAscending);
+      isAscending,
+      searchQuery);
 
   @override
   String toString() {
-    return 'HomeState.loaded(allTickers: $allTickers, displayedTickers: $displayedTickers, displayCount: $displayCount, sortType: $sortType, isAscending: $isAscending)';
+    return 'HomeState.loaded(allTickers: $allTickers, displayedTickers: $displayedTickers, displayCount: $displayCount, sortType: $sortType, isAscending: $isAscending, searchQuery: $searchQuery)';
   }
 }
 
@@ -386,7 +410,8 @@ abstract mixin class _$LoadedCopyWith<$Res>
       List<CoinTickerEntity> displayedTickers,
       int displayCount,
       SortType sortType,
-      bool isAscending});
+      bool isAscending,
+      String searchQuery});
 }
 
 /// @nodoc
@@ -405,6 +430,7 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
     Object? displayCount = null,
     Object? sortType = null,
     Object? isAscending = null,
+    Object? searchQuery = null,
   }) {
     return _then(_Loaded(
       allTickers: null == allTickers
@@ -427,6 +453,10 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
           ? _self.isAscending
           : isAscending // ignore: cast_nullable_to_non_nullable
               as bool,
+      searchQuery: null == searchQuery
+          ? _self.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }

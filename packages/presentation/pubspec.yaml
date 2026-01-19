@@ -24,6 +24,11 @@ dependencies:
   # 라우팅
   go_router: ^14.0.0
 
+  auto_size_text: ^3.0.0
+
+  # Cached network image
+  cached_network_image: ^3.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

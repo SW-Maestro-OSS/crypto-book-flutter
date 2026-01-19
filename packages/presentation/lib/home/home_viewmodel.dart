@@ -57,21 +57,33 @@ class HomeViewModel extends _$HomeViewModel {
 
           // 현재 State에서 정렬 설정 가져오기 (유지)
           final currentDisplayCount = state.maybeWhen(
-            loaded: (_, __, displayCount, ___, ____) => displayCount,
+            loaded: (_, __, displayCount, ___, ____, _____) => displayCount,
             orElse: () => 20,
           );
           final currentSortType = state.maybeWhen(
-            loaded: (_, __, ___, sortType, ____) => sortType,
+            loaded: (_, __, ___, sortType, ____, _____) => sortType,
             orElse: () => SortType.none,
           );
           final currentIsAscending = state.maybeWhen(
-            loaded: (_, __, ___, ____, isAscending) => isAscending,
+            loaded: (_, __, ___, ____, isAscending, _____) => isAscending,
             orElse: () => false,
           );
+          final currentSearchQuery = state.maybeWhen(
+            loaded: (_, __, ___, ____, _____, searchQuery) => searchQuery,
+            orElse: () => '',
+          );
+
+          // 검색 필터링 적용
+          final filtered = currentSearchQuery.isEmpty
+              ? top30
+              : top30.where((ticker) {
+                  final symbol = ticker.symbol.toLowerCase();
+                  return symbol.contains(currentSearchQuery.toLowerCase());
+                }).toList();
 
           // 현재 정렬 적용
           final sortedForDisplay =
-              _sortTickers(top30, currentSortType, currentIsAscending);
+              _sortTickers(filtered, currentSortType, currentIsAscending);
           final displayed = sortedForDisplay.take(currentDisplayCount).toList();
 
           state = HomeState.loaded(
@@ -80,6 +92,7 @@ class HomeViewModel extends _$HomeViewModel {
             displayCount: currentDisplayCount,
             sortType: currentSortType,
             isAscending: currentIsAscending,
+            searchQuery: currentSearchQuery,
           );
         },
         onError: (error) {
@@ -105,14 +118,29 @@ class HomeViewModel extends _$HomeViewModel {
 
   void _handleSort(SortType sortType) {
     state.whenOrNull(
-      loaded: (allTickers, displayedTickers, displayCount, _, isAscending) {
-        final sorted = _sortTickers(displayedTickers, sortType, isAscending);
+      loaded: (allTickers, _, displayCount, currentSortType, isAscending, searchQuery) {
+        // Toggle sort order if clicking same column
+        final newIsAscending = sortType == currentSortType ? !isAscending : false;
+
+        // Apply search filter
+        final filtered = searchQuery.isEmpty
+            ? allTickers
+            : allTickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                return symbol.contains(searchQuery.toLowerCase());
+              }).toList();
+
+        // Apply sorting
+        final sorted = _sortTickers(filtered, sortType, newIsAscending);
+        final displayed = sorted.take(displayCount).toList();
+
         state = HomeState.loaded(
           allTickers: allTickers,
-          displayedTickers: sorted,
+          displayedTickers: displayed,
           displayCount: displayCount,
           sortType: sortType,
-          isAscending: isAscending,
+          isAscending: newIsAscending,
+          searchQuery: searchQuery,
         );
       },
     );
@@ -120,34 +148,85 @@ class HomeViewModel extends _$HomeViewModel {
 
   void _handleToggleSortOrder() {
     state.whenOrNull(
-      loaded:
-          (allTickers, displayedTickers, displayCount, sortType, isAscending) {
+      loaded: (allTickers, _, displayCount, sortType, isAscending, searchQuery) {
         final newOrder = !isAscending;
-        final sorted = _sortTickers(displayedTickers, sortType, newOrder);
+
+        // Apply search filter
+        final filtered = searchQuery.isEmpty
+            ? allTickers
+            : allTickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                return symbol.contains(searchQuery.toLowerCase());
+              }).toList();
+
+        final sorted = _sortTickers(filtered, sortType, newOrder);
+        final displayed = sorted.take(displayCount).toList();
+
         state = HomeState.loaded(
           allTickers: allTickers,
-          displayedTickers: sorted,
+          displayedTickers: displayed,
           displayCount: displayCount,
           sortType: sortType,
           isAscending: newOrder,
+          searchQuery: searchQuery,
         );
       },
     );
   }
 
   void _handleSearch(String query) {
-    // TODO: 검색 구현
+    state.whenOrNull(
+      loaded: (allTickers, _, displayCount, sortType, isAscending, __) {
+        // 1. Filter tickers based on search query
+        final filtered = query.isEmpty
+            ? allTickers
+            : allTickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                final searchLower = query.toLowerCase();
+                return symbol.contains(searchLower);
+              }).toList();
+
+        // 2. Apply sorting to filtered results
+        final sorted = _sortTickers(filtered, sortType, isAscending);
+
+        // 3. Apply displayCount limit
+        final displayed = sorted.take(displayCount).toList();
+
+        // 4. Update state with search query
+        state = HomeState.loaded(
+          allTickers: allTickers,
+          displayedTickers: displayed,
+          displayCount: displayCount,
+          sortType: sortType,
+          isAscending: isAscending,
+          searchQuery: query,
+        );
+      },
+    );
   }
 
   void _handleTickerUpdated(List<CoinTickerEntity> tickers) {
     state.whenOrNull(
-      loaded: (_, displayedTickers, displayCount, sortType, isAscending) {
+      loaded: (_, __, displayCount, sortType, isAscending, searchQuery) {
+        // Apply search filter
+        final filtered = searchQuery.isEmpty
+            ? tickers
+            : tickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                return symbol.contains(searchQuery.toLowerCase());
+              }).toList();
+
+        // Apply sorting
+        final sorted = _sortTickers(filtered, sortType, isAscending);
+        final displayed = sorted.take(displayCount).toList();
+
         state = HomeState.loaded(
           allTickers: tickers,
-          displayedTickers: displayedTickers,
+          displayedTickers: displayed,
           displayCount: displayCount,
           sortType: sortType,
           isAscending: isAscending,
+          searchQuery: searchQuery,
         );
       },
     );
@@ -155,14 +234,21 @@ class HomeViewModel extends _$HomeViewModel {
 
   void _handleLoadMore() {
     state.whenOrNull(
-      loaded:
-          (allTickers, displayedTickers, displayCount, sortType, isAscending) {
+      loaded: (allTickers, _, displayCount, sortType, isAscending, searchQuery) {
         if (displayCount >= 30) return;
 
         final newCount = (displayCount + 10).clamp(0, 30);
 
+        // Apply search filter
+        final filtered = searchQuery.isEmpty
+            ? allTickers
+            : allTickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                return symbol.contains(searchQuery.toLowerCase());
+              }).toList();
+
         // 정렬을 적용한 후 표시
-        final sorted = _sortTickers(allTickers, sortType, isAscending);
+        final sorted = _sortTickers(filtered, sortType, isAscending);
         final newDisplayed = sorted.take(newCount).toList();
 
         state = HomeState.loaded(
@@ -171,6 +257,7 @@ class HomeViewModel extends _$HomeViewModel {
           displayCount: newCount,
           sortType: sortType,
           isAscending: isAscending,
+          searchQuery: searchQuery,
         );
       },
     );
