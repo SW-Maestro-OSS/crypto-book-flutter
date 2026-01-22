@@ -53,10 +53,20 @@ class CoinRepositoryImpl implements CoinRepository {
           .where((e) => e.quoteAsset == 'USDT')
           .toList();
 
-      print('[Repository] Filtered ${usdtPairs.length} USDT pairs');
+      // Deduplicate by baseAsset - keep highest volume pair
+      final Map<String, CoinTickerEntity> baseAssetMap = {};
+      for (final ticker in usdtPairs) {
+        final existing = baseAssetMap[ticker.baseAsset];
+        if (existing == null || ticker.quoteVolume24h > existing.quoteVolume24h) {
+          baseAssetMap[ticker.baseAsset] = ticker;
+        }
+      }
+      final deduplicated = baseAssetMap.values.toList();
+
+      print('[Repository] Filtered ${usdtPairs.length} USDT pairs → ${deduplicated.length} unique coins');
 
       // Emit filtered result
-      yield usdtPairs;
+      yield deduplicated;
     }
   }
 
