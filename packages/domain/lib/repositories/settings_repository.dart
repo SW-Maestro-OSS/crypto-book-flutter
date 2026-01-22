@@ -1,15 +1,16 @@
-import 'package:domain/entities/theme_setting_entity.dart';
-
-/// Settings repository interface
+/// Settings Repository Interface
 ///
-/// Manages user settings (theme, language, currency, etc.)
+/// Manages user preferences such as currency and language settings.
 abstract interface class SettingsRepository {
-  /// Get current theme setting (synchronous - reads from cache)
-  ThemeSettingEntity getThemeSetting();
+  /// Get the selected currency (e.g., 'USD', 'KRW')
+  Future<String> getCurrency();
 
-  /// Update theme setting
-  Future<void> updateThemeSetting(ThemeSettingEntity setting);
+  /// Set the selected currency
+  Future<void> setCurrency(String currency);
 
-  /// Clear theme setting (reset to default)
-  Future<void> clearThemeSetting();
+  /// Get the selected language (e.g., 'en', 'ko')
+  Future<String> getLanguage();
+
+  /// Set the selected language
+  Future<void> setLanguage(String language);
 }

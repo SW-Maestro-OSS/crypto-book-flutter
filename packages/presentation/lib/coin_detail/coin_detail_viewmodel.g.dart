@@ -62,7 +62,7 @@ final class CoinDetailViewModelProvider
 }
 
 String _$coinDetailViewModelHash() =>
-    r'de1c5876284f87c9aa3f3761bdf5d22de81bfad7';
+    r'511c3a975a055fe347829a2467fe2aa956fb98d5';
 
 /// Coin Detail 화면의 ViewModel (비즈니스 로직)
 

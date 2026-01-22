@@ -28,18 +28,24 @@ BinanceWebSocketClient binanceWebSocketClient(Ref ref) {
   );
 }
 
-@riverpod
-BinanceWebSocketDataSource binanceWebSocketDataSource(Ref ref) {
-  return BinanceWebSocketDataSource(
-    client: ref.watch(binanceWebSocketClientProvider),
-  );
+@Riverpod(keepAlive: true)
+WSDataHub wsDataHub(Ref ref) {
+  final client = ref.watch(binanceWebSocketClientProvider);
+  final cache = ref.watch(tickerCacheDataSourceProvider);
+
+  final hub = WSDataHub(client: client);
+  hub.loadInitialData(cache.getAll());
+  hub.connect();
+
+  ref.onDispose(() => hub.disconnect());
+  return hub;
 }
 
 @riverpod
 CoinRepository coinRepository(Ref ref) {
   return CoinRepositoryImpl(
     restDataSource: ref.watch(binanceRestDataSourceProvider),
-    wsDataSource: ref.watch(binanceWebSocketDataSourceProvider),
+    wsDataHub: ref.watch(wsDataHubProvider),
     tickerCache: ref.watch(tickerCacheDataSourceProvider),
   );
 }
@@ -50,24 +56,27 @@ ExchangeRateDataSource exchangeRateDataSource(Ref ref) {
 }
 
 @riverpod
+ExchangeRateCacheDataSource exchangeRateCacheDataSource(Ref ref) {
+  return ExchangeRateCacheDataSource();
+}
+
+@riverpod
 ExchangeRateRepository exchangeRateRepository(Ref ref) {
   return ExchangeRateRepositoryImpl(
     dataSource: ref.watch(exchangeRateDataSourceProvider),
+    cacheDataSource: ref.watch(exchangeRateCacheDataSourceProvider),
   );
 }
 
 @riverpod
-SettingsLocalDataSource settingsLocalDataSource(Ref ref) {
-  final dataSource = SettingsLocalDataSource();
-  // Initialize asynchronously
-  dataSource.init();
-  return dataSource;
+SettingsDataSource settingsDataSource(Ref ref) {
+  return SettingsDataSource();
 }
 
 @riverpod
 SettingsRepository settingsRepository(Ref ref) {
   return SettingsRepositoryImpl(
-    localDataSource: ref.watch(settingsLocalDataSourceProvider),
+    dataSource: ref.watch(settingsDataSourceProvider),
   );
 }
 
@@ -88,15 +97,39 @@ SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
 }
 
 @riverpod
-GetThemeSettingUseCase getThemeSettingUseCase(Ref ref) {
-  return GetThemeSettingUseCaseImpl(
+GetSettingsUseCase getSettingsUseCase(Ref ref) {
+  return GetSettingsUseCaseImpl(
     repository: ref.watch(settingsRepositoryProvider),
   );
 }
 
 @riverpod
-UpdateThemeSettingUseCase updateThemeSettingUseCase(Ref ref) {
-  return UpdateThemeSettingUseCaseImpl(
+SaveSettingsUseCase saveSettingsUseCase(Ref ref) {
+  return SaveSettingsUseCaseImpl(
     repository: ref.watch(settingsRepositoryProvider),
   );
+}
+
+@riverpod
+GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
+  return GetExchangeRateUseCaseImpl(
+    repository: ref.watch(exchangeRateRepositoryProvider),
+  );
+}
+
+@riverpod
+GetChartDataUseCase getChartDataUseCase(Ref ref) {
+  return GetChartDataUseCaseImpl(
+    repository: ref.watch(coinRepositoryProvider),
+  );
+}
+
+// ==================== WebSocket Connection State ====================
+
+@riverpod
+Stream<WebSocketConnectionState> wsConnectionState(Ref ref) async* {
+  final wsDataHub = ref.watch(wsDataHubProvider);
+  await for (final state in wsDataHub.connectionState) {
+    yield state;
+  }
 }

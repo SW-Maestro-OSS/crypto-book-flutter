@@ -53,6 +53,7 @@ extension SettingIntentPatterns on SettingIntent {
     TResult Function(_Load value)? load,
     TResult Function(_ChangeCurrency value)? changeCurrency,
     TResult Function(_ChangeLanguage value)? changeLanguage,
+    TResult Function(_RefreshExchangeRate value)? refreshExchangeRate,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -63,6 +64,8 @@ extension SettingIntentPatterns on SettingIntent {
         return changeCurrency(_that);
       case _ChangeLanguage() when changeLanguage != null:
         return changeLanguage(_that);
+      case _RefreshExchangeRate() when refreshExchangeRate != null:
+        return refreshExchangeRate(_that);
       case _:
         return orElse();
     }
@@ -86,6 +89,7 @@ extension SettingIntentPatterns on SettingIntent {
     required TResult Function(_Load value) load,
     required TResult Function(_ChangeCurrency value) changeCurrency,
     required TResult Function(_ChangeLanguage value) changeLanguage,
+    required TResult Function(_RefreshExchangeRate value) refreshExchangeRate,
   }) {
     final _that = this;
     switch (_that) {
@@ -95,6 +99,8 @@ extension SettingIntentPatterns on SettingIntent {
         return changeCurrency(_that);
       case _ChangeLanguage():
         return changeLanguage(_that);
+      case _RefreshExchangeRate():
+        return refreshExchangeRate(_that);
     }
   }
 
@@ -115,6 +121,7 @@ extension SettingIntentPatterns on SettingIntent {
     TResult? Function(_Load value)? load,
     TResult? Function(_ChangeCurrency value)? changeCurrency,
     TResult? Function(_ChangeLanguage value)? changeLanguage,
+    TResult? Function(_RefreshExchangeRate value)? refreshExchangeRate,
   }) {
     final _that = this;
     switch (_that) {
@@ -124,6 +131,8 @@ extension SettingIntentPatterns on SettingIntent {
         return changeCurrency(_that);
       case _ChangeLanguage() when changeLanguage != null:
         return changeLanguage(_that);
+      case _RefreshExchangeRate() when refreshExchangeRate != null:
+        return refreshExchangeRate(_that);
       case _:
         return null;
     }
@@ -146,6 +155,7 @@ extension SettingIntentPatterns on SettingIntent {
     TResult Function()? load,
     TResult Function(String currency)? changeCurrency,
     TResult Function(String language)? changeLanguage,
+    TResult Function()? refreshExchangeRate,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -156,6 +166,8 @@ extension SettingIntentPatterns on SettingIntent {
         return changeCurrency(_that.currency);
       case _ChangeLanguage() when changeLanguage != null:
         return changeLanguage(_that.language);
+      case _RefreshExchangeRate() when refreshExchangeRate != null:
+        return refreshExchangeRate();
       case _:
         return orElse();
     }
@@ -179,6 +191,7 @@ extension SettingIntentPatterns on SettingIntent {
     required TResult Function() load,
     required TResult Function(String currency) changeCurrency,
     required TResult Function(String language) changeLanguage,
+    required TResult Function() refreshExchangeRate,
   }) {
     final _that = this;
     switch (_that) {
@@ -188,6 +201,8 @@ extension SettingIntentPatterns on SettingIntent {
         return changeCurrency(_that.currency);
       case _ChangeLanguage():
         return changeLanguage(_that.language);
+      case _RefreshExchangeRate():
+        return refreshExchangeRate();
     }
   }
 
@@ -208,6 +223,7 @@ extension SettingIntentPatterns on SettingIntent {
     TResult? Function()? load,
     TResult? Function(String currency)? changeCurrency,
     TResult? Function(String language)? changeLanguage,
+    TResult? Function()? refreshExchangeRate,
   }) {
     final _that = this;
     switch (_that) {
@@ -217,6 +233,8 @@ extension SettingIntentPatterns on SettingIntent {
         return changeCurrency(_that.currency);
       case _ChangeLanguage() when changeLanguage != null:
         return changeLanguage(_that.language);
+      case _RefreshExchangeRate() when refreshExchangeRate != null:
+        return refreshExchangeRate();
       case _:
         return null;
     }
@@ -370,6 +388,26 @@ class __$ChangeLanguageCopyWithImpl<$Res>
           : language // ignore: cast_nullable_to_non_nullable
               as String,
     ));
+  }
+}
+
+/// @nodoc
+
+class _RefreshExchangeRate implements SettingIntent {
+  const _RefreshExchangeRate();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _RefreshExchangeRate);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'SettingIntent.refreshExchangeRate()';
   }
 }
 

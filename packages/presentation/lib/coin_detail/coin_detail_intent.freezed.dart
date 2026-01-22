@@ -53,6 +53,7 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Load value)? load,
     TResult Function(_TickerUpdated value)? tickerUpdated,
+    TResult Function(_ChangeTimeframe value)? changeTimeframe,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -61,6 +62,8 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
         return load(_that);
       case _TickerUpdated() when tickerUpdated != null:
         return tickerUpdated(_that);
+      case _ChangeTimeframe() when changeTimeframe != null:
+        return changeTimeframe(_that);
       case _:
         return orElse();
     }
@@ -83,6 +86,7 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
   TResult map<TResult extends Object?>({
     required TResult Function(_Load value) load,
     required TResult Function(_TickerUpdated value) tickerUpdated,
+    required TResult Function(_ChangeTimeframe value) changeTimeframe,
   }) {
     final _that = this;
     switch (_that) {
@@ -90,6 +94,8 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
         return load(_that);
       case _TickerUpdated():
         return tickerUpdated(_that);
+      case _ChangeTimeframe():
+        return changeTimeframe(_that);
     }
   }
 
@@ -109,6 +115,7 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Load value)? load,
     TResult? Function(_TickerUpdated value)? tickerUpdated,
+    TResult? Function(_ChangeTimeframe value)? changeTimeframe,
   }) {
     final _that = this;
     switch (_that) {
@@ -116,6 +123,8 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
         return load(_that);
       case _TickerUpdated() when tickerUpdated != null:
         return tickerUpdated(_that);
+      case _ChangeTimeframe() when changeTimeframe != null:
+        return changeTimeframe(_that);
       case _:
         return null;
     }
@@ -137,6 +146,7 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String symbol)? load,
     TResult Function(CoinTickerEntity ticker)? tickerUpdated,
+    TResult Function(ChartTimeframe timeframe)? changeTimeframe,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -145,6 +155,8 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
         return load(_that.symbol);
       case _TickerUpdated() when tickerUpdated != null:
         return tickerUpdated(_that.ticker);
+      case _ChangeTimeframe() when changeTimeframe != null:
+        return changeTimeframe(_that.timeframe);
       case _:
         return orElse();
     }
@@ -167,6 +179,7 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
   TResult when<TResult extends Object?>({
     required TResult Function(String symbol) load,
     required TResult Function(CoinTickerEntity ticker) tickerUpdated,
+    required TResult Function(ChartTimeframe timeframe) changeTimeframe,
   }) {
     final _that = this;
     switch (_that) {
@@ -174,6 +187,8 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
         return load(_that.symbol);
       case _TickerUpdated():
         return tickerUpdated(_that.ticker);
+      case _ChangeTimeframe():
+        return changeTimeframe(_that.timeframe);
     }
   }
 
@@ -193,6 +208,7 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String symbol)? load,
     TResult? Function(CoinTickerEntity ticker)? tickerUpdated,
+    TResult? Function(ChartTimeframe timeframe)? changeTimeframe,
   }) {
     final _that = this;
     switch (_that) {
@@ -200,6 +216,8 @@ extension CoinDetailIntentPatterns on CoinDetailIntent {
         return load(_that.symbol);
       case _TickerUpdated() when tickerUpdated != null:
         return tickerUpdated(_that.ticker);
+      case _ChangeTimeframe() when changeTimeframe != null:
+        return changeTimeframe(_that.timeframe);
       case _:
         return null;
     }
@@ -328,6 +346,71 @@ class __$TickerUpdatedCopyWithImpl<$Res>
           ? _self.ticker
           : ticker // ignore: cast_nullable_to_non_nullable
               as CoinTickerEntity,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _ChangeTimeframe implements CoinDetailIntent {
+  const _ChangeTimeframe(this.timeframe);
+
+  final ChartTimeframe timeframe;
+
+  /// Create a copy of CoinDetailIntent
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @pragma('vm:prefer-inline')
+  _$ChangeTimeframeCopyWith<_ChangeTimeframe> get copyWith =>
+      __$ChangeTimeframeCopyWithImpl<_ChangeTimeframe>(this, _$identity);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _ChangeTimeframe &&
+            (identical(other.timeframe, timeframe) ||
+                other.timeframe == timeframe));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, timeframe);
+
+  @override
+  String toString() {
+    return 'CoinDetailIntent.changeTimeframe(timeframe: $timeframe)';
+  }
+}
+
+/// @nodoc
+abstract mixin class _$ChangeTimeframeCopyWith<$Res>
+    implements $CoinDetailIntentCopyWith<$Res> {
+  factory _$ChangeTimeframeCopyWith(
+          _ChangeTimeframe value, $Res Function(_ChangeTimeframe) _then) =
+      __$ChangeTimeframeCopyWithImpl;
+  @useResult
+  $Res call({ChartTimeframe timeframe});
+}
+
+/// @nodoc
+class __$ChangeTimeframeCopyWithImpl<$Res>
+    implements _$ChangeTimeframeCopyWith<$Res> {
+  __$ChangeTimeframeCopyWithImpl(this._self, this._then);
+
+  final _ChangeTimeframe _self;
+  final $Res Function(_ChangeTimeframe) _then;
+
+  /// Create a copy of CoinDetailIntent
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  $Res call({
+    Object? timeframe = null,
+  }) {
+    return _then(_ChangeTimeframe(
+      null == timeframe
+          ? _self.timeframe
+          : timeframe // ignore: cast_nullable_to_non_nullable
+              as ChartTimeframe,
     ));
   }
 }

@@ -4,10 +4,14 @@ import 'package:domain/domain.dart';
 import 'package:presentation/home/home_viewmodel.dart';
 import 'package:presentation/home/home_state.dart';
 import 'package:presentation/home/home_intent.dart';
-import 'package:presentation/home/widgets/coin_list_item.dart';
-import 'package:presentation/theme/extensions/context_extensions.dart';
-import 'package:presentation/theme/spacing/app_spacing.dart';
+import 'package:presentation/home/widgets/search_bar_widget.dart';
+import 'package:presentation/home/widgets/sort_header.dart';
+import 'package:presentation/home/widgets/price_row.dart';
 import 'package:presentation/main/main_viewmodel.dart';
+import 'package:presentation/core/widgets/error_handler.dart';
+import 'package:presentation/core/theme/app_spacing.dart';
+import 'package:presentation/core/theme/app_colors.dart';
+import 'package:presentation/core/theme/app_typography.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -55,145 +59,116 @@ class _HomeViewState extends ConsumerState<HomeView> {
     return state.when(
       initial: () => const SizedBox.shrink(),
       loading: () => const Center(child: CircularProgressIndicator()),
-      loaded:
-          (allTickers, displayedTickers, displayCount, sortType, isAscending) {
+      loaded: (
+        allTickers,
+        displayedTickers,
+        displayCount,
+        sortType,
+        isAscending,
+        searchQuery,
+      ) {
         return Column(
           children: [
-            _buildSortHeader(sortType, isAscending),
-            Expanded(
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: displayedTickers.length + 1,
-                itemBuilder: (context, index) {
-                  // 더보기 인디케이터
-                  if (index == displayedTickers.length) {
-                    return displayCount < 30
-                        ? Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Center(
-                              child: Builder(
-                                builder: (context) => Text(
-                                  'Scroll down for more...',
-                                  style: TextStyle(
-                                    color: context.colorScheme.onSurface
-                                        .withOpacity(0.6),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink();
-                  }
+            // Search Bar
+            SearchBarWidget(
+              value: searchQuery,
+              onChanged: (query) {
+                ref.read(homeViewModelProvider.notifier).onIntent(
+                      HomeIntent.search(query),
+                    );
+              },
+              hintText: 'Search coins...',
+            ),
 
-                  final ticker = displayedTickers[index];
-                  return InkWell(
-                    onTap: () {
-                      ref.read(routingHelperProvider).pushTo(
-                            PageType.coinDetail,
-                            pathParams: {'symbol': ticker.symbol},
-                          );
-                    },
-                    child: CoinListItem(ticker: ticker),
-                  );
-                },
-              ),
+            // Sort Header
+            SortHeader(
+              currentSortType: sortType,
+              isAscending: isAscending,
+              onSortChanged: (newSortType) {
+                ref.read(homeViewModelProvider.notifier).onIntent(
+                      HomeIntent.sort(newSortType),
+                    );
+              },
+            ),
+
+            // Coin List
+            Expanded(
+              child: displayedTickers.isEmpty
+                  ? _buildEmptyState(searchQuery)
+                  : ListView.builder(
+                      controller: _scrollController,
+                      itemCount: displayedTickers.length + 1,
+                      itemBuilder: (context, index) {
+                        // 더보기 인디케이터
+                        if (index == displayedTickers.length) {
+                          return displayCount < 30
+                              ? Padding(
+                                  padding: const EdgeInsets.all(
+                                      AppSpacing.sectionPadding),
+                                  child: Center(
+                                    child: Text(
+                                      'Scroll down for more...',
+                                      style: AppTypography.bodySmall,
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink();
+                        }
+
+                        final ticker = displayedTickers[index];
+                        return PriceRow(
+                          ticker: ticker,
+                          onTap: () {
+                            ref.read(routingHelperProvider).pushTo(
+                                  PageType.coinDetail,
+                                  pathParams: {'symbol': ticker.symbol},
+                                );
+                          },
+                        );
+                      },
+                    ),
             ),
           ],
         );
       },
-      error: (message) => Builder(
-        builder: (context) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline,
-                  size: 80, color: context.colorScheme.error),
-              SizedBox(height: AppSpacing.md),
-              Text(message),
-              SizedBox(height: AppSpacing.md),
-            ElevatedButton(
-              onPressed: () {
-                ref.read(homeViewModelProvider.notifier).onIntent(
-                      const HomeIntent.load(),
-                    );
-              },
-              child: const Text('재시도'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSortHeader(SortType currentSort, bool isAscending) {
-    return Container(
-      padding: AppSpacing.allMd,
-      decoration: BoxDecoration(
-        color: context.colorScheme.surface,
-        border: Border(
-          bottom:
-              BorderSide(color: context.colorScheme.outline.withOpacity(0.3)),
-        ),
-      ),
-      child: Row(
-        children: [
-          _buildSortTab('Symbol', SortType.symbol, currentSort, isAscending),
-          _buildSortTab('Price (\$)', SortType.price, currentSort, isAscending),
-          _buildSortTab(
-              '24h Change %', SortType.changePercent, currentSort, isAscending),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSortTab(
-    String label,
-    SortType type,
-    SortType currentSort,
-    bool isAscending,
-  ) {
-    final isActive = currentSort == type;
-
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          if (isActive) {
-            ref.read(homeViewModelProvider.notifier).onIntent(
-                  const HomeIntent.toggleSortOrder(),
-                );
-          } else {
-            ref.read(homeViewModelProvider.notifier).onIntent(
-                  HomeIntent.sort(type),
-                );
-          }
+      error: (appError) => ErrorHandler(
+        error: appError,
+        onRetry: () {
+          ref.read(homeViewModelProvider.notifier).onIntent(
+                const HomeIntent.load(),
+              );
         },
-        child: Row(
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(String searchQuery) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.sectionPadding),
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Flexible(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                  fontSize: 12,
-                ),
+            Icon(
+              Icons.search_off,
+              size: AppSpacing.iconXl * 2,
+              color: AppColors.textTertiary,
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              'No coins found',
+              style: AppTypography.bodyLarge.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            if (searchQuery.isNotEmpty) ...[
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                'Try searching for "${searchQuery.toUpperCase()}"',
+                style: AppTypography.bodySmall,
                 textAlign: TextAlign.center,
               ),
-            ),
-            const SizedBox(width: 4),
-            Builder(
-              builder: (context) => Icon(
-                isActive
-                    ? (isAscending ? Icons.arrow_upward : Icons.arrow_downward)
-                    : Icons.unfold_more,
-                size: 16,
-                color: isActive
-                    ? context.colorScheme.primary
-                    : context.colorScheme.onSurface.withOpacity(0.6),
-              ),
-            ),
+            ],
           ],
         ),
       ),

@@ -6,8 +6,6 @@ import 'package:data/init_mappers.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/routing/app_router.dart';
 import 'package:presentation/providers/usecase_providers.dart';
-import 'package:presentation/theme/app_theme.dart';
-import 'package:presentation/theme/theme_mode_provider.dart';
 import 'providers.dart' as root_providers;
 
 Future<void> main() async {
@@ -16,9 +14,6 @@ Future<void> main() async {
 
   // Hive 초기화 (캐싱을 위한 로컬 스토리지)
   await Hive.initFlutter();
-
-  // Settings box 미리 열기 (테마 로드를 위해)
-  await Hive.openBox<String>('app_settings');
 
   // 환경 변수 로드
   await dotenv.load(fileName: ".env");
@@ -40,14 +35,24 @@ Future<void> main() async {
             repository: ref.watch(root_providers.coinRepositoryProvider),
           );
         }),
-        getThemeSettingUseCaseProvider.overrideWith((ref) {
-          return GetThemeSettingUseCaseImpl(
+        getSettingsUseCaseProvider.overrideWith((ref) {
+          return GetSettingsUseCaseImpl(
             repository: ref.watch(root_providers.settingsRepositoryProvider),
           );
         }),
-        updateThemeSettingUseCaseProvider.overrideWith((ref) {
-          return UpdateThemeSettingUseCaseImpl(
+        saveSettingsUseCaseProvider.overrideWith((ref) {
+          return SaveSettingsUseCaseImpl(
             repository: ref.watch(root_providers.settingsRepositoryProvider),
+          );
+        }),
+        getExchangeRateUseCaseProvider.overrideWith((ref) {
+          return GetExchangeRateUseCaseImpl(
+            repository: ref.watch(root_providers.exchangeRateRepositoryProvider),
+          );
+        }),
+        getChartDataUseCaseProvider.overrideWith((ref) {
+          return GetChartDataUseCaseImpl(
+            repository: ref.watch(root_providers.coinRepositoryProvider),
           );
         }),
       ],
@@ -56,19 +61,18 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeModeProvider);
-
+  Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Crypto Tracker',
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: themeMode,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        useMaterial3: true,
+      ),
       routerConfig: appRouter,
     );
   }

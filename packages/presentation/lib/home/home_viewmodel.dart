@@ -55,39 +55,21 @@ class HomeViewModel extends _$HomeViewModel {
 
           print('[ViewModel] Top 30 by quoteVolume: ${top30.length} tickers');
 
-          // 현재 State에서 정렬 설정 가져오기 (유지)
-          final currentDisplayCount = state.maybeWhen(
-            loaded: (_, __, displayCount, ___, ____) => displayCount,
-            orElse: () => 20,
-          );
-          final currentSortType = state.maybeWhen(
-            loaded: (_, __, ___, sortType, ____) => sortType,
-            orElse: () => SortType.none,
-          );
-          final currentIsAscending = state.maybeWhen(
-            loaded: (_, __, ___, ____, isAscending) => isAscending,
-            orElse: () => false,
-          );
-
-          // 현재 정렬 적용
-          final sortedForDisplay =
-              _sortTickers(top30, currentSortType, currentIsAscending);
-          final displayed = sortedForDisplay.take(currentDisplayCount).toList();
-
-          state = HomeState.loaded(
-            allTickers: top30,
-            displayedTickers: displayed,
-            displayCount: currentDisplayCount,
-            sortType: currentSortType,
-            isAscending: currentIsAscending,
-          );
+          // ✅ MVI 패턴: Intent를 통해 상태 변경
+          onIntent(HomeIntent.tickerUpdated(top30));
         },
         onError: (error) {
-          state = HomeState.error('실시간 데이터 수신 실패: $error');
+          final appError = error is AppError
+              ? error
+              : GenericNetworkError(error.toString());
+          state = HomeState.error(appError);
         },
       );
     } catch (e) {
-      state = HomeState.error('데이터 로드 실패: $e');
+      final appError = e is AppError
+          ? e
+          : GenericNetworkError(e.toString());
+      state = HomeState.error(appError);
     }
   }
 
@@ -99,14 +81,29 @@ class HomeViewModel extends _$HomeViewModel {
 
   void _handleSort(SortType sortType) {
     state.whenOrNull(
-      loaded: (allTickers, displayedTickers, displayCount, _, isAscending) {
-        final sorted = _sortTickers(displayedTickers, sortType, isAscending);
+      loaded: (allTickers, _, displayCount, currentSortType, isAscending, searchQuery) {
+        // Toggle sort order if clicking same column
+        final newIsAscending = sortType == currentSortType ? !isAscending : false;
+
+        // Apply search filter
+        final filtered = searchQuery.isEmpty
+            ? allTickers
+            : allTickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                return symbol.contains(searchQuery.toLowerCase());
+              }).toList();
+
+        // Apply sorting
+        final sorted = _sortTickers(filtered, sortType, newIsAscending);
+        final displayed = sorted.take(displayCount).toList();
+
         state = HomeState.loaded(
           allTickers: allTickers,
-          displayedTickers: sorted,
+          displayedTickers: displayed,
           displayCount: displayCount,
           sortType: sortType,
-          isAscending: isAscending,
+          isAscending: newIsAscending,
+          searchQuery: searchQuery,
         );
       },
     );
@@ -114,49 +111,121 @@ class HomeViewModel extends _$HomeViewModel {
 
   void _handleToggleSortOrder() {
     state.whenOrNull(
-      loaded:
-          (allTickers, displayedTickers, displayCount, sortType, isAscending) {
+      loaded: (allTickers, _, displayCount, sortType, isAscending, searchQuery) {
         final newOrder = !isAscending;
-        final sorted = _sortTickers(displayedTickers, sortType, newOrder);
+
+        // Apply search filter
+        final filtered = searchQuery.isEmpty
+            ? allTickers
+            : allTickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                return symbol.contains(searchQuery.toLowerCase());
+              }).toList();
+
+        final sorted = _sortTickers(filtered, sortType, newOrder);
+        final displayed = sorted.take(displayCount).toList();
+
         state = HomeState.loaded(
           allTickers: allTickers,
-          displayedTickers: sorted,
+          displayedTickers: displayed,
           displayCount: displayCount,
           sortType: sortType,
           isAscending: newOrder,
+          searchQuery: searchQuery,
         );
       },
     );
   }
 
   void _handleSearch(String query) {
-    // TODO: 검색 구현
-  }
-
-  void _handleTickerUpdated(List<CoinTickerEntity> tickers) {
     state.whenOrNull(
-      loaded: (_, displayedTickers, displayCount, sortType, isAscending) {
+      loaded: (allTickers, _, displayCount, sortType, isAscending, __) {
+        // 1. Filter tickers based on search query
+        final filtered = query.isEmpty
+            ? allTickers
+            : allTickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                final searchLower = query.toLowerCase();
+                return symbol.contains(searchLower);
+              }).toList();
+
+        // 2. Apply sorting to filtered results
+        final sorted = _sortTickers(filtered, sortType, isAscending);
+
+        // 3. Apply displayCount limit
+        final displayed = sorted.take(displayCount).toList();
+
+        // 4. Update state with search query
         state = HomeState.loaded(
-          allTickers: tickers,
-          displayedTickers: displayedTickers,
+          allTickers: allTickers,
+          displayedTickers: displayed,
           displayCount: displayCount,
           sortType: sortType,
           isAscending: isAscending,
+          searchQuery: query,
         );
       },
     );
   }
 
+  void _handleTickerUpdated(List<CoinTickerEntity> tickers) {
+    // Get current settings or use defaults
+    final currentDisplayCount = state.maybeWhen(
+      loaded: (_, __, displayCount, ___, ____, _____) => displayCount,
+      orElse: () => 20,
+    );
+    final currentSortType = state.maybeWhen(
+      loaded: (_, __, ___, sortType, ____, _____) => sortType,
+      orElse: () => SortType.none,
+    );
+    final currentIsAscending = state.maybeWhen(
+      loaded: (_, __, ___, ____, isAscending, _____) => isAscending,
+      orElse: () => false,
+    );
+    final currentSearchQuery = state.maybeWhen(
+      loaded: (_, __, ___, ____, _____, searchQuery) => searchQuery,
+      orElse: () => '',
+    );
+
+    // Apply search filter
+    final filtered = currentSearchQuery.isEmpty
+        ? tickers
+        : tickers.where((ticker) {
+            final symbol = ticker.symbol.toLowerCase();
+            return symbol.contains(currentSearchQuery.toLowerCase());
+          }).toList();
+
+    // Apply sorting
+    final sorted = _sortTickers(filtered, currentSortType, currentIsAscending);
+    final displayed = sorted.take(currentDisplayCount).toList();
+
+    state = HomeState.loaded(
+      allTickers: tickers,
+      displayedTickers: displayed,
+      displayCount: currentDisplayCount,
+      sortType: currentSortType,
+      isAscending: currentIsAscending,
+      searchQuery: currentSearchQuery,
+    );
+  }
+
   void _handleLoadMore() {
     state.whenOrNull(
-      loaded:
-          (allTickers, displayedTickers, displayCount, sortType, isAscending) {
+      loaded: (allTickers, _, displayCount, sortType, isAscending, searchQuery) {
         if (displayCount >= 30) return;
 
         final newCount = (displayCount + 10).clamp(0, 30);
 
+        // Apply search filter
+        final filtered = searchQuery.isEmpty
+            ? allTickers
+            : allTickers.where((ticker) {
+                final symbol = ticker.symbol.toLowerCase();
+                return symbol.contains(searchQuery.toLowerCase());
+              }).toList();
+
         // 정렬을 적용한 후 표시
-        final sorted = _sortTickers(allTickers, sortType, isAscending);
+        final sorted = _sortTickers(filtered, sortType, isAscending);
         final newDisplayed = sorted.take(newCount).toList();
 
         state = HomeState.loaded(
@@ -165,6 +234,7 @@ class HomeViewModel extends _$HomeViewModel {
           displayCount: newCount,
           sortType: sortType,
           isAscending: isAscending,
+          searchQuery: searchQuery,
         );
       },
     );

@@ -21,20 +21,38 @@ SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
   );
 }
 
-/// GetThemeSettingUseCase Provider
+/// GetSettingsUseCase Provider
 /// 실제 구현체는 root app에서 override됨
 @riverpod
-GetThemeSettingUseCase getThemeSettingUseCase(Ref ref) {
+GetSettingsUseCase getSettingsUseCase(Ref ref) {
   throw UnimplementedError(
-    'getThemeSettingUseCaseProvider must be overridden in main app',
+    'getSettingsUseCaseProvider must be overridden in main app',
   );
 }
 
-/// UpdateThemeSettingUseCase Provider
+/// SaveSettingsUseCase Provider
 /// 실제 구현체는 root app에서 override됨
 @riverpod
-UpdateThemeSettingUseCase updateThemeSettingUseCase(Ref ref) {
+SaveSettingsUseCase saveSettingsUseCase(Ref ref) {
   throw UnimplementedError(
-    'updateThemeSettingUseCaseProvider must be overridden in main app',
+    'saveSettingsUseCaseProvider must be overridden in main app',
+  );
+}
+
+/// GetExchangeRateUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+@riverpod
+GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
+  throw UnimplementedError(
+    'getExchangeRateUseCaseProvider must be overridden in main app',
+  );
+}
+
+/// GetChartDataUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+@riverpod
+GetChartDataUseCase getChartDataUseCase(Ref ref) {
+  throw UnimplementedError(
+    'getChartDataUseCaseProvider must be overridden in main app',
   );
 }

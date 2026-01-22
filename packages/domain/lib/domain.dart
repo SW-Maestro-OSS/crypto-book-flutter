@@ -2,7 +2,14 @@
 export 'entities/coin_entity.dart';
 export 'entities/coin_ticker_entity.dart';
 export 'entities/exchange_rate_entity.dart';
-export 'entities/theme_setting_entity.dart';
+export 'entities/chart_data_entity.dart';
+export 'entities/ai_insight_entity.dart';
+
+// Errors
+export 'errors/app_error.dart';
+export 'errors/coin_error.dart';
+export 'errors/network_error.dart';
+export 'errors/websocket_error.dart';
 
 // Repositories
 export 'repositories/coin_repository.dart';
@@ -15,8 +22,9 @@ export 'usecases/get_coin_list_use_case.dart';
 export 'usecases/subscribe_coin_ticker_use_case.dart';
 export 'usecases/get_exchange_rate_use_case.dart';
 export 'usecases/manage_websocket_use_case.dart';
-export 'usecases/get_theme_setting_use_case.dart';
-export 'usecases/update_theme_setting_use_case.dart';
+export 'usecases/get_settings_use_case.dart';
+export 'usecases/save_settings_use_case.dart';
+export 'usecases/get_chart_data_use_case.dart';
 
 // Routing
 export 'routing/page_type.dart';

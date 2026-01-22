@@ -1,16 +1,17 @@
 import 'package:domain/domain.dart';
 import 'package:data/datasources/binance_rest_data_source.dart';
-import 'package:data/datasources/binance_websocket_data_source.dart';
+import 'package:data/datasources/ws_data_hub.dart';
 import 'package:data/datasources/ticker_cache_data_source.dart';
+import 'package:data/dto/kline_dto.dart';
 
 class CoinRepositoryImpl implements CoinRepository {
   final BinanceRestDataSource restDataSource;
-  final BinanceWebSocketDataSource wsDataSource;
+  final WSDataHub wsDataHub;
   final TickerCacheDataSource tickerCache;
 
   CoinRepositoryImpl({
     required this.restDataSource,
-    required this.wsDataSource,
+    required this.wsDataHub,
     required this.tickerCache,
   });
 
@@ -28,49 +29,71 @@ class CoinRepositoryImpl implements CoinRepository {
   }
 
   @override
-  Stream<CoinTickerEntity> subscribeToTicker(String symbol) {
-    return wsDataSource.subscribeAllTickers().map((tickers) {
-      final ticker = tickers.firstWhere(
-        (t) => t.symbol == symbol,
-        orElse: () => throw Exception('Ticker not found: $symbol'),
-      );
-      return ticker.toEntity();
-    });
+  Stream<CoinTickerEntity> subscribeToTicker(String symbol) async* {
+    await for (final tickerDto in wsDataHub.getSymbolStream(symbol)) {
+      yield tickerDto.toEntity();
+    }
   }
 
   @override
   Stream<List<CoinTickerEntity>> subscribeToTickers(List<String> symbols) async* {
-    // STEP 1: Emit cached data immediately (before WebSocket connects)
-    final cachedTickers = tickerCache.getAll();
-    if (cachedTickers.isNotEmpty) {
-      final usdtTickers = cachedTickers
-          .where((t) => t.symbol.endsWith('USDT'))
+    // Stream all symbols from WSDataHub (cache already loaded in provider)
+    await for (final symbolMap in wsDataHub.getAllSymbolsStream()) {
+      print('[Repository] Received ${symbolMap.length} tickers from WSDataHub');
+
+      // Update cache
+      await tickerCache.updateMany(symbolMap.values.toList());
+
+      // Filter USDT pairs and convert to entities
+      final entities = symbolMap.values
           .map((dto) => dto.toEntity())
           .toList();
-      yield usdtTickers;
+
+      final usdtPairs = entities
+          .where((e) => e.quoteAsset == 'USDT')
+          .toList();
+
+      // Deduplicate by baseAsset - keep highest volume pair
+      final Map<String, CoinTickerEntity> baseAssetMap = {};
+      for (final ticker in usdtPairs) {
+        final existing = baseAssetMap[ticker.baseAsset];
+        if (existing == null || ticker.quoteVolume24h > existing.quoteVolume24h) {
+          baseAssetMap[ticker.baseAsset] = ticker;
+        }
+      }
+      final deduplicated = baseAssetMap.values.toList();
+
+      print('[Repository] Filtered ${usdtPairs.length} USDT pairs → ${deduplicated.length} unique coins');
+
+      // Emit filtered result
+      yield deduplicated;
     }
+  }
 
-    // STEP 2: Subscribe to WebSocket and merge with cache
-    await for (final incomingTickers in wsDataSource.subscribeAllTickers()) {
-      print('[Repository] WebSocket received ${incomingTickers.length} tickers');
+  @override
+  Future<ChartDataEntity> getChartData(
+    String symbol,
+    ChartTimeframe timeframe,
+  ) async {
+    try {
+      // Fetch klines from Binance API
+      final klines = await restDataSource.fetchKlines(
+        symbol: symbol,
+        interval: timeframe.interval,
+        limit: timeframe.dataPointCount,
+      );
 
-      // STEP 3: Update cache (merge: update changed, add new, preserve unchanged)
-      await tickerCache.updateMany(incomingTickers);
-
-      // STEP 4: Get all cached tickers (merged result)
-      final allTickers = tickerCache.getAll();
-      print('[Repository] Total cached: ${allTickers.length} tickers');
-
-      // STEP 5: Filter USDT pairs and convert to entities
-      final usdtTickers = allTickers
-          .where((t) => t.symbol.endsWith('USDT'))
-          .map((dto) => dto.toEntity())
+      // Convert to ChartDataPoint list
+      final dataPoints = klines
+          .map((klineData) => KlineDTO.fromList(klineData).toChartDataPoint())
           .toList();
 
-      print('[Repository] USDT filtered: ${usdtTickers.length} tickers');
-
-      // STEP 6: Emit merged result
-      yield usdtTickers;
+      return ChartDataEntity(
+        dataPoints: dataPoints,
+        timeframe: timeframe,
+      );
+    } catch (e) {
+      throw GenericNetworkError('Failed to fetch chart data: $e');
     }
   }
 }

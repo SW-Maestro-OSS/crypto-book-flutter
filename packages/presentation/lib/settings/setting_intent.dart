@@ -8,4 +8,5 @@ sealed class SettingIntent with _$SettingIntent {
   const factory SettingIntent.load() = _Load;
   const factory SettingIntent.changeCurrency(String currency) = _ChangeCurrency;
   const factory SettingIntent.changeLanguage(String language) = _ChangeLanguage;
+  const factory SettingIntent.refreshExchangeRate() = _RefreshExchangeRate;
 }

@@ -155,8 +155,10 @@ extension CoinDetailStatePatterns on CoinDetailState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(CoinTickerEntity ticker)? loaded,
-    TResult Function(String message)? error,
+    TResult Function(CoinTickerEntity ticker, ChartDataEntity? chartData,
+            ChartTimeframe selectedTimeframe, bool isLoadingChart)?
+        loaded,
+    TResult Function(AppError error)? error,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -166,9 +168,10 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loading() when loading != null:
         return loading();
       case _Loaded() when loaded != null:
-        return loaded(_that.ticker);
+        return loaded(_that.ticker, _that.chartData, _that.selectedTimeframe,
+            _that.isLoadingChart);
       case _Error() when error != null:
-        return error(_that.message);
+        return error(_that.error);
       case _:
         return orElse();
     }
@@ -191,8 +194,13 @@ extension CoinDetailStatePatterns on CoinDetailState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(CoinTickerEntity ticker) loaded,
-    required TResult Function(String message) error,
+    required TResult Function(
+            CoinTickerEntity ticker,
+            ChartDataEntity? chartData,
+            ChartTimeframe selectedTimeframe,
+            bool isLoadingChart)
+        loaded,
+    required TResult Function(AppError error) error,
   }) {
     final _that = this;
     switch (_that) {
@@ -201,9 +209,10 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loading():
         return loading();
       case _Loaded():
-        return loaded(_that.ticker);
+        return loaded(_that.ticker, _that.chartData, _that.selectedTimeframe,
+            _that.isLoadingChart);
       case _Error():
-        return error(_that.message);
+        return error(_that.error);
     }
   }
 
@@ -223,8 +232,10 @@ extension CoinDetailStatePatterns on CoinDetailState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(CoinTickerEntity ticker)? loaded,
-    TResult? Function(String message)? error,
+    TResult? Function(CoinTickerEntity ticker, ChartDataEntity? chartData,
+            ChartTimeframe selectedTimeframe, bool isLoadingChart)?
+        loaded,
+    TResult? Function(AppError error)? error,
   }) {
     final _that = this;
     switch (_that) {
@@ -233,9 +244,10 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loading() when loading != null:
         return loading();
       case _Loaded() when loaded != null:
-        return loaded(_that.ticker);
+        return loaded(_that.ticker, _that.chartData, _that.selectedTimeframe,
+            _that.isLoadingChart);
       case _Error() when error != null:
-        return error(_that.message);
+        return error(_that.error);
       case _:
         return null;
     }
@@ -285,9 +297,18 @@ class _Loading implements CoinDetailState {
 /// @nodoc
 
 class _Loaded implements CoinDetailState {
-  const _Loaded({required this.ticker});
+  const _Loaded(
+      {required this.ticker,
+      this.chartData,
+      this.selectedTimeframe = ChartTimeframe.h24,
+      this.isLoadingChart = false});
 
   final CoinTickerEntity ticker;
+  final ChartDataEntity? chartData;
+  @JsonKey()
+  final ChartTimeframe selectedTimeframe;
+  @JsonKey()
+  final bool isLoadingChart;
 
   /// Create a copy of CoinDetailState
   /// with the given fields replaced by the non-null parameter values.
@@ -301,15 +322,22 @@ class _Loaded implements CoinDetailState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Loaded &&
-            (identical(other.ticker, ticker) || other.ticker == ticker));
+            (identical(other.ticker, ticker) || other.ticker == ticker) &&
+            (identical(other.chartData, chartData) ||
+                other.chartData == chartData) &&
+            (identical(other.selectedTimeframe, selectedTimeframe) ||
+                other.selectedTimeframe == selectedTimeframe) &&
+            (identical(other.isLoadingChart, isLoadingChart) ||
+                other.isLoadingChart == isLoadingChart));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, ticker);
+  int get hashCode => Object.hash(
+      runtimeType, ticker, chartData, selectedTimeframe, isLoadingChart);
 
   @override
   String toString() {
-    return 'CoinDetailState.loaded(ticker: $ticker)';
+    return 'CoinDetailState.loaded(ticker: $ticker, chartData: $chartData, selectedTimeframe: $selectedTimeframe, isLoadingChart: $isLoadingChart)';
   }
 }
 
@@ -319,7 +347,11 @@ abstract mixin class _$LoadedCopyWith<$Res>
   factory _$LoadedCopyWith(_Loaded value, $Res Function(_Loaded) _then) =
       __$LoadedCopyWithImpl;
   @useResult
-  $Res call({CoinTickerEntity ticker});
+  $Res call(
+      {CoinTickerEntity ticker,
+      ChartDataEntity? chartData,
+      ChartTimeframe selectedTimeframe,
+      bool isLoadingChart});
 }
 
 /// @nodoc
@@ -334,12 +366,27 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
   @pragma('vm:prefer-inline')
   $Res call({
     Object? ticker = null,
+    Object? chartData = freezed,
+    Object? selectedTimeframe = null,
+    Object? isLoadingChart = null,
   }) {
     return _then(_Loaded(
       ticker: null == ticker
           ? _self.ticker
           : ticker // ignore: cast_nullable_to_non_nullable
               as CoinTickerEntity,
+      chartData: freezed == chartData
+          ? _self.chartData
+          : chartData // ignore: cast_nullable_to_non_nullable
+              as ChartDataEntity?,
+      selectedTimeframe: null == selectedTimeframe
+          ? _self.selectedTimeframe
+          : selectedTimeframe // ignore: cast_nullable_to_non_nullable
+              as ChartTimeframe,
+      isLoadingChart: null == isLoadingChart
+          ? _self.isLoadingChart
+          : isLoadingChart // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -347,9 +394,9 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
 /// @nodoc
 
 class _Error implements CoinDetailState {
-  const _Error(this.message);
+  const _Error(this.error);
 
-  final String message;
+  final AppError error;
 
   /// Create a copy of CoinDetailState
   /// with the given fields replaced by the non-null parameter values.
@@ -363,15 +410,15 @@ class _Error implements CoinDetailState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _Error &&
-            (identical(other.message, message) || other.message == message));
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, message);
+  int get hashCode => Object.hash(runtimeType, error);
 
   @override
   String toString() {
-    return 'CoinDetailState.error(message: $message)';
+    return 'CoinDetailState.error(error: $error)';
   }
 }
 
@@ -381,7 +428,7 @@ abstract mixin class _$ErrorCopyWith<$Res>
   factory _$ErrorCopyWith(_Error value, $Res Function(_Error) _then) =
       __$ErrorCopyWithImpl;
   @useResult
-  $Res call({String message});
+  $Res call({AppError error});
 }
 
 /// @nodoc
@@ -395,13 +442,13 @@ class __$ErrorCopyWithImpl<$Res> implements _$ErrorCopyWith<$Res> {
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   $Res call({
-    Object? message = null,
+    Object? error = null,
   }) {
     return _then(_Error(
-      null == message
-          ? _self.message
-          : message // ignore: cast_nullable_to_non_nullable
-              as String,
+      null == error
+          ? _self.error
+          : error // ignore: cast_nullable_to_non_nullable
+              as AppError,
     ));
   }
 }

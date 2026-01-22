@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:data/dto/exchange_rate_dto.dart';
 import 'package:data/constants/exchange_rate_constants.dart';
+import 'package:data/mappers/error_mapper.dart';
+import 'package:domain/domain.dart';
 
 /// 한국수출입은행 환율 API DataSource
 class ExchangeRateDataSource {
@@ -29,7 +31,7 @@ class ExchangeRateDataSource {
     final apiKey = ExchangeRateConstants.apiKey;
 
     if (apiKey == null || apiKey.isEmpty) {
-      throw Exception('EXCHANGE_RATE_API_KEY is not configured in .env file');
+      throw const GenericNetworkError('EXCHANGE_RATE_API_KEY is not configured in .env file');
     }
 
     try {
@@ -43,7 +45,7 @@ class ExchangeRateDataSource {
       );
 
       if (response.data == null) {
-        throw Exception('No data returned from API');
+        throw const GenericNetworkError('No data returned from API');
       }
 
       // API 응답이 List 형태로 옴
@@ -51,14 +53,52 @@ class ExchangeRateDataSource {
           ? response.data as List<dynamic>
           : [response.data];
 
-      return jsonList
+      // 전체 응답 파싱 (필터링 전)
+      final allDtos = jsonList
           .map((json) => ExchangeRateDTOMapper.fromMap(json as Map<String, dynamic>))
-          .where((dto) => dto.isSuccess) // 성공한 응답만 필터링
           .toList();
+
+      // === 디버깅 로그 추가 ===
+      print('=== Exchange Rate API Response ===');
+      print('Total items: ${allDtos.length}');
+      if (allDtos.isNotEmpty) {
+        final firstItem = allDtos.first;
+        print('First item - Currency: ${firstItem.currencyCode}, Result: ${firstItem.result}, IsSuccess: ${firstItem.isSuccess}');
+
+        // USD 데이터 확인
+        final usdItem = allDtos.where((dto) => dto.currencyCode == 'USD').firstOrNull;
+        if (usdItem != null) {
+          print('USD found - Result: ${usdItem.result}, Rate: ${usdItem.dealBaseRate}');
+        } else {
+          print('WARNING: USD not found in response!');
+        }
+      }
+
+      // 필터링 후 개수 확인
+      final successItems = allDtos.where((dto) => dto.isSuccess).toList();
+      print('Success items after filter: ${successItems.length}');
+      print('=====================================');
+
+      // 성공한 항목이 없으면 에러 처리
+      if (successItems.isEmpty && allDtos.isNotEmpty) {
+        final firstItem = allDtos.first;
+        switch (firstItem.result) {
+          case 2:
+            throw const ApiDataError('Invalid DATA code (result=2)');
+          case 3:
+            throw const ApiAuthenticationError();
+          case 4:
+            throw const ApiRateLimitError();
+          default:
+            throw ApiDataError('Unknown result code: ${firstItem.result}');
+        }
+      }
+
+      return successItems;
     } on DioException catch (e) {
-      throw Exception('Failed to fetch exchange rates: ${e.message}');
+      throw ErrorMapper.fromDioException(e);
     } catch (e) {
-      throw Exception('Unexpected error: $e');
+      throw GenericNetworkError('Unexpected error: $e');
     }
   }
 

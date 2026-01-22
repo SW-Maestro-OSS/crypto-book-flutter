@@ -29,6 +29,15 @@ class _MainPageState extends ConsumerState<MainPage> {
     );
 
     return Scaffold(
+      // appBar: state.currentTabIndex == 0
+      //     ? AppBar(
+      //         title: const Text('Market'),
+      //         // Connection indicator will be added in Phase 3 completion
+      //         actions: const [
+      //           SizedBox(width: AppSpacing.lg),
+      //         ],
+      //       )
+      //     : null,
       body: SafeArea(
         child: IndexedStack(
           index: state.currentTabIndex,
@@ -127,4 +136,3 @@ class _MainPageState extends ConsumerState<MainPage> {
     );
   }
 }
-

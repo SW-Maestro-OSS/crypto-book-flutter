@@ -1,57 +1,29 @@
 import 'package:domain/domain.dart';
-import 'package:data/datasources/settings_local_data_source.dart';
+import 'package:data/datasources/settings_data_source.dart';
 
-/// Settings repository implementation
+/// Settings Repository Implementation
 class SettingsRepositoryImpl implements SettingsRepository {
-  final SettingsLocalDataSource localDataSource;
+  final SettingsDataSource dataSource;
 
-  SettingsRepositoryImpl({required this.localDataSource});
+  SettingsRepositoryImpl({required this.dataSource});
 
   @override
-  ThemeSettingEntity getThemeSetting() {
-    final savedValue = localDataSource.getThemeMode();
-
-    // Parse saved value to ThemeMode
-    final ThemeMode themeMode;
-    switch (savedValue) {
-      case 'light':
-        themeMode = ThemeMode.light;
-        break;
-      case 'dark':
-        themeMode = ThemeMode.dark;
-        break;
-      case 'system':
-        themeMode = ThemeMode.system;
-        break;
-      default:
-        // Default to system if not set
-        themeMode = ThemeMode.system;
-    }
-
-    return ThemeSettingEntity(themeMode: themeMode);
+  Future<String> getCurrency() {
+    return dataSource.getCurrency();
   }
 
   @override
-  Future<void> updateThemeSetting(ThemeSettingEntity setting) async {
-    // Convert ThemeMode to string for storage
-    final String value;
-    switch (setting.themeMode) {
-      case ThemeMode.light:
-        value = 'light';
-        break;
-      case ThemeMode.dark:
-        value = 'dark';
-        break;
-      case ThemeMode.system:
-        value = 'system';
-        break;
-    }
-
-    await localDataSource.saveThemeMode(value);
+  Future<void> setCurrency(String currency) {
+    return dataSource.setCurrency(currency);
   }
 
   @override
-  Future<void> clearThemeSetting() async {
-    await localDataSource.clearThemeMode();
+  Future<String> getLanguage() {
+    return dataSource.getLanguage();
+  }
+
+  @override
+  Future<void> setLanguage(String language) {
+    return dataSource.setLanguage(language);
   }
 }

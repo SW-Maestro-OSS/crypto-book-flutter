@@ -14,8 +14,9 @@ sealed class HomeState with _$HomeState {
     @Default(10) int displayCount,
     @Default(SortType.none) SortType sortType,
     @Default(false) bool isAscending,
+    @Default('') String searchQuery,
   }) = _Loaded;
-  const factory HomeState.error(String message) = _Error;
+  const factory HomeState.error(AppError error) = _Error;
 }
 
 /// 정렬 타입 (Dart 3 Enhanced Enum)

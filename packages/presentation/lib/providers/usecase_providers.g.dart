@@ -113,106 +113,210 @@ final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
 String _$subscribeCoinTickerUseCaseHash() =>
     r'3583fe7bc3ca2ab28ad21d4b9e2cfc9a3f53f0b9';
 
-/// GetThemeSettingUseCase Provider
+/// GetSettingsUseCase Provider
 /// 실제 구현체는 root app에서 override됨
 
-@ProviderFor(getThemeSettingUseCase)
-const getThemeSettingUseCaseProvider = GetThemeSettingUseCaseProvider._();
+@ProviderFor(getSettingsUseCase)
+const getSettingsUseCaseProvider = GetSettingsUseCaseProvider._();
 
-/// GetThemeSettingUseCase Provider
+/// GetSettingsUseCase Provider
 /// 실제 구현체는 root app에서 override됨
 
-final class GetThemeSettingUseCaseProvider extends $FunctionalProvider<
-    GetThemeSettingUseCase,
-    GetThemeSettingUseCase,
-    GetThemeSettingUseCase> with $Provider<GetThemeSettingUseCase> {
-  /// GetThemeSettingUseCase Provider
+final class GetSettingsUseCaseProvider extends $FunctionalProvider<
+    GetSettingsUseCase,
+    GetSettingsUseCase,
+    GetSettingsUseCase> with $Provider<GetSettingsUseCase> {
+  /// GetSettingsUseCase Provider
   /// 실제 구현체는 root app에서 override됨
-  const GetThemeSettingUseCaseProvider._()
+  const GetSettingsUseCaseProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
-          name: r'getThemeSettingUseCaseProvider',
+          name: r'getSettingsUseCaseProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$getThemeSettingUseCaseHash();
+  String debugGetCreateSourceHash() => _$getSettingsUseCaseHash();
 
   @$internal
   @override
-  $ProviderElement<GetThemeSettingUseCase> $createElement(
+  $ProviderElement<GetSettingsUseCase> $createElement(
           $ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  GetThemeSettingUseCase create(Ref ref) {
-    return getThemeSettingUseCase(ref);
+  GetSettingsUseCase create(Ref ref) {
+    return getSettingsUseCase(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(GetThemeSettingUseCase value) {
+  Override overrideWithValue(GetSettingsUseCase value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<GetThemeSettingUseCase>(value),
+      providerOverride: $SyncValueProvider<GetSettingsUseCase>(value),
     );
   }
 }
 
-String _$getThemeSettingUseCaseHash() =>
-    r'15bfec8919f3f2332d03308937c1a4c5e8470b1d';
+String _$getSettingsUseCaseHash() =>
+    r'46bcf6d15133e23a1358f9d150abc1d1c88dc7cf';
 
-/// UpdateThemeSettingUseCase Provider
+/// SaveSettingsUseCase Provider
 /// 실제 구현체는 root app에서 override됨
 
-@ProviderFor(updateThemeSettingUseCase)
-const updateThemeSettingUseCaseProvider = UpdateThemeSettingUseCaseProvider._();
+@ProviderFor(saveSettingsUseCase)
+const saveSettingsUseCaseProvider = SaveSettingsUseCaseProvider._();
 
-/// UpdateThemeSettingUseCase Provider
+/// SaveSettingsUseCase Provider
 /// 실제 구현체는 root app에서 override됨
 
-final class UpdateThemeSettingUseCaseProvider extends $FunctionalProvider<
-    UpdateThemeSettingUseCase,
-    UpdateThemeSettingUseCase,
-    UpdateThemeSettingUseCase> with $Provider<UpdateThemeSettingUseCase> {
-  /// UpdateThemeSettingUseCase Provider
+final class SaveSettingsUseCaseProvider extends $FunctionalProvider<
+    SaveSettingsUseCase,
+    SaveSettingsUseCase,
+    SaveSettingsUseCase> with $Provider<SaveSettingsUseCase> {
+  /// SaveSettingsUseCase Provider
   /// 실제 구현체는 root app에서 override됨
-  const UpdateThemeSettingUseCaseProvider._()
+  const SaveSettingsUseCaseProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
-          name: r'updateThemeSettingUseCaseProvider',
+          name: r'saveSettingsUseCaseProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$updateThemeSettingUseCaseHash();
+  String debugGetCreateSourceHash() => _$saveSettingsUseCaseHash();
 
   @$internal
   @override
-  $ProviderElement<UpdateThemeSettingUseCase> $createElement(
+  $ProviderElement<SaveSettingsUseCase> $createElement(
           $ProviderPointer pointer) =>
       $ProviderElement(pointer);
 
   @override
-  UpdateThemeSettingUseCase create(Ref ref) {
-    return updateThemeSettingUseCase(ref);
+  SaveSettingsUseCase create(Ref ref) {
+    return saveSettingsUseCase(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(UpdateThemeSettingUseCase value) {
+  Override overrideWithValue(SaveSettingsUseCase value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<UpdateThemeSettingUseCase>(value),
+      providerOverride: $SyncValueProvider<SaveSettingsUseCase>(value),
     );
   }
 }
 
-String _$updateThemeSettingUseCaseHash() =>
-    r'cc7856613254fee20516d38bd439f0c437331d83';
+String _$saveSettingsUseCaseHash() =>
+    r'bdb53f1b60c5a9628cee57f9dbc624a36094d995';
+
+/// GetExchangeRateUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+@ProviderFor(getExchangeRateUseCase)
+const getExchangeRateUseCaseProvider = GetExchangeRateUseCaseProvider._();
+
+/// GetExchangeRateUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+final class GetExchangeRateUseCaseProvider extends $FunctionalProvider<
+    GetExchangeRateUseCase,
+    GetExchangeRateUseCase,
+    GetExchangeRateUseCase> with $Provider<GetExchangeRateUseCase> {
+  /// GetExchangeRateUseCase Provider
+  /// 실제 구현체는 root app에서 override됨
+  const GetExchangeRateUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getExchangeRateUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getExchangeRateUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetExchangeRateUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetExchangeRateUseCase create(Ref ref) {
+    return getExchangeRateUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetExchangeRateUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetExchangeRateUseCase>(value),
+    );
+  }
+}
+
+String _$getExchangeRateUseCaseHash() =>
+    r'2276d6d6a3682a1313c6c2bb97f3a9e734272bdd';
+
+/// GetChartDataUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+@ProviderFor(getChartDataUseCase)
+const getChartDataUseCaseProvider = GetChartDataUseCaseProvider._();
+
+/// GetChartDataUseCase Provider
+/// 실제 구현체는 root app에서 override됨
+
+final class GetChartDataUseCaseProvider extends $FunctionalProvider<
+    GetChartDataUseCase,
+    GetChartDataUseCase,
+    GetChartDataUseCase> with $Provider<GetChartDataUseCase> {
+  /// GetChartDataUseCase Provider
+  /// 실제 구현체는 root app에서 override됨
+  const GetChartDataUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getChartDataUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getChartDataUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetChartDataUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetChartDataUseCase create(Ref ref) {
+    return getChartDataUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetChartDataUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetChartDataUseCase>(value),
+    );
+  }
+}
+
+String _$getChartDataUseCaseHash() =>
+    r'a411e3cba89c40fa1b9aed4686b90bf052d81b31';
