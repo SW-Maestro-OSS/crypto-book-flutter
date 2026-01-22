@@ -53,10 +53,48 @@ class ExchangeRateDataSource {
           ? response.data as List<dynamic>
           : [response.data];
 
-      return jsonList
+      // 전체 응답 파싱 (필터링 전)
+      final allDtos = jsonList
           .map((json) => ExchangeRateDTOMapper.fromMap(json as Map<String, dynamic>))
-          .where((dto) => dto.isSuccess) // 성공한 응답만 필터링
           .toList();
+
+      // === 디버깅 로그 추가 ===
+      print('=== Exchange Rate API Response ===');
+      print('Total items: ${allDtos.length}');
+      if (allDtos.isNotEmpty) {
+        final firstItem = allDtos.first;
+        print('First item - Currency: ${firstItem.currencyCode}, Result: ${firstItem.result}, IsSuccess: ${firstItem.isSuccess}');
+
+        // USD 데이터 확인
+        final usdItem = allDtos.where((dto) => dto.currencyCode == 'USD').firstOrNull;
+        if (usdItem != null) {
+          print('USD found - Result: ${usdItem.result}, Rate: ${usdItem.dealBaseRate}');
+        } else {
+          print('WARNING: USD not found in response!');
+        }
+      }
+
+      // 필터링 후 개수 확인
+      final successItems = allDtos.where((dto) => dto.isSuccess).toList();
+      print('Success items after filter: ${successItems.length}');
+      print('=====================================');
+
+      // 성공한 항목이 없으면 에러 처리
+      if (successItems.isEmpty && allDtos.isNotEmpty) {
+        final firstItem = allDtos.first;
+        switch (firstItem.result) {
+          case 2:
+            throw const ApiDataError('Invalid DATA code (result=2)');
+          case 3:
+            throw const ApiAuthenticationError();
+          case 4:
+            throw const ApiRateLimitError();
+          default:
+            throw ApiDataError('Unknown result code: ${firstItem.result}');
+        }
+      }
+
+      return successItems;
     } on DioException catch (e) {
       throw ErrorMapper.fromDioException(e);
     } catch (e) {

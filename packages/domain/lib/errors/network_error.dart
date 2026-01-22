@@ -84,3 +84,47 @@ class GenericNetworkError extends NetworkError {
   @override
   bool get isRecoverable => true;
 }
+
+/// API 인증 실패
+class ApiAuthenticationError extends NetworkError {
+  const ApiAuthenticationError();
+
+  @override
+  String get userMessage => 'API 인증에 실패했습니다';
+
+  @override
+  String get technicalMessage => 'API authentication failed (result=3)';
+
+  @override
+  bool get isRecoverable => false;
+}
+
+/// API 사용량 제한 초과
+class ApiRateLimitError extends NetworkError {
+  const ApiRateLimitError();
+
+  @override
+  String get userMessage => 'API 사용량이 초과되었습니다. 잠시 후 다시 시도해주세요';
+
+  @override
+  String get technicalMessage => 'API rate limit exceeded (result=4)';
+
+  @override
+  bool get isRecoverable => true;
+}
+
+/// API 데이터 오류
+class ApiDataError extends NetworkError {
+  final String details;
+
+  const ApiDataError(this.details);
+
+  @override
+  String get userMessage => '환율 데이터를 가져올 수 없습니다';
+
+  @override
+  String get technicalMessage => 'API data error: $details';
+
+  @override
+  bool get isRecoverable => true;
+}

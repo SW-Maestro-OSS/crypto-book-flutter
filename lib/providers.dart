@@ -56,9 +56,15 @@ ExchangeRateDataSource exchangeRateDataSource(Ref ref) {
 }
 
 @riverpod
+ExchangeRateCacheDataSource exchangeRateCacheDataSource(Ref ref) {
+  return ExchangeRateCacheDataSource();
+}
+
+@riverpod
 ExchangeRateRepository exchangeRateRepository(Ref ref) {
   return ExchangeRateRepositoryImpl(
     dataSource: ref.watch(exchangeRateDataSourceProvider),
+    cacheDataSource: ref.watch(exchangeRateCacheDataSourceProvider),
   );
 }
 

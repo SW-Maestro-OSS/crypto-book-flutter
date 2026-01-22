@@ -267,6 +267,51 @@ final class ExchangeRateDataSourceProvider extends $FunctionalProvider<
 String _$exchangeRateDataSourceHash() =>
     r'2fa215ae50db5dd2075643ce949b567930a3ac70';
 
+@ProviderFor(exchangeRateCacheDataSource)
+const exchangeRateCacheDataSourceProvider =
+    ExchangeRateCacheDataSourceProvider._();
+
+final class ExchangeRateCacheDataSourceProvider extends $FunctionalProvider<
+    ExchangeRateCacheDataSource,
+    ExchangeRateCacheDataSource,
+    ExchangeRateCacheDataSource> with $Provider<ExchangeRateCacheDataSource> {
+  const ExchangeRateCacheDataSourceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'exchangeRateCacheDataSourceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$exchangeRateCacheDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<ExchangeRateCacheDataSource> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  ExchangeRateCacheDataSource create(Ref ref) {
+    return exchangeRateCacheDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(ExchangeRateCacheDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<ExchangeRateCacheDataSource>(value),
+    );
+  }
+}
+
+String _$exchangeRateCacheDataSourceHash() =>
+    r'7e9771822bab967448d2b042a6e2cf8ea4a735cd';
+
 @ProviderFor(exchangeRateRepository)
 const exchangeRateRepositoryProvider = ExchangeRateRepositoryProvider._();
 
@@ -309,7 +354,7 @@ final class ExchangeRateRepositoryProvider extends $FunctionalProvider<
 }
 
 String _$exchangeRateRepositoryHash() =>
-    r'9648bce9dda53b6328b07f3d4c41631c9ee8cf8f';
+    r'fc4ce2ef205b6e0fcdb926808b4123beedabf67e';
 
 @ProviderFor(settingsDataSource)
 const settingsDataSourceProvider = SettingsDataSourceProvider._();
