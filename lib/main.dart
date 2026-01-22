@@ -50,6 +50,11 @@ Future<void> main() async {
             repository: ref.watch(root_providers.exchangeRateRepositoryProvider),
           );
         }),
+        getChartDataUseCaseProvider.overrideWith((ref) {
+          return GetChartDataUseCaseImpl(
+            repository: ref.watch(root_providers.coinRepositoryProvider),
+          );
+        }),
       ],
       child: const MyApp(),
     ),
