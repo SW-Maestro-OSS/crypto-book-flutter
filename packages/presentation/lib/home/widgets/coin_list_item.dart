@@ -18,7 +18,7 @@ class CoinListItem extends StatelessWidget {
     return ListTile(
       leading: _buildCoinImage(),
       title: Text(
-        ticker.symbol.replaceAll("USDT", ""),
+        ticker.symbol,
         style: context.textTheme.titleMedium
             ?.copyWith(fontWeight: FontWeight.bold),
       ),
@@ -72,15 +72,15 @@ class CoinListItem extends StatelessWidget {
   /// 가격 포맷 (가격에 따라 소수점 자리수 동적 조정)
   String _formatPrice(double price) {
     if (price >= 100) {
-      return price.toStringAsFixed(2);  // $100 이상: 2자리
+      return price.toStringAsFixed(2); // $100 이상: 2자리
     } else if (price >= 10) {
-      return price.toStringAsFixed(3);  // $10-100: 3자리
+      return price.toStringAsFixed(3); // $10-100: 3자리
     } else if (price >= 1) {
-      return price.toStringAsFixed(4);  // $1-10: 4자리
+      return price.toStringAsFixed(4); // $1-10: 4자리
     } else if (price >= 0.01) {
-      return price.toStringAsFixed(5);  // $0.01-1: 5자리
+      return price.toStringAsFixed(5); // $0.01-1: 5자리
     } else {
-      return price.toStringAsFixed(6);  // $0.01 미만: 6자리
+      return price.toStringAsFixed(6); // $0.01 미만: 6자리
     }
   }
 
