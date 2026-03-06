@@ -13,4 +13,10 @@ sealed class MainIntent with _$MainIntent {
 
   /// Handle deep link
   const factory MainIntent.handleDeepLink(String path) = _HandleDeepLink;
+
+  /// App resumed (foreground)
+  const factory MainIntent.appResumed() = _AppResumed;
+
+  /// App paused (background)
+  const factory MainIntent.appPaused() = _AppPaused;
 }

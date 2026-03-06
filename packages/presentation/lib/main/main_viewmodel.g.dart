@@ -10,25 +10,19 @@ part of 'main_viewmodel.dart';
 // ignore_for_file: type=lint, type=warning
 /// Main screen ViewModel
 ///
-/// This ViewModel manages:
-/// - Tab selection state
-/// - Navigation state for child ViewModels
+/// 앱 라이프사이클 + WebSocket 연결 + 네트워크 상태를 관리한다.
 
 @ProviderFor(MainViewModel)
 const mainViewModelProvider = MainViewModelProvider._();
 
 /// Main screen ViewModel
 ///
-/// This ViewModel manages:
-/// - Tab selection state
-/// - Navigation state for child ViewModels
+/// 앱 라이프사이클 + WebSocket 연결 + 네트워크 상태를 관리한다.
 final class MainViewModelProvider
     extends $NotifierProvider<MainViewModel, MainState> {
   /// Main screen ViewModel
   ///
-  /// This ViewModel manages:
-  /// - Tab selection state
-  /// - Navigation state for child ViewModels
+  /// 앱 라이프사이클 + WebSocket 연결 + 네트워크 상태를 관리한다.
   const MainViewModelProvider._()
       : super(
           from: null,
@@ -56,13 +50,11 @@ final class MainViewModelProvider
   }
 }
 
-String _$mainViewModelHash() => r'ac3c4c38fbdd674ae18a7ae9e04bf209558c5e9b';
+String _$mainViewModelHash() => r'1efd9d62b0db6c460fda5a4ecb1d16309c8b87ea';
 
 /// Main screen ViewModel
 ///
-/// This ViewModel manages:
-/// - Tab selection state
-/// - Navigation state for child ViewModels
+/// 앱 라이프사이클 + WebSocket 연결 + 네트워크 상태를 관리한다.
 
 abstract class _$MainViewModel extends $Notifier<MainState> {
   MainState build();
@@ -78,22 +70,16 @@ abstract class _$MainViewModel extends $Notifier<MainState> {
 }
 
 /// Provider for RoutingHelper
-///
-/// This allows other ViewModels to access the RoutingHelper
 
 @ProviderFor(routingHelper)
 const routingHelperProvider = RoutingHelperProvider._();
 
 /// Provider for RoutingHelper
-///
-/// This allows other ViewModels to access the RoutingHelper
 
 final class RoutingHelperProvider
     extends $FunctionalProvider<RoutingHelper, RoutingHelper, RoutingHelper>
     with $Provider<RoutingHelper> {
   /// Provider for RoutingHelper
-  ///
-  /// This allows other ViewModels to access the RoutingHelper
   const RoutingHelperProvider._()
       : super(
           from: null,

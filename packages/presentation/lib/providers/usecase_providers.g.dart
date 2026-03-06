@@ -493,3 +493,100 @@ final class AiRepositoryProvider
 }
 
 String _$aiRepositoryHash() => r'7c0649c33effa53030ccdcc0b8ebc201bc9810b0';
+
+/// WebSocketRepository Provider
+
+@ProviderFor(webSocketRepository)
+const webSocketRepositoryProvider = WebSocketRepositoryProvider._();
+
+/// WebSocketRepository Provider
+
+final class WebSocketRepositoryProvider extends $FunctionalProvider<
+    WebSocketRepository,
+    WebSocketRepository,
+    WebSocketRepository> with $Provider<WebSocketRepository> {
+  /// WebSocketRepository Provider
+  const WebSocketRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'webSocketRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$webSocketRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<WebSocketRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  WebSocketRepository create(Ref ref) {
+    return webSocketRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WebSocketRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WebSocketRepository>(value),
+    );
+  }
+}
+
+String _$webSocketRepositoryHash() =>
+    r'96ef353cd5d2fddbf0752615dad66f377e9467d7';
+
+/// NetworkRepository Provider
+
+@ProviderFor(networkRepository)
+const networkRepositoryProvider = NetworkRepositoryProvider._();
+
+/// NetworkRepository Provider
+
+final class NetworkRepositoryProvider extends $FunctionalProvider<
+    NetworkRepository,
+    NetworkRepository,
+    NetworkRepository> with $Provider<NetworkRepository> {
+  /// NetworkRepository Provider
+  const NetworkRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'networkRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$networkRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<NetworkRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  NetworkRepository create(Ref ref) {
+    return networkRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(NetworkRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<NetworkRepository>(value),
+    );
+  }
+}
+
+String _$networkRepositoryHash() => r'49ee9710160a9a9b190f92f8d17d6d061683b937';

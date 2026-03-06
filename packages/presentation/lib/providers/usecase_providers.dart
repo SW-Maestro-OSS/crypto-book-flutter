@@ -82,3 +82,19 @@ AiRepository aiRepository(Ref ref) {
     'aiRepositoryProvider must be overridden in main app',
   );
 }
+
+/// WebSocketRepository Provider
+@riverpod
+WebSocketRepository webSocketRepository(Ref ref) {
+  throw UnimplementedError(
+    'webSocketRepositoryProvider must be overridden in main app',
+  );
+}
+
+/// NetworkRepository Provider
+@riverpod
+NetworkRepository networkRepository(Ref ref) {
+  throw UnimplementedError(
+    'networkRepositoryProvider must be overridden in main app',
+  );
+}

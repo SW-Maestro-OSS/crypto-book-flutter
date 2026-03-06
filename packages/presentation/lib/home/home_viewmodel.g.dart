@@ -8,15 +8,15 @@ part of 'home_viewmodel.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Home ViewModel with SideEffect support
+/// Home ViewModel with SideEffect + WebSocket subscription support
 
 @ProviderFor(HomeViewModel)
 const homeViewModelProvider = HomeViewModelProvider._();
 
-/// Home ViewModel with SideEffect support
+/// Home ViewModel with SideEffect + WebSocket subscription support
 final class HomeViewModelProvider
     extends $NotifierProvider<HomeViewModel, HomeState> {
-  /// Home ViewModel with SideEffect support
+  /// Home ViewModel with SideEffect + WebSocket subscription support
   const HomeViewModelProvider._()
       : super(
           from: null,
@@ -44,9 +44,9 @@ final class HomeViewModelProvider
   }
 }
 
-String _$homeViewModelHash() => r'44a7da738f6ce6d5004d8a28331d7c3e8e6f2194';
+String _$homeViewModelHash() => r'5b2edc812b37ba4c94417a0b8419045261627ba1';
 
-/// Home ViewModel with SideEffect support
+/// Home ViewModel with SideEffect + WebSocket subscription support
 
 abstract class _$HomeViewModel extends $Notifier<HomeState> {
   HomeState build();

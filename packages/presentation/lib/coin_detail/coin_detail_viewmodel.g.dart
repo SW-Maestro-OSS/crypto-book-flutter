@@ -8,15 +8,15 @@ part of 'coin_detail_viewmodel.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Coin Detail ViewModel with SideEffect support
+/// Coin Detail ViewModel with SideEffect + WebSocket subscription support
 
 @ProviderFor(CoinDetailViewModel)
 const coinDetailViewModelProvider = CoinDetailViewModelFamily._();
 
-/// Coin Detail ViewModel with SideEffect support
+/// Coin Detail ViewModel with SideEffect + WebSocket subscription support
 final class CoinDetailViewModelProvider
     extends $NotifierProvider<CoinDetailViewModel, CoinDetailState> {
-  /// Coin Detail ViewModel with SideEffect support
+  /// Coin Detail ViewModel with SideEffect + WebSocket subscription support
   const CoinDetailViewModelProvider._(
       {required CoinDetailViewModelFamily super.from,
       required String super.argument})
@@ -62,9 +62,9 @@ final class CoinDetailViewModelProvider
 }
 
 String _$coinDetailViewModelHash() =>
-    r'18c79fd10c368a60caf1f3db321577f86d01525d';
+    r'1fd750ecee1b2d170b12c5b726d4f6611653390b';
 
-/// Coin Detail ViewModel with SideEffect support
+/// Coin Detail ViewModel with SideEffect + WebSocket subscription support
 
 final class CoinDetailViewModelFamily extends $Family
     with
@@ -79,7 +79,7 @@ final class CoinDetailViewModelFamily extends $Family
           isAutoDispose: true,
         );
 
-  /// Coin Detail ViewModel with SideEffect support
+  /// Coin Detail ViewModel with SideEffect + WebSocket subscription support
 
   CoinDetailViewModelProvider call(
     String symbol,
@@ -90,7 +90,7 @@ final class CoinDetailViewModelFamily extends $Family
   String toString() => r'coinDetailViewModelProvider';
 }
 
-/// Coin Detail ViewModel with SideEffect support
+/// Coin Detail ViewModel with SideEffect + WebSocket subscription support
 
 abstract class _$CoinDetailViewModel extends $Notifier<CoinDetailState> {
   late final _$args = ref.$arg as String;

@@ -1,33 +1,51 @@
+import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:presentation/main/main_state.dart';
 import 'package:presentation/main/main_intent.dart';
 import 'package:presentation/routing/navigation_state.dart';
 import 'package:presentation/routing/routing_helper_impl.dart';
+import 'package:presentation/core/mvi/websocket_subscription_mixin.dart';
+import 'package:presentation/providers/usecase_providers.dart';
 import 'package:domain/domain.dart';
 
 part 'main_viewmodel.g.dart';
 
 /// Main screen ViewModel
 ///
-/// This ViewModel manages:
-/// - Tab selection state
-/// - Navigation state for child ViewModels
+/// 앱 라이프사이클 + WebSocket 연결 + 네트워크 상태를 관리한다.
 @riverpod
-class MainViewModel extends _$MainViewModel {
+class MainViewModel extends _$MainViewModel with WebSocketSubscriptionMixin {
   late final RoutingHelper _routingHelper;
+  bool _isForeground = true;
+  StreamSubscription? _networkSubscription;
 
   @override
   MainState build() {
-    // Create RoutingHelper with callback
     _routingHelper = RoutingHelperImpl(
       onNavigationStateChanged: _updateNavigationState,
     );
+
+    // WebSocket 상태 구독 (mixin)
+    final wsRepo = ref.read(webSocketRepositoryProvider);
+    subscribeWebSocket(wsRepo.connectionState);
+
+    // 네트워크 상태 감시
+    final networkRepo = ref.read(networkRepositoryProvider);
+    _networkSubscription = networkRepo.statusStream.listen((status) {
+      if (status == NetworkStatus.online && _isForeground) {
+        _connectWebSocketIfDisconnected();
+      }
+    });
+
+    ref.onDispose(() {
+      disposeWebSocketSubscription();
+      _networkSubscription?.cancel();
+    });
 
     return MainState();
   }
 
   /// Get the RoutingHelper instance
-  /// This will be provided to other ViewModels
   RoutingHelper get routingHelper => _routingHelper;
 
   /// Handle intents
@@ -36,7 +54,27 @@ class MainViewModel extends _$MainViewModel {
       changeTab: _handleChangeTab,
       navigationCompleted: _handleNavigationCompleted,
       handleDeepLink: _handleDeepLink,
+      appResumed: _handleAppResumed,
+      appPaused: _handleAppPaused,
     );
+  }
+
+  void _handleAppResumed() {
+    _isForeground = true;
+    ref.read(webSocketRepositoryProvider).setForeground(true);
+    _connectWebSocketIfDisconnected();
+  }
+
+  void _handleAppPaused() {
+    _isForeground = false;
+    ref.read(webSocketRepositoryProvider).setForeground(false);
+  }
+
+  void _connectWebSocketIfDisconnected() {
+    final wsRepo = ref.read(webSocketRepositoryProvider);
+    if (!wsRepo.isConnected) {
+      wsRepo.reconnect();
+    }
   }
 
   void _handleChangeTab(int tabIndex) {
@@ -44,37 +82,30 @@ class MainViewModel extends _$MainViewModel {
   }
 
   void _handleNavigationCompleted() {
-    // Reset navigation state to idle after navigation is handled
     state = state.copyWith(
       navigationState: const NavigationState.idle(),
     );
   }
 
   void _handleDeepLink(String path) {
-    // Parse the deep link path
     final pageType = PageType.fromPath(path);
     if (pageType == null) {
-      // Unknown route, navigate to main
       _updateNavigationState(
         const NavigationState.navigateTo(pageType: PageType.main),
       );
       return;
     }
 
-    // Extract parameters
     final params = PageType.extractParams(path);
 
-    // Handle based on page type
     switch (pageType) {
       case PageType.splash:
-        // Deep link to splash doesn't make sense, go to main
         _updateNavigationState(
           const NavigationState.navigateTo(pageType: PageType.main),
         );
         break;
 
       case PageType.main:
-        // Check if tab is specified
         final tabParam = params.getQueryParam('tab');
         if (tabParam != null) {
           final tabIndex = int.tryParse(tabParam) ?? 0;
@@ -86,8 +117,6 @@ class MainViewModel extends _$MainViewModel {
         break;
 
       case PageType.coinDetail:
-        // Navigate to coin detail
-        // This will push the detail page on top of main page
         _updateNavigationState(
           NavigationState.pushTo(
             pageType: PageType.coinDetail,
@@ -98,7 +127,6 @@ class MainViewModel extends _$MainViewModel {
 
       case PageType.home:
       case PageType.settings:
-        // These are tab-only routes, navigate to main
         _updateNavigationState(
           const NavigationState.navigateTo(pageType: PageType.main),
         );
@@ -112,8 +140,6 @@ class MainViewModel extends _$MainViewModel {
 }
 
 /// Provider for RoutingHelper
-///
-/// This allows other ViewModels to access the RoutingHelper
 @riverpod
 RoutingHelper routingHelper(Ref ref) {
   return ref.watch(mainViewModelProvider.notifier).routingHelper;

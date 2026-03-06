@@ -6,28 +6,39 @@ import 'package:presentation/coin_detail/coin_detail_state.dart';
 import 'package:presentation/coin_detail/coin_detail_intent.dart';
 import 'package:presentation/coin_detail/coin_detail_side_effect.dart';
 import 'package:presentation/core/mvi/side_effect_mixin.dart';
+import 'package:presentation/core/mvi/websocket_subscription_mixin.dart';
 import 'package:presentation/providers/usecase_providers.dart';
 
 part 'coin_detail_viewmodel.g.dart';
 
-/// Coin Detail ViewModel with SideEffect support
+/// Coin Detail ViewModel with SideEffect + WebSocket subscription support
 @riverpod
 class CoinDetailViewModel extends _$CoinDetailViewModel
-    with SideEffectMixin<CoinDetailSideEffect> {
+    with SideEffectMixin<CoinDetailSideEffect>, WebSocketSubscriptionMixin {
   StreamSubscription? _tickerSubscription;
   Timer? _chartRefreshTimer;
 
   @override
   CoinDetailState build(String symbol) {
+    final wsRepo = ref.read(webSocketRepositoryProvider);
+    subscribeWebSocket(wsRepo.connectionState);
+
     ref.onDispose(() {
       _tickerSubscription?.cancel();
       _chartRefreshTimer?.cancel();
+      disposeWebSocketSubscription();
       disposeSideEffects();
     });
 
     Future.microtask(() => onIntent(CoinDetailIntent.load(symbol)));
 
     return const CoinDetailState.initial();
+  }
+
+  @override
+  void onWsDisconnected() {
+    emitSideEffect(const CoinDetailSideEffect.showToast(
+        '실시간 연결이 끊어졌습니다. 재연결 중...'));
   }
 
   void onIntent(CoinDetailIntent intent) {

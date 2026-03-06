@@ -15,7 +15,33 @@ class MainPage extends ConsumerStatefulWidget {
   ConsumerState<MainPage> createState() => _MainPageState();
 }
 
-class _MainPageState extends ConsumerState<MainPage> {
+class _MainPageState extends ConsumerState<MainPage>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref
+          .read(mainViewModelProvider.notifier)
+          .onIntent(const MainIntent.appResumed());
+    } else if (state == AppLifecycleState.paused) {
+      ref
+          .read(mainViewModelProvider.notifier)
+          .onIntent(const MainIntent.appPaused());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(mainViewModelProvider);

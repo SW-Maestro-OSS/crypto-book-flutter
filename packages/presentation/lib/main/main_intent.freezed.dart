@@ -53,6 +53,8 @@ extension MainIntentPatterns on MainIntent {
     TResult Function(_ChangeTab value)? changeTab,
     TResult Function(_NavigationCompleted value)? navigationCompleted,
     TResult Function(_HandleDeepLink value)? handleDeepLink,
+    TResult Function(_AppResumed value)? appResumed,
+    TResult Function(_AppPaused value)? appPaused,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -63,6 +65,10 @@ extension MainIntentPatterns on MainIntent {
         return navigationCompleted(_that);
       case _HandleDeepLink() when handleDeepLink != null:
         return handleDeepLink(_that);
+      case _AppResumed() when appResumed != null:
+        return appResumed(_that);
+      case _AppPaused() when appPaused != null:
+        return appPaused(_that);
       case _:
         return orElse();
     }
@@ -86,6 +92,8 @@ extension MainIntentPatterns on MainIntent {
     required TResult Function(_ChangeTab value) changeTab,
     required TResult Function(_NavigationCompleted value) navigationCompleted,
     required TResult Function(_HandleDeepLink value) handleDeepLink,
+    required TResult Function(_AppResumed value) appResumed,
+    required TResult Function(_AppPaused value) appPaused,
   }) {
     final _that = this;
     switch (_that) {
@@ -95,6 +103,10 @@ extension MainIntentPatterns on MainIntent {
         return navigationCompleted(_that);
       case _HandleDeepLink():
         return handleDeepLink(_that);
+      case _AppResumed():
+        return appResumed(_that);
+      case _AppPaused():
+        return appPaused(_that);
     }
   }
 
@@ -115,6 +127,8 @@ extension MainIntentPatterns on MainIntent {
     TResult? Function(_ChangeTab value)? changeTab,
     TResult? Function(_NavigationCompleted value)? navigationCompleted,
     TResult? Function(_HandleDeepLink value)? handleDeepLink,
+    TResult? Function(_AppResumed value)? appResumed,
+    TResult? Function(_AppPaused value)? appPaused,
   }) {
     final _that = this;
     switch (_that) {
@@ -124,6 +138,10 @@ extension MainIntentPatterns on MainIntent {
         return navigationCompleted(_that);
       case _HandleDeepLink() when handleDeepLink != null:
         return handleDeepLink(_that);
+      case _AppResumed() when appResumed != null:
+        return appResumed(_that);
+      case _AppPaused() when appPaused != null:
+        return appPaused(_that);
       case _:
         return null;
     }
@@ -146,6 +164,8 @@ extension MainIntentPatterns on MainIntent {
     TResult Function(int tabIndex)? changeTab,
     TResult Function()? navigationCompleted,
     TResult Function(String path)? handleDeepLink,
+    TResult Function()? appResumed,
+    TResult Function()? appPaused,
     required TResult orElse(),
   }) {
     final _that = this;
@@ -156,6 +176,10 @@ extension MainIntentPatterns on MainIntent {
         return navigationCompleted();
       case _HandleDeepLink() when handleDeepLink != null:
         return handleDeepLink(_that.path);
+      case _AppResumed() when appResumed != null:
+        return appResumed();
+      case _AppPaused() when appPaused != null:
+        return appPaused();
       case _:
         return orElse();
     }
@@ -179,6 +203,8 @@ extension MainIntentPatterns on MainIntent {
     required TResult Function(int tabIndex) changeTab,
     required TResult Function() navigationCompleted,
     required TResult Function(String path) handleDeepLink,
+    required TResult Function() appResumed,
+    required TResult Function() appPaused,
   }) {
     final _that = this;
     switch (_that) {
@@ -188,6 +214,10 @@ extension MainIntentPatterns on MainIntent {
         return navigationCompleted();
       case _HandleDeepLink():
         return handleDeepLink(_that.path);
+      case _AppResumed():
+        return appResumed();
+      case _AppPaused():
+        return appPaused();
     }
   }
 
@@ -208,6 +238,8 @@ extension MainIntentPatterns on MainIntent {
     TResult? Function(int tabIndex)? changeTab,
     TResult? Function()? navigationCompleted,
     TResult? Function(String path)? handleDeepLink,
+    TResult? Function()? appResumed,
+    TResult? Function()? appPaused,
   }) {
     final _that = this;
     switch (_that) {
@@ -217,6 +249,10 @@ extension MainIntentPatterns on MainIntent {
         return navigationCompleted();
       case _HandleDeepLink() when handleDeepLink != null:
         return handleDeepLink(_that.path);
+      case _AppResumed() when appResumed != null:
+        return appResumed();
+      case _AppPaused() when appPaused != null:
+        return appPaused();
       case _:
         return null;
     }
@@ -368,6 +404,46 @@ class __$HandleDeepLinkCopyWithImpl<$Res>
           : path // ignore: cast_nullable_to_non_nullable
               as String,
     ));
+  }
+}
+
+/// @nodoc
+
+class _AppResumed implements MainIntent {
+  const _AppResumed();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _AppResumed);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'MainIntent.appResumed()';
+  }
+}
+
+/// @nodoc
+
+class _AppPaused implements MainIntent {
+  const _AppPaused();
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _AppPaused);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  String toString() {
+    return 'MainIntent.appPaused()';
   }
 }
 

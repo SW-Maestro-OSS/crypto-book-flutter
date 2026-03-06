@@ -6,24 +6,35 @@ import 'package:presentation/home/home_state.dart';
 import 'package:presentation/home/home_intent.dart';
 import 'package:presentation/home/home_side_effect.dart';
 import 'package:presentation/core/mvi/side_effect_mixin.dart';
+import 'package:presentation/core/mvi/websocket_subscription_mixin.dart';
 import 'package:presentation/providers/usecase_providers.dart';
 
 part 'home_viewmodel.g.dart';
 
-/// Home ViewModel with SideEffect support
+/// Home ViewModel with SideEffect + WebSocket subscription support
 @riverpod
 class HomeViewModel extends _$HomeViewModel
-    with SideEffectMixin<HomeSideEffect> {
+    with SideEffectMixin<HomeSideEffect>, WebSocketSubscriptionMixin {
   StreamSubscription? _tickerSubscription;
 
   @override
   HomeState build() {
+    final wsRepo = ref.read(webSocketRepositoryProvider);
+    subscribeWebSocket(wsRepo.connectionState);
+
     ref.onDispose(() {
       _tickerSubscription?.cancel();
+      disposeWebSocketSubscription();
       disposeSideEffects();
     });
 
     return const HomeState.initial();
+  }
+
+  @override
+  void onWsDisconnected() {
+    emitSideEffect(
+        const HomeSideEffect.showToast('실시간 연결이 끊어졌습니다. 재연결 중...'));
   }
 
   void onIntent(HomeIntent intent) {
