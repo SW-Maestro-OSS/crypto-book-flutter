@@ -3,14 +3,20 @@ abstract interface class WebSocketRepository {
   /// WebSocket 연결
   Future<void> connect();
 
-  /// WebSocket 해제
+  /// WebSocket 해제 (controller 유지, 재연결 가능)
   Future<void> disconnect();
 
   /// WebSocket 재연결
   Future<void> reconnect();
 
+  /// 현재 연결 여부
+  bool get isConnected;
+
   /// 연결 상태 스트림
-  Stream<WebSocketConnectionState> connectionState();
+  Stream<WebSocketConnectionState> get connectionState;
+
+  /// 포그라운드/백그라운드 상태 설정
+  void setForeground(bool isForeground);
 }
 
 /// WebSocket 연결 상태

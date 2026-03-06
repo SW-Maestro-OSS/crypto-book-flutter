@@ -16,6 +16,7 @@ export 'errors/ai_error.dart';
 export 'repositories/coin_repository.dart';
 export 'repositories/exchange_rate_repository.dart';
 export 'repositories/websocket_repository.dart';
+export 'repositories/network_repository.dart';
 export 'repositories/settings_repository.dart';
 export 'repositories/news_repository.dart';
 export 'repositories/ai_repository.dart';
