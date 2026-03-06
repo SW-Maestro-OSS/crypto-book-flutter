@@ -27,6 +27,9 @@ dependencies:
   # SharedPreferences for settings
   shared_preferences: ^2.3.3
 
+  # Network status
+  connectivity_plus: ^6.0.0
+
   # On-device AI
   flutter_local_ai: ^0.0.6
 
