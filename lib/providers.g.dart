@@ -180,7 +180,7 @@ final class WsDataHubProvider
   }
 }
 
-String _$wsDataHubHash() => r'3c3850b6a998d306c661cd31e2e1b01bdc09796a';
+String _$wsDataHubHash() => r'686582b62ad8f8c0697d88f604f6570116646a06';
 
 @ProviderFor(coinRepository)
 const coinRepositoryProvider = CoinRepositoryProvider._();
@@ -1006,40 +1006,133 @@ final class AnalyzeCoinUseCaseProvider extends $FunctionalProvider<
 String _$analyzeCoinUseCaseHash() =>
     r'b5321874bfc809853cf66b22905508cd33a9e740';
 
-@ProviderFor(wsConnectionState)
-const wsConnectionStateProvider = WsConnectionStateProvider._();
+@ProviderFor(networkStatusDataSource)
+const networkStatusDataSourceProvider = NetworkStatusDataSourceProvider._();
 
-final class WsConnectionStateProvider extends $FunctionalProvider<
-        AsyncValue<WebSocketConnectionState>,
-        WebSocketConnectionState,
-        Stream<WebSocketConnectionState>>
-    with
-        $FutureModifier<WebSocketConnectionState>,
-        $StreamProvider<WebSocketConnectionState> {
-  const WsConnectionStateProvider._()
+final class NetworkStatusDataSourceProvider extends $FunctionalProvider<
+    NetworkStatusDataSource,
+    NetworkStatusDataSource,
+    NetworkStatusDataSource> with $Provider<NetworkStatusDataSource> {
+  const NetworkStatusDataSourceProvider._()
       : super(
           from: null,
           argument: null,
           retry: null,
-          name: r'wsConnectionStateProvider',
+          name: r'networkStatusDataSourceProvider',
           isAutoDispose: true,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
 
   @override
-  String debugGetCreateSourceHash() => _$wsConnectionStateHash();
+  String debugGetCreateSourceHash() => _$networkStatusDataSourceHash();
 
   @$internal
   @override
-  $StreamProviderElement<WebSocketConnectionState> $createElement(
+  $ProviderElement<NetworkStatusDataSource> $createElement(
           $ProviderPointer pointer) =>
-      $StreamProviderElement(pointer);
+      $ProviderElement(pointer);
 
   @override
-  Stream<WebSocketConnectionState> create(Ref ref) {
-    return wsConnectionState(ref);
+  NetworkStatusDataSource create(Ref ref) {
+    return networkStatusDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(NetworkStatusDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<NetworkStatusDataSource>(value),
+    );
   }
 }
 
-String _$wsConnectionStateHash() => r'a1adf9ed11bd4b545ed966988b9f8be5e9834efe';
+String _$networkStatusDataSourceHash() =>
+    r'370dd6a2037e0688d0d29dbb372103e47a876184';
+
+@ProviderFor(networkRepository)
+const networkRepositoryProvider = NetworkRepositoryProvider._();
+
+final class NetworkRepositoryProvider extends $FunctionalProvider<
+    NetworkRepository,
+    NetworkRepository,
+    NetworkRepository> with $Provider<NetworkRepository> {
+  const NetworkRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'networkRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$networkRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<NetworkRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  NetworkRepository create(Ref ref) {
+    return networkRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(NetworkRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<NetworkRepository>(value),
+    );
+  }
+}
+
+String _$networkRepositoryHash() => r'545bbc371f843315dd9bb88556286a7f84fa4362';
+
+@ProviderFor(webSocketRepository)
+const webSocketRepositoryProvider = WebSocketRepositoryProvider._();
+
+final class WebSocketRepositoryProvider extends $FunctionalProvider<
+    WebSocketRepository,
+    WebSocketRepository,
+    WebSocketRepository> with $Provider<WebSocketRepository> {
+  const WebSocketRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'webSocketRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$webSocketRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<WebSocketRepository> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  WebSocketRepository create(Ref ref) {
+    return webSocketRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(WebSocketRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WebSocketRepository>(value),
+    );
+  }
+}
+
+String _$webSocketRepositoryHash() =>
+    r'b1845fade5a70f4b72d360023c47aeea3c5d1743';

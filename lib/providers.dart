@@ -36,7 +36,7 @@ WSDataHub wsDataHub(Ref ref) {
   hub.loadInitialData(cache.getAll());
   hub.connect();
 
-  ref.onDispose(() => hub.disconnect());
+  ref.onDispose(() => hub.dispose());
   return hub;
 }
 
@@ -170,12 +170,20 @@ AnalyzeCoinUseCase analyzeCoinUseCase(Ref ref) {
   );
 }
 
-// ==================== WebSocket Connection State ====================
+// ==================== Network ====================
 
 @riverpod
-Stream<WebSocketConnectionState> wsConnectionState(Ref ref) async* {
-  final wsDataHub = ref.watch(wsDataHubProvider);
-  await for (final state in wsDataHub.connectionState) {
-    yield state;
-  }
-}
+NetworkStatusDataSource networkStatusDataSource(Ref ref) =>
+    NetworkStatusDataSource();
+
+@riverpod
+NetworkRepository networkRepository(Ref ref) => NetworkRepositoryImpl(
+      dataSource: ref.watch(networkStatusDataSourceProvider),
+    );
+
+// ==================== WebSocket ====================
+
+@riverpod
+WebSocketRepository webSocketRepository(Ref ref) => WebSocketRepositoryImpl(
+      wsDataHub: ref.watch(wsDataHubProvider),
+    );

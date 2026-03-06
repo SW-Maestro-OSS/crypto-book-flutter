@@ -65,6 +65,12 @@ Future<void> main() async {
         aiRepositoryProvider.overrideWith((ref) {
           return ref.watch(root_providers.aiRepositoryProvider);
         }),
+        webSocketRepositoryProvider.overrideWith((ref) {
+          return ref.watch(root_providers.webSocketRepositoryProvider);
+        }),
+        networkRepositoryProvider.overrideWith((ref) {
+          return ref.watch(root_providers.networkRepositoryProvider);
+        }),
       ],
       child: const MyApp(),
     ),
