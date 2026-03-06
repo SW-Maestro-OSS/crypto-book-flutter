@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'package:domain/domain.dart';
 import 'package:data/datasources/binance_rest_data_source.dart';
 import 'package:data/datasources/ws_data_hub.dart';
@@ -39,7 +40,7 @@ class CoinRepositoryImpl implements CoinRepository {
   Stream<List<CoinTickerEntity>> subscribeToTickers(List<String> symbols) async* {
     // Stream all symbols from WSDataHub (cache already loaded in provider)
     await for (final symbolMap in wsDataHub.getAllSymbolsStream()) {
-      print('[Repository] Received ${symbolMap.length} tickers from WSDataHub');
+      dev.log('[Repository] Received ${symbolMap.length} tickers from WSDataHub');
 
       // Update cache
       await tickerCache.updateMany(symbolMap.values.toList());
@@ -63,7 +64,7 @@ class CoinRepositoryImpl implements CoinRepository {
       }
       final deduplicated = baseAssetMap.values.toList();
 
-      print('[Repository] Filtered ${usdtPairs.length} USDT pairs → ${deduplicated.length} unique coins');
+      dev.log('[Repository] Filtered ${usdtPairs.length} USDT pairs → ${deduplicated.length} unique coins');
 
       // Emit filtered result
       yield deduplicated;

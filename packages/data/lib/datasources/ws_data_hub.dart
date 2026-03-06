@@ -154,16 +154,21 @@ class WSDataHub {
       yield cached;
     }
 
-    // Track last emitted price to avoid duplicates
-    String? lastPrice = cached?.currentPrice;
+    // Track last emitted ticker to avoid unnecessary duplicates
+    TickerDTO? lastTicker = cached;
 
     // Then stream real-time updates
     await for (final symbolMap in _controller.stream) {
       if (symbolMap.containsKey(symbol)) {
         final ticker = symbolMap[symbol]!;
-        // Only emit if price changed
-        if (lastPrice != ticker.currentPrice) {
-          lastPrice = ticker.currentPrice;
+        // Emit if any field changed (price, volume, high, low)
+        final prev = lastTicker;
+        if (prev == null ||
+            prev.currentPrice != ticker.currentPrice ||
+            prev.volume != ticker.volume ||
+            prev.high != ticker.high ||
+            prev.low != ticker.low) {
+          lastTicker = ticker;
           yield ticker;
         }
       }
