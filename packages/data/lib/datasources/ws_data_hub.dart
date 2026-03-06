@@ -12,11 +12,8 @@ import 'package:domain/domain.dart';
 /// - A hot broadcast stream of all symbols (for home page)
 /// - Individual symbol streams (for detail pages)
 ///
-/// Benefits:
-/// - Single WebSocket connection shared across the app
-/// - Instant symbol lookup via Map
-/// - Hot stream (always emitting, no cold start)
-/// - Automatic error recovery and reconnection
+/// disconnect()는 소켓만 닫고 controller를 유지하여 재연결이 가능하다.
+/// dispose()에서 controller를 닫아 완전히 정리한다.
 class WSDataHub {
   final BinanceWebSocketClient _client;
 
@@ -27,13 +24,20 @@ class WSDataHub {
   late final StreamController<Map<String, TickerDTO>> _controller;
 
   /// Connection state stream controller
-  late final StreamController<WebSocketConnectionState> _connectionStateController;
+  late final StreamController<WebSocketConnectionState>
+      _connectionStateController;
 
   /// WebSocket subscription
   StreamSubscription? _wsSubscription;
 
   /// Whether the hub is currently connected
   bool _isConnected = false;
+
+  /// Whether the hub has been disposed
+  bool _isDisposed = false;
+
+  /// Whether the app is in foreground
+  bool _isForeground = true;
 
   /// Reconnection attempt counter
   int _reconnectAttempt = 0;
@@ -51,117 +55,130 @@ class WSDataHub {
       },
       onCancel: () {
         dev.log('[WSDataHub] Last listener detached');
-        // Keep connection alive for quick re-subscription
       },
     );
-    _connectionStateController = StreamController<WebSocketConnectionState>.broadcast();
+    _connectionStateController =
+        StreamController<WebSocketConnectionState>.broadcast();
     _connectionStateController.add(WebSocketConnectionState.disconnected);
   }
 
   /// Initialize WebSocket connection
   void connect() {
-    if (_isConnected) {
-      dev.log('[WSDataHub] Already connected');
+    if (_isConnected || _isDisposed) {
+      dev.log('[WSDataHub] Already connected or disposed');
       return;
     }
 
     dev.log('[WSDataHub] Connecting to WebSocket...');
     _connectionStateController.add(WebSocketConnectionState.connecting);
 
-    _wsSubscription = _client.subscribeAllTickers().listen(
-      (tickersJson) {
-        try {
-          // First data received - we're connected!
-          if (!_isConnected) {
-            _isConnected = true;
-            _reconnectAttempt = 0;
-            _connectionStateController.add(WebSocketConnectionState.connected);
-            dev.log('[WSDataHub] Connected successfully');
-          }
+    // 기존 subscription 정리
+    _wsSubscription?.cancel();
 
-          // Parse and update symbol map
-          for (final json in tickersJson) {
-            try {
-              final ticker = TickerDTOMapper.fromMap(json);
-              _symbolMap[ticker.symbol] = ticker;
-            } catch (e) {
-              dev.log('[WSDataHub] Failed to parse ticker: $e');
+    _client.connect().then((_) {
+      _wsSubscription = _client.tickerStream.listen(
+        (tickersJson) {
+          try {
+            if (!_isConnected) {
+              _isConnected = true;
+              _reconnectAttempt = 0;
+              _connectionStateController
+                  .add(WebSocketConnectionState.connected);
+              dev.log('[WSDataHub] Connected successfully');
+            }
+
+            for (final json in tickersJson) {
+              try {
+                final ticker = TickerDTOMapper.fromMap(json);
+                _symbolMap[ticker.symbol] = ticker;
+              } catch (e) {
+                dev.log('[WSDataHub] Failed to parse ticker: $e');
+              }
+            }
+
+            if (!_controller.isClosed) {
+              _controller.add(Map.from(_symbolMap));
+            }
+          } catch (e) {
+            dev.log('[WSDataHub] Error processing tickers: $e');
+            if (!_controller.isClosed) {
+              _controller.addError(e);
             }
           }
-
-          // Broadcast updated map to all listeners
+        },
+        onError: (error) {
+          dev.log('[WSDataHub] WebSocket error: $error');
+          _isConnected = false;
+          _connectionStateController.add(WebSocketConnectionState.error);
           if (!_controller.isClosed) {
-            _controller.add(Map.from(_symbolMap));
+            _controller.addError(error);
           }
-        } catch (e) {
-          dev.log('[WSDataHub] Error processing tickers: $e');
-          _controller.addError(e);
-        }
-      },
-      onError: (error) {
-        dev.log('[WSDataHub] WebSocket error: $error');
-        _isConnected = false;
-        _connectionStateController.add(WebSocketConnectionState.error);
-        _controller.addError(error);
-
-        // Schedule reconnection with exponential backoff
-        _scheduleReconnect();
-      },
-      onDone: () {
-        dev.log('[WSDataHub] WebSocket connection closed');
-        _isConnected = false;
-        _connectionStateController.add(WebSocketConnectionState.disconnected);
-
-        // Schedule reconnection with exponential backoff
-        _scheduleReconnect();
-      },
-    );
+          if (_isForeground) _scheduleReconnect();
+        },
+        onDone: () {
+          dev.log('[WSDataHub] WebSocket connection closed');
+          _isConnected = false;
+          _connectionStateController
+              .add(WebSocketConnectionState.disconnected);
+          if (_isForeground) _scheduleReconnect();
+        },
+      );
+    }).catchError((e) {
+      dev.log('[WSDataHub] Failed to connect: $e');
+      _isConnected = false;
+      _connectionStateController.add(WebSocketConnectionState.error);
+      if (_isForeground) _scheduleReconnect();
+    });
   }
 
   /// Schedule reconnection with exponential backoff
   void _scheduleReconnect() {
-    // Cancel any pending reconnection timer
     _reconnectTimer?.cancel();
 
-    if (_controller.isClosed) {
-      dev.log('[WSDataHub] Controller closed, skipping reconnection');
+    if (_controller.isClosed || _isDisposed) {
+      dev.log('[WSDataHub] Controller closed or disposed, skipping reconnection');
       return;
     }
 
     _connectionStateController.add(WebSocketConnectionState.reconnecting);
 
-    // Exponential backoff: 2^attempt seconds, capped at 30 seconds
-    final delay = Duration(seconds: min(pow(2, _reconnectAttempt).toInt(), 30));
-    dev.log('[WSDataHub] Scheduling reconnection in ${delay.inSeconds}s (attempt ${_reconnectAttempt + 1})');
+    final delay =
+        Duration(seconds: min(pow(2, _reconnectAttempt).toInt(), 30));
+    dev.log(
+        '[WSDataHub] Scheduling reconnection in ${delay.inSeconds}s (attempt ${_reconnectAttempt + 1})');
 
     _reconnectTimer = Timer(delay, () {
-      if (!_isConnected && !_controller.isClosed) {
+      if (!_isConnected && !_controller.isClosed && !_isDisposed) {
         _reconnectAttempt++;
-        dev.log('[WSDataHub] Attempting reconnection (attempt $_reconnectAttempt)');
+        dev.log(
+            '[WSDataHub] Attempting reconnection (attempt $_reconnectAttempt)');
         connect();
       }
     });
   }
 
+  /// 재연결 (외부에서 명시적으로 호출)
+  Future<void> reconnect() async {
+    _reconnectTimer?.cancel();
+    _reconnectAttempt = 0;
+    await _wsSubscription?.cancel();
+    await _client.disconnect();
+    _isConnected = false;
+    connect();
+  }
+
   /// Get live stream for a specific symbol
-  ///
-  /// Returns a stream that emits whenever the symbol data updates.
-  /// If the symbol doesn't exist, the stream will wait until it appears.
   Stream<TickerDTO> getSymbolStream(String symbol) async* {
-    // Emit cached data immediately if available
     final cached = _symbolMap[symbol];
     if (cached != null) {
       yield cached;
     }
 
-    // Track last emitted ticker to avoid unnecessary duplicates
     TickerDTO? lastTicker = cached;
 
-    // Then stream real-time updates
     await for (final symbolMap in _controller.stream) {
       if (symbolMap.containsKey(symbol)) {
         final ticker = symbolMap[symbol]!;
-        // Emit if any field changed (price, volume, high, low)
         final prev = lastTicker;
         if (prev == null ||
             prev.currentPrice != ticker.currentPrice ||
@@ -176,22 +193,16 @@ class WSDataHub {
   }
 
   /// Get latest cached ticker for a symbol (synchronous)
-  ///
-  /// Returns null if symbol not yet received from WebSocket.
   TickerDTO? getLatestTicker(String symbol) {
     return _symbolMap[symbol];
   }
 
   /// Get stream of all symbols (for home page)
-  ///
-  /// Emits the complete symbol map whenever any ticker updates.
   Stream<Map<String, TickerDTO>> getAllSymbolsStream() async* {
-    // Emit cached data immediately if available
     if (_symbolMap.isNotEmpty) {
       yield Map.from(_symbolMap);
     }
 
-    // Then stream real-time updates
     await for (final symbolMap in _controller.stream) {
       yield symbolMap;
     }
@@ -209,22 +220,39 @@ class WSDataHub {
     }
     dev.log('[WSDataHub] Loaded ${tickers.length} tickers from cache');
 
-    // Emit initial data
     if (!_controller.isClosed) {
       _controller.add(Map.from(_symbolMap));
     }
   }
 
-  /// Disconnect and clean up
+  /// 연결만 끊음 - controller 유지 (재연결 가능)
   Future<void> disconnect() async {
     dev.log('[WSDataHub] Disconnecting...');
-    _isConnected = false;
     _reconnectTimer?.cancel();
+    _isConnected = false;
     await _wsSubscription?.cancel();
+    _wsSubscription = null;
+    await _client.disconnect();
+    if (!_connectionStateController.isClosed) {
+      _connectionStateController
+          .add(WebSocketConnectionState.disconnected);
+    }
+  }
+
+  /// 완전 정리 - 앱 종료 시
+  Future<void> dispose() async {
+    dev.log('[WSDataHub] Disposing...');
+    _isDisposed = true;
+    await disconnect();
     await _controller.close();
     await _connectionStateController.close();
-    await _client.disconnect();
     _symbolMap.clear();
+  }
+
+  /// 포그라운드/백그라운드 상태 설정
+  void setForeground(bool isForeground) {
+    _isForeground = isForeground;
+    dev.log('[WSDataHub] Foreground: $isForeground');
   }
 
   /// Check if hub is connected
@@ -234,5 +262,6 @@ class WSDataHub {
   int get symbolCount => _symbolMap.length;
 
   /// Get connection state stream
-  Stream<WebSocketConnectionState> get connectionState => _connectionStateController.stream;
+  Stream<WebSocketConnectionState> get connectionState =>
+      _connectionStateController.stream;
 }

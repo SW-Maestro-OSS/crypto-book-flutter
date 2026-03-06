@@ -4,36 +4,36 @@ import 'dart:io';
 import 'package:domain/domain.dart';
 
 /// 바이낸스 WebSocket 클라이언트
+///
+/// connect()/disconnect()로 소켓 수명을 관리하고,
+/// tickerStream getter로 데이터를 수신한다.
+/// StreamController는 클래스 수명과 동일하게 유지되어 reconnect가 가능하다.
 class BinanceWebSocketClient {
   final String baseUrl;
   WebSocket? _socket;
-  StreamController<List<Map<String, dynamic>>>? _controller;
+  final StreamController<List<Map<String, dynamic>>> _controller =
+      StreamController<List<Map<String, dynamic>>>.broadcast();
+  bool _isDisposed = false;
 
   BinanceWebSocketClient({
     required this.baseUrl,
   });
 
-  /// All Market Tickers Stream 구독
-  /// Binance: wss://stream.binance.com:9443/ws/!ticker@arr
-  ///
-  /// pingInterval을 15초로 설정하여 바이낸스 서버의 ping(20초)에 자동으로 pong 응답
-  Stream<List<Map<String, dynamic>>> subscribeAllTickers() {
-    _controller = StreamController<List<Map<String, dynamic>>>.broadcast();
+  /// 티커 데이터 스트림 (broadcast)
+  Stream<List<Map<String, dynamic>>> get tickerStream => _controller.stream;
 
-    _connectWebSocket();
+  /// 현재 소켓이 연결되어 있는지 여부
+  bool get isConnected =>
+      _socket != null && _socket!.readyState == WebSocket.open;
 
-    return _controller!.stream;
-  }
+  /// WebSocket 연결
+  Future<void> connect() async {
+    if (_isDisposed) return;
+    await _socket?.close();
 
-  Future<void> _connectWebSocket() async {
     try {
       final uri = Uri.parse('$baseUrl/ws/!ticker@arr');
-
-      // dart:io WebSocket with automatic ping-pong handling
-      _socket = await WebSocket.connect(
-        uri.toString(),
-      );
-      // pingInterval 설정 (클라이언트 → 서버 ping)
+      _socket = await WebSocket.connect(uri.toString());
       _socket!.pingInterval = const Duration(seconds: 15);
 
       _socket!.listen(
@@ -42,31 +42,47 @@ class BinanceWebSocketClient {
             final decoded = json.decode(data);
             if (decoded is List) {
               final tickers = decoded.cast<Map<String, dynamic>>();
-              _controller?.add(tickers);
+              if (!_controller.isClosed) {
+                _controller.add(tickers);
+              }
             }
           } catch (e) {
-            _controller?.addError(
-                WebSocketParseError('Failed to parse WebSocket data: $e'));
+            if (!_controller.isClosed) {
+              _controller.addError(
+                  WebSocketParseError('Failed to parse WebSocket data: $e'));
+            }
           }
         },
         onError: (error) {
-          _controller?.addError(WebSocketDisconnectedError(error.toString()));
+          if (!_controller.isClosed) {
+            _controller
+                .addError(WebSocketDisconnectedError(error.toString()));
+          }
         },
         onDone: () {
-          _controller?.close();
+          // controller를 닫지 않음 → 상위(WSDataHub)에서 reconnect 판단
+          _socket = null;
         },
       );
     } catch (e) {
-      _controller?.addError(
-          WebSocketConnectionError('Failed to connect to WebSocket: $e'));
+      if (!_controller.isClosed) {
+        _controller.addError(
+            WebSocketConnectionError('Failed to connect to WebSocket: $e'));
+      }
+      rethrow;
     }
   }
 
-  /// 연결 해제
+  /// 소켓만 닫음 (controller 유지 → 재연결 가능)
   Future<void> disconnect() async {
     await _socket?.close();
-    await _controller?.close();
     _socket = null;
-    _controller = null;
+  }
+
+  /// 완전 정리 (앱 종료 시)
+  Future<void> dispose() async {
+    _isDisposed = true;
+    await disconnect();
+    await _controller.close();
   }
 }

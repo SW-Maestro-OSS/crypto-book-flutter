@@ -1,33 +1,29 @@
 import 'package:domain/domain.dart';
-import 'package:data/websocket/websocket_client.dart';
+import 'package:data/datasources/ws_data_hub.dart';
 
 class WebSocketRepositoryImpl implements WebSocketRepository {
-  final BinanceWebSocketClient client;
+  final WSDataHub _wsDataHub;
 
-  WebSocketRepositoryImpl({required this.client});
-
-  @override
-  Future<void> connect() async {
-    // WebSocket은 subscribeAllTickers() 호출 시 자동으로 연결됨
-    // 별도의 connect() 호출 불필요
-  }
+  WebSocketRepositoryImpl({required WSDataHub wsDataHub})
+      : _wsDataHub = wsDataHub;
 
   @override
-  Future<void> disconnect() async {
-    // TODO: 실제 구현
-    await client.disconnect();
-  }
+  Future<void> connect() async => _wsDataHub.connect();
 
   @override
-  Future<void> reconnect() async {
-    // TODO: 실제 구현
-    await disconnect();
-    await connect();
-  }
+  Future<void> disconnect() async => await _wsDataHub.disconnect();
 
   @override
-  Stream<WebSocketConnectionState> connectionState() {
-    // TODO: 실제 구현
-    throw UnimplementedError('connectionState not implemented yet');
-  }
+  Future<void> reconnect() async => await _wsDataHub.reconnect();
+
+  @override
+  Stream<WebSocketConnectionState> get connectionState =>
+      _wsDataHub.connectionState;
+
+  @override
+  bool get isConnected => _wsDataHub.isConnected;
+
+  @override
+  void setForeground(bool isForeground) =>
+      _wsDataHub.setForeground(isForeground);
 }
