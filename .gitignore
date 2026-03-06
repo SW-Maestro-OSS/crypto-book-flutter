@@ -25,6 +25,7 @@ migrate_working_dir/
 
 # Claude Code
 .claude/
+ref/
 
 # Personal notes and temporary files
 myprompt.md

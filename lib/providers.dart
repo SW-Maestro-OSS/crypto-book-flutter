@@ -9,7 +9,6 @@ part 'providers.g.dart';
 @riverpod
 TickerCacheDataSource tickerCacheDataSource(Ref ref) {
   final cache = TickerCacheDataSource();
-  // Initialize asynchronously
   cache.init();
   return cache;
 }
@@ -80,6 +79,32 @@ SettingsRepository settingsRepository(Ref ref) {
   );
 }
 
+@riverpod
+CryptoPanicDataSource cryptoPanicDataSource(Ref ref) {
+  return CryptoPanicDataSource();
+}
+
+@riverpod
+NewsRepository newsRepository(Ref ref) {
+  return NewsRepositoryImpl(
+    dataSource: ref.watch(cryptoPanicDataSourceProvider),
+  );
+}
+
+@riverpod
+AiDataSource aiDataSource(Ref ref) {
+  final ds = AiDataSource();
+  ds.initialize();
+  return ds;
+}
+
+@riverpod
+AiRepository aiRepository(Ref ref) {
+  return AiRepositoryImpl(
+    dataSource: ref.watch(aiDataSourceProvider),
+  );
+}
+
 // ==================== Domain Layer ====================
 
 @riverpod
@@ -92,6 +117,13 @@ GetCoinListUseCase getCoinListUseCase(Ref ref) {
 @riverpod
 SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
   return SubscribeCoinTickerUseCaseImpl(
+    repository: ref.watch(coinRepositoryProvider),
+  );
+}
+
+@riverpod
+SubscribeSingleTickerUseCase subscribeSingleTickerUseCase(Ref ref) {
+  return SubscribeSingleTickerUseCaseImpl(
     repository: ref.watch(coinRepositoryProvider),
   );
 }
@@ -121,6 +153,20 @@ GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
 GetChartDataUseCase getChartDataUseCase(Ref ref) {
   return GetChartDataUseCaseImpl(
     repository: ref.watch(coinRepositoryProvider),
+  );
+}
+
+@riverpod
+GetNewsUseCase getNewsUseCase(Ref ref) {
+  return GetNewsUseCaseImpl(
+    repository: ref.watch(newsRepositoryProvider),
+  );
+}
+
+@riverpod
+AnalyzeCoinUseCase analyzeCoinUseCase(Ref ref) {
+  return AnalyzeCoinUseCaseImpl(
+    repository: ref.watch(aiRepositoryProvider),
   );
 }
 

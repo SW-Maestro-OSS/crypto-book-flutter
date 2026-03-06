@@ -444,6 +444,173 @@ final class SettingsRepositoryProvider extends $FunctionalProvider<
 String _$settingsRepositoryHash() =>
     r'a32800987c5ee747692feb9f86a7e9bfc3b2be2c';
 
+@ProviderFor(cryptoPanicDataSource)
+const cryptoPanicDataSourceProvider = CryptoPanicDataSourceProvider._();
+
+final class CryptoPanicDataSourceProvider extends $FunctionalProvider<
+    CryptoPanicDataSource,
+    CryptoPanicDataSource,
+    CryptoPanicDataSource> with $Provider<CryptoPanicDataSource> {
+  const CryptoPanicDataSourceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'cryptoPanicDataSourceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$cryptoPanicDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<CryptoPanicDataSource> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CryptoPanicDataSource create(Ref ref) {
+    return cryptoPanicDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CryptoPanicDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CryptoPanicDataSource>(value),
+    );
+  }
+}
+
+String _$cryptoPanicDataSourceHash() =>
+    r'eb3f4e1380192768cedcee0bb90c1befbba52533';
+
+@ProviderFor(newsRepository)
+const newsRepositoryProvider = NewsRepositoryProvider._();
+
+final class NewsRepositoryProvider
+    extends $FunctionalProvider<NewsRepository, NewsRepository, NewsRepository>
+    with $Provider<NewsRepository> {
+  const NewsRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'newsRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$newsRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<NewsRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  NewsRepository create(Ref ref) {
+    return newsRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(NewsRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<NewsRepository>(value),
+    );
+  }
+}
+
+String _$newsRepositoryHash() => r'eeed26e4261072dd0498ab87bb7bf69a25b6d33f';
+
+@ProviderFor(aiDataSource)
+const aiDataSourceProvider = AiDataSourceProvider._();
+
+final class AiDataSourceProvider
+    extends $FunctionalProvider<AiDataSource, AiDataSource, AiDataSource>
+    with $Provider<AiDataSource> {
+  const AiDataSourceProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'aiDataSourceProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$aiDataSourceHash();
+
+  @$internal
+  @override
+  $ProviderElement<AiDataSource> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AiDataSource create(Ref ref) {
+    return aiDataSource(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AiDataSource value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AiDataSource>(value),
+    );
+  }
+}
+
+String _$aiDataSourceHash() => r'6f187df8309939f99b0a183957d2cc1d0a286deb';
+
+@ProviderFor(aiRepository)
+const aiRepositoryProvider = AiRepositoryProvider._();
+
+final class AiRepositoryProvider
+    extends $FunctionalProvider<AiRepository, AiRepository, AiRepository>
+    with $Provider<AiRepository> {
+  const AiRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'aiRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$aiRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<AiRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AiRepository create(Ref ref) {
+    return aiRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AiRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AiRepository>(value),
+    );
+  }
+}
+
+String _$aiRepositoryHash() => r'9cbde9e9f9fab927be549b99680b89c90af1fd57';
+
 @ProviderFor(getCoinListUseCase)
 const getCoinListUseCaseProvider = GetCoinListUseCaseProvider._();
 
@@ -532,6 +699,51 @@ final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
 
 String _$subscribeCoinTickerUseCaseHash() =>
     r'bd17a13d6be889c711077419b63ff2e5911c6981';
+
+@ProviderFor(subscribeSingleTickerUseCase)
+const subscribeSingleTickerUseCaseProvider =
+    SubscribeSingleTickerUseCaseProvider._();
+
+final class SubscribeSingleTickerUseCaseProvider extends $FunctionalProvider<
+    SubscribeSingleTickerUseCase,
+    SubscribeSingleTickerUseCase,
+    SubscribeSingleTickerUseCase> with $Provider<SubscribeSingleTickerUseCase> {
+  const SubscribeSingleTickerUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'subscribeSingleTickerUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$subscribeSingleTickerUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<SubscribeSingleTickerUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SubscribeSingleTickerUseCase create(Ref ref) {
+    return subscribeSingleTickerUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SubscribeSingleTickerUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SubscribeSingleTickerUseCase>(value),
+    );
+  }
+}
+
+String _$subscribeSingleTickerUseCaseHash() =>
+    r'6251d94732298768ecef2e452b66ab6331537b29';
 
 @ProviderFor(getSettingsUseCase)
 const getSettingsUseCaseProvider = GetSettingsUseCaseProvider._();
@@ -708,6 +920,91 @@ final class GetChartDataUseCaseProvider extends $FunctionalProvider<
 
 String _$getChartDataUseCaseHash() =>
     r'783c21b8198ad4fb886f251bf03cc3ae31436c6a';
+
+@ProviderFor(getNewsUseCase)
+const getNewsUseCaseProvider = GetNewsUseCaseProvider._();
+
+final class GetNewsUseCaseProvider
+    extends $FunctionalProvider<GetNewsUseCase, GetNewsUseCase, GetNewsUseCase>
+    with $Provider<GetNewsUseCase> {
+  const GetNewsUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getNewsUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getNewsUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetNewsUseCase> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetNewsUseCase create(Ref ref) {
+    return getNewsUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetNewsUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetNewsUseCase>(value),
+    );
+  }
+}
+
+String _$getNewsUseCaseHash() => r'fe8654b1a49d7cc36e64fb310e2a1cecdc39985d';
+
+@ProviderFor(analyzeCoinUseCase)
+const analyzeCoinUseCaseProvider = AnalyzeCoinUseCaseProvider._();
+
+final class AnalyzeCoinUseCaseProvider extends $FunctionalProvider<
+    AnalyzeCoinUseCase,
+    AnalyzeCoinUseCase,
+    AnalyzeCoinUseCase> with $Provider<AnalyzeCoinUseCase> {
+  const AnalyzeCoinUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'analyzeCoinUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$analyzeCoinUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<AnalyzeCoinUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AnalyzeCoinUseCase create(Ref ref) {
+    return analyzeCoinUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AnalyzeCoinUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AnalyzeCoinUseCase>(value),
+    );
+  }
+}
+
+String _$analyzeCoinUseCaseHash() =>
+    r'b5321874bfc809853cf66b22905508cd33a9e740';
 
 @ProviderFor(wsConnectionState)
 const wsConnectionStateProvider = WsConnectionStateProvider._();

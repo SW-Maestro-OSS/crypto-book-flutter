@@ -9,22 +9,14 @@ import 'package:presentation/providers/usecase_providers.dart';
 import 'providers.dart' as root_providers;
 
 Future<void> main() async {
-  // Flutter 엔진 초기화
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Hive 초기화 (캐싱을 위한 로컬 스토리지)
   await Hive.initFlutter();
-
-  // 환경 변수 로드
   await dotenv.load(fileName: ".env");
-
-  // Mapper 초기화
   initializeMappers();
 
   runApp(
     ProviderScope(
       overrides: [
-        // Presentation의 UseCase provider를 실제 구현체로 override
         getCoinListUseCaseProvider.overrideWith((ref) {
           return GetCoinListUseCaseImpl(
             repository: ref.watch(root_providers.coinRepositoryProvider),
@@ -32,6 +24,11 @@ Future<void> main() async {
         }),
         subscribeCoinTickerUseCaseProvider.overrideWith((ref) {
           return SubscribeCoinTickerUseCaseImpl(
+            repository: ref.watch(root_providers.coinRepositoryProvider),
+          );
+        }),
+        subscribeSingleTickerUseCaseProvider.overrideWith((ref) {
+          return SubscribeSingleTickerUseCaseImpl(
             repository: ref.watch(root_providers.coinRepositoryProvider),
           );
         }),
@@ -54,6 +51,19 @@ Future<void> main() async {
           return GetChartDataUseCaseImpl(
             repository: ref.watch(root_providers.coinRepositoryProvider),
           );
+        }),
+        getNewsUseCaseProvider.overrideWith((ref) {
+          return GetNewsUseCaseImpl(
+            repository: ref.watch(root_providers.newsRepositoryProvider),
+          );
+        }),
+        analyzeCoinUseCaseProvider.overrideWith((ref) {
+          return AnalyzeCoinUseCaseImpl(
+            repository: ref.watch(root_providers.aiRepositoryProvider),
+          );
+        }),
+        aiRepositoryProvider.overrideWith((ref) {
+          return ref.watch(root_providers.aiRepositoryProvider);
         }),
       ],
       child: const MyApp(),
