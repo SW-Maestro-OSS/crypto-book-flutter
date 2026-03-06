@@ -8,15 +8,15 @@ part of 'coin_detail_viewmodel.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Coin Detail 화면의 ViewModel (비즈니스 로직)
+/// Coin Detail ViewModel with SideEffect support
 
 @ProviderFor(CoinDetailViewModel)
 const coinDetailViewModelProvider = CoinDetailViewModelFamily._();
 
-/// Coin Detail 화면의 ViewModel (비즈니스 로직)
+/// Coin Detail ViewModel with SideEffect support
 final class CoinDetailViewModelProvider
     extends $NotifierProvider<CoinDetailViewModel, CoinDetailState> {
-  /// Coin Detail 화면의 ViewModel (비즈니스 로직)
+  /// Coin Detail ViewModel with SideEffect support
   const CoinDetailViewModelProvider._(
       {required CoinDetailViewModelFamily super.from,
       required String super.argument})
@@ -62,9 +62,9 @@ final class CoinDetailViewModelProvider
 }
 
 String _$coinDetailViewModelHash() =>
-    r'511c3a975a055fe347829a2467fe2aa956fb98d5';
+    r'18c79fd10c368a60caf1f3db321577f86d01525d';
 
-/// Coin Detail 화면의 ViewModel (비즈니스 로직)
+/// Coin Detail ViewModel with SideEffect support
 
 final class CoinDetailViewModelFamily extends $Family
     with
@@ -79,7 +79,7 @@ final class CoinDetailViewModelFamily extends $Family
           isAutoDispose: true,
         );
 
-  /// Coin Detail 화면의 ViewModel (비즈니스 로직)
+  /// Coin Detail ViewModel with SideEffect support
 
   CoinDetailViewModelProvider call(
     String symbol,
@@ -90,7 +90,7 @@ final class CoinDetailViewModelFamily extends $Family
   String toString() => r'coinDetailViewModelProvider';
 }
 
-/// Coin Detail 화면의 ViewModel (비즈니스 로직)
+/// Coin Detail ViewModel with SideEffect support
 
 abstract class _$CoinDetailViewModel extends $Notifier<CoinDetailState> {
   late final _$args = ref.$arg as String;

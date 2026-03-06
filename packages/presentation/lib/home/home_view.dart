@@ -1,9 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/home/home_viewmodel.dart';
 import 'package:presentation/home/home_state.dart';
 import 'package:presentation/home/home_intent.dart';
+import 'package:presentation/home/home_side_effect.dart';
 import 'package:presentation/home/widgets/search_bar_widget.dart';
 import 'package:presentation/home/widgets/sort_header.dart';
 import 'package:presentation/home/widgets/price_row.dart';
@@ -22,22 +24,41 @@ class HomeView extends ConsumerStatefulWidget {
 
 class _HomeViewState extends ConsumerState<HomeView> {
   final ScrollController _scrollController = ScrollController();
+  StreamSubscription<HomeSideEffect>? _sideEffectSubscription;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref
-          .read(homeViewModelProvider.notifier)
-          .onIntent(const HomeIntent.load());
+      final viewModel = ref.read(homeViewModelProvider.notifier);
+      viewModel.onIntent(const HomeIntent.load());
+
+      _sideEffectSubscription = viewModel.sideEffects.listen((sideEffect) {
+        if (!mounted) return;
+        sideEffect.when(
+          showError: (message) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(message),
+                backgroundColor: Colors.red,
+              ),
+            );
+          },
+          showToast: (message) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(message)),
+            );
+          },
+        );
+      });
     });
 
-    // 스크롤 리스너 추가 (페이징 처리)
     _scrollController.addListener(_onScroll);
   }
 
   @override
   void dispose() {
+    _sideEffectSubscription?.cancel();
     _scrollController.dispose();
     super.dispose();
   }

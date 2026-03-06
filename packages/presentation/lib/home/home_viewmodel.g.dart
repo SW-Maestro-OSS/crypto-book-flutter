@@ -8,15 +8,15 @@ part of 'home_viewmodel.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Home 화면의 ViewModel (비즈니스 로직)
+/// Home ViewModel with SideEffect support
 
 @ProviderFor(HomeViewModel)
 const homeViewModelProvider = HomeViewModelProvider._();
 
-/// Home 화면의 ViewModel (비즈니스 로직)
+/// Home ViewModel with SideEffect support
 final class HomeViewModelProvider
     extends $NotifierProvider<HomeViewModel, HomeState> {
-  /// Home 화면의 ViewModel (비즈니스 로직)
+  /// Home ViewModel with SideEffect support
   const HomeViewModelProvider._()
       : super(
           from: null,
@@ -44,9 +44,9 @@ final class HomeViewModelProvider
   }
 }
 
-String _$homeViewModelHash() => r'b04a351a6cfb23b2a060ca72ed1b06b15ffe6cb6';
+String _$homeViewModelHash() => r'44a7da738f6ce6d5004d8a28331d7c3e8e6f2194';
 
-/// Home 화면의 ViewModel (비즈니스 로직)
+/// Home ViewModel with SideEffect support
 
 abstract class _$HomeViewModel extends $Notifier<HomeState> {
   HomeState build();

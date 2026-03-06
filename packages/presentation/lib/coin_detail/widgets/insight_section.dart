@@ -4,13 +4,17 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
 
-/// AI Insight section displaying analysis and buy/sell pressure
+/// AI Insight section with status-based UI
 class InsightSection extends StatelessWidget {
-  final AiInsightEntity insight;
+  final AiInsightEntity? insight;
+  final AiAnalysisStatus aiStatus;
+  final VoidCallback onRequestAnalysis;
 
   const InsightSection({
     super.key,
     required this.insight,
+    required this.aiStatus,
+    required this.onRequestAnalysis,
   });
 
   @override
@@ -41,114 +45,219 @@ class InsightSection extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: AppSpacing.lg),
+          _buildContent(),
+        ],
+      ),
+    );
+  }
 
-          // Insight bullet points
-          ...insight.insights.map((text) => Padding(
-                padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      '• ',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                    Expanded(
-                      child: Text(
-                        text,
-                        style: AppTypography.bodyMedium,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+  Widget _buildContent() {
+    switch (aiStatus) {
+      case AiAnalysisStatus.idle:
+        return _buildIdleState();
+      case AiAnalysisStatus.loading:
+        return _buildLoadingState();
+      case AiAnalysisStatus.completed:
+        return _buildCompletedState();
+      case AiAnalysisStatus.unavailable:
+        return _buildUnavailableState();
+      case AiAnalysisStatus.error:
+        return _buildErrorState();
+    }
+  }
 
-          const SizedBox(height: AppSpacing.lg),
-
-          // Buy vs Sell Pressure
+  Widget _buildIdleState() {
+    return Center(
+      child: Column(
+        children: [
           Text(
-            'Market Pressure',
-            style: AppTypography.labelMedium,
+            'Get AI-powered analysis for this coin',
+            style: AppTypography.bodyMedium,
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.md),
+          ElevatedButton.icon(
+            onPressed: onRequestAnalysis,
+            icon: const Icon(Icons.auto_awesome, size: 18),
+            label: const Text('Analyze'),
+          ),
+        ],
+      ),
+    );
+  }
 
-          // Pressure bars
-          Row(
-            children: [
-              Expanded(
-                flex: (insight.buyPressure * 100).toInt(),
-                child: Container(
-                  height: 8,
+  Widget _buildLoadingState() {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(AppSpacing.lg),
+        child: Column(
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: AppSpacing.md),
+            Text('Analyzing...'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCompletedState() {
+    if (insight == null) return _buildIdleState();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Insight bullet points
+        ...insight!.insights.map((text) => Padding(
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    '\u2022 ',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Expanded(
+                    child: Text(
+                      text,
+                      style: AppTypography.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
+            )),
+
+        const SizedBox(height: AppSpacing.lg),
+
+        // Buy vs Sell Pressure
+        Text(
+          'Market Pressure',
+          style: AppTypography.labelMedium,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+
+        // Pressure bars
+        Row(
+          children: [
+            Expanded(
+              flex: (insight!.buyPressure * 100).toInt().clamp(1, 99),
+              child: Container(
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: AppColors.priceUp,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    bottomLeft: Radius.circular(4),
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: (insight!.sellPressure * 100).toInt().clamp(1, 99),
+              child: Container(
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: AppColors.priceDown,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(4),
+                    bottomRight: Radius.circular(4),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: AppSpacing.sm),
+
+        // Pressure labels
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 12,
+                  height: 12,
                   decoration: const BoxDecoration(
                     color: AppColors.priceUp,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      bottomLeft: Radius.circular(4),
-                    ),
+                    shape: BoxShape.circle,
                   ),
                 ),
-              ),
-              Expanded(
-                flex: (insight.sellPressure * 100).toInt(),
-                child: Container(
-                  height: 8,
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  'Buy ${(insight!.buyPressure * 100).toInt()}%',
+                  style: AppTypography.bodySmall,
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Container(
+                  width: 12,
+                  height: 12,
                   decoration: const BoxDecoration(
                     color: AppColors.priceDown,
-                    borderRadius: BorderRadius.only(
-                      topRight: Radius.circular(4),
-                      bottomRight: Radius.circular(4),
-                    ),
+                    shape: BoxShape.circle,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(width: AppSpacing.xs),
+                Text(
+                  'Sell ${(insight!.sellPressure * 100).toInt()}%',
+                  style: AppTypography.bodySmall,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildUnavailableState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        child: Column(
+          children: [
+            Icon(
+              Icons.info_outline,
+              size: 32,
+              color: AppColors.textTertiary,
+            ),
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              'AI analysis is not available on this device',
+              style: AppTypography.bodyMedium,
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildErrorState() {
+    return Center(
+      child: Column(
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: 32,
+            color: AppColors.priceDown,
           ),
           const SizedBox(height: AppSpacing.sm),
-
-          // Pressure labels
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: const BoxDecoration(
-                      color: AppColors.priceUp,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  Text(
-                    'Buy ${(insight.buyPressure * 100).toInt()}%',
-                    style: AppTypography.bodySmall,
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: 12,
-                    height: 12,
-                    decoration: const BoxDecoration(
-                      color: AppColors.priceDown,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  Text(
-                    'Sell ${(insight.sellPressure * 100).toInt()}%',
-                    style: AppTypography.bodySmall,
-                  ),
-                ],
-              ),
-            ],
+          Text(
+            'Analysis failed',
+            style: AppTypography.bodyMedium,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          OutlinedButton.icon(
+            onPressed: onRequestAnalysis,
+            icon: const Icon(Icons.refresh, size: 18),
+            label: const Text('Retry'),
           ),
         ],
       ),
     );
   }
 }
-

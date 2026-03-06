@@ -4,7 +4,6 @@ import 'package:domain/domain.dart';
 part 'usecase_providers.g.dart';
 
 /// GetCoinListUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 @riverpod
 GetCoinListUseCase getCoinListUseCase(Ref ref) {
   throw UnimplementedError(
@@ -13,7 +12,6 @@ GetCoinListUseCase getCoinListUseCase(Ref ref) {
 }
 
 /// SubscribeCoinTickerUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 @riverpod
 SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
   throw UnimplementedError(
@@ -21,8 +19,15 @@ SubscribeCoinTickerUseCase subscribeCoinTickerUseCase(Ref ref) {
   );
 }
 
+/// SubscribeSingleTickerUseCase Provider
+@riverpod
+SubscribeSingleTickerUseCase subscribeSingleTickerUseCase(Ref ref) {
+  throw UnimplementedError(
+    'subscribeSingleTickerUseCaseProvider must be overridden in main app',
+  );
+}
+
 /// GetSettingsUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 @riverpod
 GetSettingsUseCase getSettingsUseCase(Ref ref) {
   throw UnimplementedError(
@@ -31,7 +36,6 @@ GetSettingsUseCase getSettingsUseCase(Ref ref) {
 }
 
 /// SaveSettingsUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 @riverpod
 SaveSettingsUseCase saveSettingsUseCase(Ref ref) {
   throw UnimplementedError(
@@ -40,7 +44,6 @@ SaveSettingsUseCase saveSettingsUseCase(Ref ref) {
 }
 
 /// GetExchangeRateUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 @riverpod
 GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
   throw UnimplementedError(
@@ -49,10 +52,33 @@ GetExchangeRateUseCase getExchangeRateUseCase(Ref ref) {
 }
 
 /// GetChartDataUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 @riverpod
 GetChartDataUseCase getChartDataUseCase(Ref ref) {
   throw UnimplementedError(
     'getChartDataUseCaseProvider must be overridden in main app',
+  );
+}
+
+/// GetNewsUseCase Provider
+@riverpod
+GetNewsUseCase getNewsUseCase(Ref ref) {
+  throw UnimplementedError(
+    'getNewsUseCaseProvider must be overridden in main app',
+  );
+}
+
+/// AnalyzeCoinUseCase Provider
+@riverpod
+AnalyzeCoinUseCase analyzeCoinUseCase(Ref ref) {
+  throw UnimplementedError(
+    'analyzeCoinUseCaseProvider must be overridden in main app',
+  );
+}
+
+/// AiRepository Provider (for isAvailable check)
+@riverpod
+AiRepository aiRepository(Ref ref) {
+  throw UnimplementedError(
+    'aiRepositoryProvider must be overridden in main app',
   );
 }

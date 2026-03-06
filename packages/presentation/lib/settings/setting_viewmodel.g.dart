@@ -44,7 +44,7 @@ final class SettingViewModelProvider
   }
 }
 
-String _$settingViewModelHash() => r'2c55912bb49866e5188501deb847c493752ab490';
+String _$settingViewModelHash() => r'9e4d01dfc13e25fd1f7ee4983ddc21e2198664a7';
 
 /// Settings ViewModel (MVI 패턴)
 

@@ -155,8 +155,15 @@ extension CoinDetailStatePatterns on CoinDetailState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(CoinTickerEntity ticker, ChartDataEntity? chartData,
-            ChartTimeframe selectedTimeframe, bool isLoadingChart)?
+    TResult Function(
+            CoinTickerEntity ticker,
+            ChartDataEntity? chartData,
+            ChartTimeframe selectedTimeframe,
+            bool isLoadingChart,
+            List<NewsArticleEntity>? articles,
+            bool isLoadingNews,
+            AiInsightEntity? aiInsight,
+            AiAnalysisStatus aiStatus)?
         loaded,
     TResult Function(AppError error)? error,
     required TResult orElse(),
@@ -168,8 +175,15 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loading() when loading != null:
         return loading();
       case _Loaded() when loaded != null:
-        return loaded(_that.ticker, _that.chartData, _that.selectedTimeframe,
-            _that.isLoadingChart);
+        return loaded(
+            _that.ticker,
+            _that.chartData,
+            _that.selectedTimeframe,
+            _that.isLoadingChart,
+            _that.articles,
+            _that.isLoadingNews,
+            _that.aiInsight,
+            _that.aiStatus);
       case _Error() when error != null:
         return error(_that.error);
       case _:
@@ -198,7 +212,11 @@ extension CoinDetailStatePatterns on CoinDetailState {
             CoinTickerEntity ticker,
             ChartDataEntity? chartData,
             ChartTimeframe selectedTimeframe,
-            bool isLoadingChart)
+            bool isLoadingChart,
+            List<NewsArticleEntity>? articles,
+            bool isLoadingNews,
+            AiInsightEntity? aiInsight,
+            AiAnalysisStatus aiStatus)
         loaded,
     required TResult Function(AppError error) error,
   }) {
@@ -209,8 +227,15 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loading():
         return loading();
       case _Loaded():
-        return loaded(_that.ticker, _that.chartData, _that.selectedTimeframe,
-            _that.isLoadingChart);
+        return loaded(
+            _that.ticker,
+            _that.chartData,
+            _that.selectedTimeframe,
+            _that.isLoadingChart,
+            _that.articles,
+            _that.isLoadingNews,
+            _that.aiInsight,
+            _that.aiStatus);
       case _Error():
         return error(_that.error);
     }
@@ -232,8 +257,15 @@ extension CoinDetailStatePatterns on CoinDetailState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(CoinTickerEntity ticker, ChartDataEntity? chartData,
-            ChartTimeframe selectedTimeframe, bool isLoadingChart)?
+    TResult? Function(
+            CoinTickerEntity ticker,
+            ChartDataEntity? chartData,
+            ChartTimeframe selectedTimeframe,
+            bool isLoadingChart,
+            List<NewsArticleEntity>? articles,
+            bool isLoadingNews,
+            AiInsightEntity? aiInsight,
+            AiAnalysisStatus aiStatus)?
         loaded,
     TResult? Function(AppError error)? error,
   }) {
@@ -244,8 +276,15 @@ extension CoinDetailStatePatterns on CoinDetailState {
       case _Loading() when loading != null:
         return loading();
       case _Loaded() when loaded != null:
-        return loaded(_that.ticker, _that.chartData, _that.selectedTimeframe,
-            _that.isLoadingChart);
+        return loaded(
+            _that.ticker,
+            _that.chartData,
+            _that.selectedTimeframe,
+            _that.isLoadingChart,
+            _that.articles,
+            _that.isLoadingNews,
+            _that.aiInsight,
+            _that.aiStatus);
       case _Error() when error != null:
         return error(_that.error);
       case _:
@@ -301,7 +340,12 @@ class _Loaded implements CoinDetailState {
       {required this.ticker,
       this.chartData,
       this.selectedTimeframe = ChartTimeframe.h24,
-      this.isLoadingChart = false});
+      this.isLoadingChart = false,
+      final List<NewsArticleEntity>? articles,
+      this.isLoadingNews = false,
+      this.aiInsight,
+      this.aiStatus = AiAnalysisStatus.idle})
+      : _articles = articles;
 
   final CoinTickerEntity ticker;
   final ChartDataEntity? chartData;
@@ -309,6 +353,20 @@ class _Loaded implements CoinDetailState {
   final ChartTimeframe selectedTimeframe;
   @JsonKey()
   final bool isLoadingChart;
+  final List<NewsArticleEntity>? _articles;
+  List<NewsArticleEntity>? get articles {
+    final value = _articles;
+    if (value == null) return null;
+    if (_articles is EqualUnmodifiableListView) return _articles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @JsonKey()
+  final bool isLoadingNews;
+  final AiInsightEntity? aiInsight;
+  @JsonKey()
+  final AiAnalysisStatus aiStatus;
 
   /// Create a copy of CoinDetailState
   /// with the given fields replaced by the non-null parameter values.
@@ -328,16 +386,31 @@ class _Loaded implements CoinDetailState {
             (identical(other.selectedTimeframe, selectedTimeframe) ||
                 other.selectedTimeframe == selectedTimeframe) &&
             (identical(other.isLoadingChart, isLoadingChart) ||
-                other.isLoadingChart == isLoadingChart));
+                other.isLoadingChart == isLoadingChart) &&
+            const DeepCollectionEquality().equals(other._articles, _articles) &&
+            (identical(other.isLoadingNews, isLoadingNews) ||
+                other.isLoadingNews == isLoadingNews) &&
+            (identical(other.aiInsight, aiInsight) ||
+                other.aiInsight == aiInsight) &&
+            (identical(other.aiStatus, aiStatus) ||
+                other.aiStatus == aiStatus));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, ticker, chartData, selectedTimeframe, isLoadingChart);
+      runtimeType,
+      ticker,
+      chartData,
+      selectedTimeframe,
+      isLoadingChart,
+      const DeepCollectionEquality().hash(_articles),
+      isLoadingNews,
+      aiInsight,
+      aiStatus);
 
   @override
   String toString() {
-    return 'CoinDetailState.loaded(ticker: $ticker, chartData: $chartData, selectedTimeframe: $selectedTimeframe, isLoadingChart: $isLoadingChart)';
+    return 'CoinDetailState.loaded(ticker: $ticker, chartData: $chartData, selectedTimeframe: $selectedTimeframe, isLoadingChart: $isLoadingChart, articles: $articles, isLoadingNews: $isLoadingNews, aiInsight: $aiInsight, aiStatus: $aiStatus)';
   }
 }
 
@@ -351,7 +424,11 @@ abstract mixin class _$LoadedCopyWith<$Res>
       {CoinTickerEntity ticker,
       ChartDataEntity? chartData,
       ChartTimeframe selectedTimeframe,
-      bool isLoadingChart});
+      bool isLoadingChart,
+      List<NewsArticleEntity>? articles,
+      bool isLoadingNews,
+      AiInsightEntity? aiInsight,
+      AiAnalysisStatus aiStatus});
 }
 
 /// @nodoc
@@ -369,6 +446,10 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
     Object? chartData = freezed,
     Object? selectedTimeframe = null,
     Object? isLoadingChart = null,
+    Object? articles = freezed,
+    Object? isLoadingNews = null,
+    Object? aiInsight = freezed,
+    Object? aiStatus = null,
   }) {
     return _then(_Loaded(
       ticker: null == ticker
@@ -387,6 +468,22 @@ class __$LoadedCopyWithImpl<$Res> implements _$LoadedCopyWith<$Res> {
           ? _self.isLoadingChart
           : isLoadingChart // ignore: cast_nullable_to_non_nullable
               as bool,
+      articles: freezed == articles
+          ? _self._articles
+          : articles // ignore: cast_nullable_to_non_nullable
+              as List<NewsArticleEntity>?,
+      isLoadingNews: null == isLoadingNews
+          ? _self.isLoadingNews
+          : isLoadingNews // ignore: cast_nullable_to_non_nullable
+              as bool,
+      aiInsight: freezed == aiInsight
+          ? _self.aiInsight
+          : aiInsight // ignore: cast_nullable_to_non_nullable
+              as AiInsightEntity?,
+      aiStatus: null == aiStatus
+          ? _self.aiStatus
+          : aiStatus // ignore: cast_nullable_to_non_nullable
+              as AiAnalysisStatus,
     ));
   }
 }

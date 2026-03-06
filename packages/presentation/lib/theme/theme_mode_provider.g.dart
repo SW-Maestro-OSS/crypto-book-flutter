@@ -41,7 +41,7 @@ final class ThemeModeNotifierProvider
   }
 }
 
-String _$themeModeNotifierHash() => r'da04a8495c55533b9a2175177b0bb31656101d7d';
+String _$themeModeNotifierHash() => r'e48c7d9e1e9400afd61b7826af17ad98bfee8f24';
 
 abstract class _$ThemeModeNotifier extends $Notifier<flutter.ThemeMode> {
   flutter.ThemeMode build();

@@ -7,10 +7,12 @@ import '../../core/theme/app_typography.dart';
 /// Related articles/news section
 class ArticleSection extends StatelessWidget {
   final List<NewsArticleEntity> articles;
+  final bool isLoading;
 
   const ArticleSection({
     super.key,
     required this.articles,
+    this.isLoading = false,
   });
 
   @override
@@ -44,50 +46,88 @@ class ArticleSection extends StatelessWidget {
 
           const SizedBox(height: AppSpacing.lg),
 
-          // Article list
-          ...articles.map((article) => _buildArticleRow(article)),
+          if (isLoading)
+            const Center(
+              child: Padding(
+                padding: EdgeInsets.all(AppSpacing.lg),
+                child: CircularProgressIndicator(),
+              ),
+            )
+          else if (articles.isEmpty)
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Text(
+                  'No articles available',
+                  style: AppTypography.bodyMedium,
+                ),
+              ),
+            )
+          else
+            ...articles.map((article) => _buildArticleRow(context, article)),
         ],
       ),
     );
   }
 
-  Widget _buildArticleRow(NewsArticleEntity article) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            article.title,
-            style: AppTypography.bodyMedium.copyWith(
-              fontWeight: FontWeight.w600,
+  Widget _buildArticleRow(BuildContext context, NewsArticleEntity article) {
+    return InkWell(
+      onTap: article.url.isNotEmpty
+          ? () => _openUrl(context, article.url)
+          : null,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: AppSpacing.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              article.title,
+              style: AppTypography.bodyMedium.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            children: [
-              Text(
-                article.source,
-                style: AppTypography.bodySmall.copyWith(
-                  color: AppColors.primary,
+            const SizedBox(height: AppSpacing.xs),
+            Row(
+              children: [
+                Text(
+                  article.source,
+                  style: AppTypography.bodySmall.copyWith(
+                    color: AppColors.primary,
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text(
-                '•',
-                style: AppTypography.bodySmall,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Text(
-                _getTimeAgo(article.publishedAt),
-                style: AppTypography.bodySmall,
-              ),
-            ],
-          ),
-        ],
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  '\u2022',
+                  style: AppTypography.bodySmall,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Text(
+                  _getTimeAgo(article.publishedAt),
+                  style: AppTypography.bodySmall,
+                ),
+                if (article.url.isNotEmpty) ...[
+                  const Spacer(),
+                  Icon(
+                    Icons.open_in_new,
+                    size: 14,
+                    color: AppColors.textTertiary,
+                  ),
+                ],
+              ],
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  void _openUrl(BuildContext context, String url) {
+    // url_launcher would be used here in a real app
+    // For now, show a snackbar with the URL
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Opening: $url')),
     );
   }
 
@@ -104,4 +144,3 @@ class ArticleSection extends StatelessWidget {
     }
   }
 }
-

@@ -9,20 +9,17 @@ part of 'usecase_providers.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// GetCoinListUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 @ProviderFor(getCoinListUseCase)
 const getCoinListUseCaseProvider = GetCoinListUseCaseProvider._();
 
 /// GetCoinListUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 final class GetCoinListUseCaseProvider extends $FunctionalProvider<
     GetCoinListUseCase,
     GetCoinListUseCase,
     GetCoinListUseCase> with $Provider<GetCoinListUseCase> {
   /// GetCoinListUseCase Provider
-  /// 실제 구현체는 root app에서 override됨
   const GetCoinListUseCaseProvider._()
       : super(
           from: null,
@@ -61,21 +58,18 @@ String _$getCoinListUseCaseHash() =>
     r'df7ad9fa896c93cada6efeeb070b08dc948e37d0';
 
 /// SubscribeCoinTickerUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 @ProviderFor(subscribeCoinTickerUseCase)
 const subscribeCoinTickerUseCaseProvider =
     SubscribeCoinTickerUseCaseProvider._();
 
 /// SubscribeCoinTickerUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
     SubscribeCoinTickerUseCase,
     SubscribeCoinTickerUseCase,
     SubscribeCoinTickerUseCase> with $Provider<SubscribeCoinTickerUseCase> {
   /// SubscribeCoinTickerUseCase Provider
-  /// 실제 구현체는 root app에서 override됨
   const SubscribeCoinTickerUseCaseProvider._()
       : super(
           from: null,
@@ -113,21 +107,68 @@ final class SubscribeCoinTickerUseCaseProvider extends $FunctionalProvider<
 String _$subscribeCoinTickerUseCaseHash() =>
     r'3583fe7bc3ca2ab28ad21d4b9e2cfc9a3f53f0b9';
 
+/// SubscribeSingleTickerUseCase Provider
+
+@ProviderFor(subscribeSingleTickerUseCase)
+const subscribeSingleTickerUseCaseProvider =
+    SubscribeSingleTickerUseCaseProvider._();
+
+/// SubscribeSingleTickerUseCase Provider
+
+final class SubscribeSingleTickerUseCaseProvider extends $FunctionalProvider<
+    SubscribeSingleTickerUseCase,
+    SubscribeSingleTickerUseCase,
+    SubscribeSingleTickerUseCase> with $Provider<SubscribeSingleTickerUseCase> {
+  /// SubscribeSingleTickerUseCase Provider
+  const SubscribeSingleTickerUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'subscribeSingleTickerUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$subscribeSingleTickerUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<SubscribeSingleTickerUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  SubscribeSingleTickerUseCase create(Ref ref) {
+    return subscribeSingleTickerUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SubscribeSingleTickerUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SubscribeSingleTickerUseCase>(value),
+    );
+  }
+}
+
+String _$subscribeSingleTickerUseCaseHash() =>
+    r'154ed650d403ae60b31c99c659e81a474a35d971';
+
 /// GetSettingsUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 @ProviderFor(getSettingsUseCase)
 const getSettingsUseCaseProvider = GetSettingsUseCaseProvider._();
 
 /// GetSettingsUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 final class GetSettingsUseCaseProvider extends $FunctionalProvider<
     GetSettingsUseCase,
     GetSettingsUseCase,
     GetSettingsUseCase> with $Provider<GetSettingsUseCase> {
   /// GetSettingsUseCase Provider
-  /// 실제 구현체는 root app에서 override됨
   const GetSettingsUseCaseProvider._()
       : super(
           from: null,
@@ -166,20 +207,17 @@ String _$getSettingsUseCaseHash() =>
     r'46bcf6d15133e23a1358f9d150abc1d1c88dc7cf';
 
 /// SaveSettingsUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 @ProviderFor(saveSettingsUseCase)
 const saveSettingsUseCaseProvider = SaveSettingsUseCaseProvider._();
 
 /// SaveSettingsUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 final class SaveSettingsUseCaseProvider extends $FunctionalProvider<
     SaveSettingsUseCase,
     SaveSettingsUseCase,
     SaveSettingsUseCase> with $Provider<SaveSettingsUseCase> {
   /// SaveSettingsUseCase Provider
-  /// 실제 구현체는 root app에서 override됨
   const SaveSettingsUseCaseProvider._()
       : super(
           from: null,
@@ -218,20 +256,17 @@ String _$saveSettingsUseCaseHash() =>
     r'bdb53f1b60c5a9628cee57f9dbc624a36094d995';
 
 /// GetExchangeRateUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 @ProviderFor(getExchangeRateUseCase)
 const getExchangeRateUseCaseProvider = GetExchangeRateUseCaseProvider._();
 
 /// GetExchangeRateUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 final class GetExchangeRateUseCaseProvider extends $FunctionalProvider<
     GetExchangeRateUseCase,
     GetExchangeRateUseCase,
     GetExchangeRateUseCase> with $Provider<GetExchangeRateUseCase> {
   /// GetExchangeRateUseCase Provider
-  /// 실제 구현체는 root app에서 override됨
   const GetExchangeRateUseCaseProvider._()
       : super(
           from: null,
@@ -270,20 +305,17 @@ String _$getExchangeRateUseCaseHash() =>
     r'2276d6d6a3682a1313c6c2bb97f3a9e734272bdd';
 
 /// GetChartDataUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 @ProviderFor(getChartDataUseCase)
 const getChartDataUseCaseProvider = GetChartDataUseCaseProvider._();
 
 /// GetChartDataUseCase Provider
-/// 실제 구현체는 root app에서 override됨
 
 final class GetChartDataUseCaseProvider extends $FunctionalProvider<
     GetChartDataUseCase,
     GetChartDataUseCase,
     GetChartDataUseCase> with $Provider<GetChartDataUseCase> {
   /// GetChartDataUseCase Provider
-  /// 실제 구현체는 root app에서 override됨
   const GetChartDataUseCaseProvider._()
       : super(
           from: null,
@@ -320,3 +352,144 @@ final class GetChartDataUseCaseProvider extends $FunctionalProvider<
 
 String _$getChartDataUseCaseHash() =>
     r'a411e3cba89c40fa1b9aed4686b90bf052d81b31';
+
+/// GetNewsUseCase Provider
+
+@ProviderFor(getNewsUseCase)
+const getNewsUseCaseProvider = GetNewsUseCaseProvider._();
+
+/// GetNewsUseCase Provider
+
+final class GetNewsUseCaseProvider
+    extends $FunctionalProvider<GetNewsUseCase, GetNewsUseCase, GetNewsUseCase>
+    with $Provider<GetNewsUseCase> {
+  /// GetNewsUseCase Provider
+  const GetNewsUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'getNewsUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$getNewsUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<GetNewsUseCase> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  GetNewsUseCase create(Ref ref) {
+    return getNewsUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(GetNewsUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GetNewsUseCase>(value),
+    );
+  }
+}
+
+String _$getNewsUseCaseHash() => r'237f944e228ac318c149ca1d00b5f6f30a718df6';
+
+/// AnalyzeCoinUseCase Provider
+
+@ProviderFor(analyzeCoinUseCase)
+const analyzeCoinUseCaseProvider = AnalyzeCoinUseCaseProvider._();
+
+/// AnalyzeCoinUseCase Provider
+
+final class AnalyzeCoinUseCaseProvider extends $FunctionalProvider<
+    AnalyzeCoinUseCase,
+    AnalyzeCoinUseCase,
+    AnalyzeCoinUseCase> with $Provider<AnalyzeCoinUseCase> {
+  /// AnalyzeCoinUseCase Provider
+  const AnalyzeCoinUseCaseProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'analyzeCoinUseCaseProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$analyzeCoinUseCaseHash();
+
+  @$internal
+  @override
+  $ProviderElement<AnalyzeCoinUseCase> $createElement(
+          $ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AnalyzeCoinUseCase create(Ref ref) {
+    return analyzeCoinUseCase(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AnalyzeCoinUseCase value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AnalyzeCoinUseCase>(value),
+    );
+  }
+}
+
+String _$analyzeCoinUseCaseHash() =>
+    r'd0d0df673706207943eeb2bd266bdcc78b9953f8';
+
+/// AiRepository Provider (for isAvailable check)
+
+@ProviderFor(aiRepository)
+const aiRepositoryProvider = AiRepositoryProvider._();
+
+/// AiRepository Provider (for isAvailable check)
+
+final class AiRepositoryProvider
+    extends $FunctionalProvider<AiRepository, AiRepository, AiRepository>
+    with $Provider<AiRepository> {
+  /// AiRepository Provider (for isAvailable check)
+  const AiRepositoryProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'aiRepositoryProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$aiRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<AiRepository> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  AiRepository create(Ref ref) {
+    return aiRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(AiRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<AiRepository>(value),
+    );
+  }
+}
+
+String _$aiRepositoryHash() => r'7c0649c33effa53030ccdcc0b8ebc201bc9810b0';

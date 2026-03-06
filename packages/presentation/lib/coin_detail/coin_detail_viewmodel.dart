@@ -1,36 +1,45 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/coin_detail/coin_detail_state.dart';
 import 'package:presentation/coin_detail/coin_detail_intent.dart';
+import 'package:presentation/coin_detail/coin_detail_side_effect.dart';
+import 'package:presentation/core/mvi/side_effect_mixin.dart';
 import 'package:presentation/providers/usecase_providers.dart';
 
 part 'coin_detail_viewmodel.g.dart';
 
-/// Coin Detail 화면의 ViewModel (비즈니스 로직)
+/// Coin Detail ViewModel with SideEffect support
 @riverpod
-class CoinDetailViewModel extends _$CoinDetailViewModel {
+class CoinDetailViewModel extends _$CoinDetailViewModel
+    with SideEffectMixin<CoinDetailSideEffect> {
   StreamSubscription? _tickerSubscription;
+  Timer? _chartRefreshTimer;
 
   @override
   CoinDetailState build(String symbol) {
-    // Cleanup on dispose
     ref.onDispose(() {
       _tickerSubscription?.cancel();
+      _chartRefreshTimer?.cancel();
+      disposeSideEffects();
     });
 
-    // Auto-load on init
     Future.microtask(() => onIntent(CoinDetailIntent.load(symbol)));
 
     return const CoinDetailState.initial();
   }
 
-  /// Intent 처리
   void onIntent(CoinDetailIntent intent) {
     intent.when(
       load: _handleLoad,
       tickerUpdated: _handleTickerUpdated,
       changeTimeframe: _handleChangeTimeframe,
+      loadNews: _handleLoadNews,
+      newsLoaded: _handleNewsLoaded,
+      requestAiAnalysis: _handleRequestAiAnalysis,
+      aiAnalysisCompleted: _handleAiAnalysisCompleted,
+      aiAnalysisFailed: _handleAiAnalysisFailed,
     );
   }
 
@@ -38,55 +47,55 @@ class CoinDetailViewModel extends _$CoinDetailViewModel {
     state = const CoinDetailState.loading();
 
     try {
-      // Subscribe to WebSocket ticker stream for this specific symbol
-      final useCase = ref.read(subscribeCoinTickerUseCaseProvider);
-
-      // Use subscribeToTickers with single symbol to get stream
-      final tickerStream = useCase.execute([symbol]);
+      final useCase = ref.read(subscribeSingleTickerUseCaseProvider);
+      final tickerStream = useCase.execute(symbol);
 
       _tickerSubscription = tickerStream.listen(
-        (tickers) {
-          if (tickers.isNotEmpty) {
-            final ticker = tickers.firstWhere(
-              (t) => t.symbol == symbol,
-              orElse: () => tickers.first,
-            );
-
-            // ✅ MVI 패턴: Intent를 통해 상태 변경
-            onIntent(CoinDetailIntent.tickerUpdated(ticker));
-          }
+        (ticker) {
+          onIntent(CoinDetailIntent.tickerUpdated(ticker));
         },
         onError: (error) {
           final appError = error is AppError
               ? error
               : GenericNetworkError(error.toString());
           state = CoinDetailState.error(appError);
+          emitSideEffect(
+            CoinDetailSideEffect.showError(appError.userMessage),
+          );
         },
       );
 
-      // Load initial chart data in background
       _loadChartData(symbol, ChartTimeframe.h24);
+
+      // Load news
+      _handleLoadNews(symbol);
+
+      // Periodic chart refresh every 60 seconds
+      _chartRefreshTimer = Timer.periodic(
+        const Duration(seconds: 60),
+        (_) {
+          state.maybeMap(
+            loaded: (s) => _loadChartData(symbol, s.selectedTimeframe),
+            orElse: () {},
+          );
+        },
+      );
     } catch (e) {
-      final appError = e is AppError
-          ? e
-          : GenericNetworkError(e.toString());
+      final appError =
+          e is AppError ? e : GenericNetworkError(e.toString());
       state = CoinDetailState.error(appError);
+      emitSideEffect(
+        CoinDetailSideEffect.showError(appError.userMessage),
+      );
     }
   }
 
   void _handleTickerUpdated(CoinTickerEntity ticker) {
-    // Preserve existing chart data and timeframe when updating ticker
     state.maybeMap(
       loaded: (currentState) {
-        state = CoinDetailState.loaded(
-          ticker: ticker,
-          chartData: currentState.chartData,
-          selectedTimeframe: currentState.selectedTimeframe,
-          isLoadingChart: currentState.isLoadingChart,
-        );
+        state = currentState.copyWith(ticker: ticker);
       },
       orElse: () {
-        // First time loading
         state = CoinDetailState.loaded(ticker: ticker);
       },
     );
@@ -95,19 +104,121 @@ class CoinDetailViewModel extends _$CoinDetailViewModel {
   Future<void> _handleChangeTimeframe(ChartTimeframe timeframe) async {
     state.maybeMap(
       loaded: (currentState) async {
-        // Set loading state for chart
-        state = CoinDetailState.loaded(
-          ticker: currentState.ticker,
+        state = currentState.copyWith(
           chartData: null,
           selectedTimeframe: timeframe,
           isLoadingChart: true,
         );
-
-        // Load chart data for new timeframe
         await _loadChartData(currentState.ticker.symbol, timeframe);
       },
       orElse: () {},
     );
+  }
+
+  Future<void> _handleLoadNews(String symbol) async {
+    try {
+      final newsUseCase = ref.read(getNewsUseCaseProvider);
+      state.maybeMap(
+        loaded: (currentState) {
+          state = currentState.copyWith(isLoadingNews: true);
+        },
+        orElse: () {},
+      );
+
+      final baseAsset = CoinTickerEntity.extractBaseAsset(symbol);
+      final articles = await newsUseCase.execute(baseAsset);
+      onIntent(CoinDetailIntent.newsLoaded(articles));
+    } catch (e) {
+      debugPrint('[CoinDetailViewModel] Failed to load news: $e');
+      emitSideEffect(
+        const CoinDetailSideEffect.showToast('Failed to load news'),
+      );
+      state.maybeMap(
+        loaded: (currentState) {
+          state = currentState.copyWith(isLoadingNews: false);
+        },
+        orElse: () {},
+      );
+    }
+  }
+
+  void _handleNewsLoaded(List<NewsArticleEntity> articles) {
+    state.maybeMap(
+      loaded: (currentState) {
+        state = currentState.copyWith(
+          articles: articles,
+          isLoadingNews: false,
+        );
+      },
+      orElse: () {},
+    );
+  }
+
+  Future<void> _handleRequestAiAnalysis() async {
+    try {
+      final aiUseCase = ref.read(analyzeCoinUseCaseProvider);
+
+      state.maybeMap(
+        loaded: (currentState) async {
+          final aiRepo = ref.read(aiRepositoryProvider);
+          final isAvailable = await aiRepo.isAvailable();
+          if (!isAvailable) {
+            final reason = aiRepo.unavailableReason ??
+                'AI analysis is not available on this device';
+            state = currentState.copyWith(
+              aiStatus: AiAnalysisStatus.unavailable,
+            );
+            emitSideEffect(
+              CoinDetailSideEffect.showToast(reason),
+            );
+            return;
+          }
+
+          state = currentState.copyWith(
+            aiStatus: AiAnalysisStatus.loading,
+          );
+
+          try {
+            final insight = await aiUseCase.execute(
+              ticker: currentState.ticker,
+              chartData: currentState.chartData,
+              news: currentState.articles,
+            );
+            onIntent(CoinDetailIntent.aiAnalysisCompleted(insight));
+          } catch (e) {
+            onIntent(CoinDetailIntent.aiAnalysisFailed(e.toString()));
+          }
+        },
+        orElse: () {},
+      );
+    } catch (e) {
+      debugPrint('[CoinDetailViewModel] AI analysis error: $e');
+      onIntent(CoinDetailIntent.aiAnalysisFailed(e.toString()));
+    }
+  }
+
+  void _handleAiAnalysisCompleted(AiInsightEntity insight) {
+    state.maybeMap(
+      loaded: (currentState) {
+        state = currentState.copyWith(
+          aiInsight: insight,
+          aiStatus: AiAnalysisStatus.completed,
+        );
+      },
+      orElse: () {},
+    );
+  }
+
+  void _handleAiAnalysisFailed(String error) {
+    state.maybeMap(
+      loaded: (currentState) {
+        state = currentState.copyWith(
+          aiStatus: AiAnalysisStatus.error,
+        );
+      },
+      orElse: () {},
+    );
+    emitSideEffect(CoinDetailSideEffect.showError('AI analysis failed: $error'));
   }
 
   Future<void> _loadChartData(String symbol, ChartTimeframe timeframe) async {
@@ -115,11 +226,9 @@ class CoinDetailViewModel extends _$CoinDetailViewModel {
       final chartUseCase = ref.read(getChartDataUseCaseProvider);
       final chartData = await chartUseCase.execute(symbol, timeframe);
 
-      // Update state with chart data
       state.maybeMap(
         loaded: (currentState) {
-          state = CoinDetailState.loaded(
-            ticker: currentState.ticker,
+          state = currentState.copyWith(
             chartData: chartData,
             selectedTimeframe: timeframe,
             isLoadingChart: false,
@@ -128,14 +237,11 @@ class CoinDetailViewModel extends _$CoinDetailViewModel {
         orElse: () {},
       );
     } catch (e) {
-      // Chart loading failed, but keep showing ticker data
-      print('[CoinDetailViewModel] Failed to load chart: $e');
+      debugPrint('[CoinDetailViewModel] Failed to load chart: $e');
       state.maybeMap(
         loaded: (currentState) {
-          state = CoinDetailState.loaded(
-            ticker: currentState.ticker,
+          state = currentState.copyWith(
             chartData: null,
-            selectedTimeframe: currentState.selectedTimeframe,
             isLoadingChart: false,
           );
         },
