@@ -91,14 +91,14 @@ NewsRepository newsRepository(Ref ref) {
   );
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 AiDataSource aiDataSource(Ref ref) {
   final ds = AiDataSource();
   ds.initialize();
   return ds;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 AiRepository aiRepository(Ref ref) {
   return AiRepositoryImpl(
     dataSource: ref.watch(aiDataSourceProvider),

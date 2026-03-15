@@ -12,6 +12,7 @@ class AiDataSource {
   final FlutterLocalAi _aiEngine = FlutterLocalAi();
   bool _isAvailable = false;
   bool _isInitialized = false;
+  Future<void>? _initFuture;
 
   static const _systemPrompt =
       'You are a cryptocurrency analyst. Analyze market data and news '
@@ -21,7 +22,17 @@ class AiDataSource {
 
   String? get unavailableReason => _unavailableReason;
 
+  /// Wait for initialization to complete
+  Future<void> ensureInitialized() async {
+    if (_initFuture != null) await _initFuture;
+  }
+
   Future<void> initialize() async {
+    _initFuture = _doInitialize();
+    await _initFuture;
+  }
+
+  Future<void> _doInitialize() async {
     try {
       dev.log('[AiDataSource] Calling isAvailable()...');
       _isAvailable = await _aiEngine.isAvailable();

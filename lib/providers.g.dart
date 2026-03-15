@@ -541,7 +541,7 @@ final class AiDataSourceProvider
           argument: null,
           retry: null,
           name: r'aiDataSourceProvider',
-          isAutoDispose: true,
+          isAutoDispose: false,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
@@ -568,7 +568,7 @@ final class AiDataSourceProvider
   }
 }
 
-String _$aiDataSourceHash() => r'6f187df8309939f99b0a183957d2cc1d0a286deb';
+String _$aiDataSourceHash() => r'196c937caf6d797c4a9b7e20cad4e836b3336203';
 
 @ProviderFor(aiRepository)
 const aiRepositoryProvider = AiRepositoryProvider._();
@@ -582,7 +582,7 @@ final class AiRepositoryProvider
           argument: null,
           retry: null,
           name: r'aiRepositoryProvider',
-          isAutoDispose: true,
+          isAutoDispose: false,
           dependencies: null,
           $allTransitiveDependencies: null,
         );
@@ -609,7 +609,7 @@ final class AiRepositoryProvider
   }
 }
 
-String _$aiRepositoryHash() => r'9cbde9e9f9fab927be549b99680b89c90af1fd57';
+String _$aiRepositoryHash() => r'b951fdfe26bb51cffded3dad7c968ed56c133030';
 
 @ProviderFor(getCoinListUseCase)
 const getCoinListUseCaseProvider = GetCoinListUseCaseProvider._();

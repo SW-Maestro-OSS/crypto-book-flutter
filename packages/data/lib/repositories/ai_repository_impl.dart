@@ -8,6 +8,7 @@ class AiRepositoryImpl implements AiRepository {
 
   @override
   Future<bool> isAvailable() async {
+    await dataSource.ensureInitialized();
     return dataSource.isAvailable;
   }
 
