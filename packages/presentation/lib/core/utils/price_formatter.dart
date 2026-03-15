@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:domain/domain.dart';
+import 'number_formatter.dart';
 
 /// Price formatter utility for displaying prices in different currencies
 class PriceFormatter {
@@ -27,17 +28,7 @@ class PriceFormatter {
 
   /// Format price in USD
   static String _formatUSD(double price) {
-    if (price >= 100) {
-      return '\$${price.toStringAsFixed(2)}';
-    } else if (price >= 10) {
-      return '\$${price.toStringAsFixed(3)}';
-    } else if (price >= 1) {
-      return '\$${price.toStringAsFixed(4)}';
-    } else if (price >= 0.01) {
-      return '\$${price.toStringAsFixed(5)}';
-    } else {
-      return '\$${price.toStringAsFixed(6)}';
-    }
+    return '\$${NumberFormatter.formatPrice(price)}';
   }
 
   /// Format price in KRW
@@ -58,19 +49,9 @@ class PriceFormatter {
     }
   }
 
-  /// Format volume/market cap with abbreviations (K, M, B, T)
+  /// Format volume/market cap with $ prefix and abbreviations (K, M, B, T)
   static String formatLargeNumber(double number) {
-    if (number >= 1000000000000) {
-      return '\$${(number / 1000000000000).toStringAsFixed(2)}T';
-    } else if (number >= 1000000000) {
-      return '\$${(number / 1000000000).toStringAsFixed(2)}B';
-    } else if (number >= 1000000) {
-      return '\$${(number / 1000000).toStringAsFixed(2)}M';
-    } else if (number >= 1000) {
-      return '\$${(number / 1000).toStringAsFixed(2)}K';
-    } else {
-      return '\$${number.toStringAsFixed(2)}';
-    }
+    return '\$${NumberFormatter.formatVolume(number)}';
   }
 
   /// Format percentage change

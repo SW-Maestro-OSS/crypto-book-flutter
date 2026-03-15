@@ -34,19 +34,9 @@ class NumberFormatter {
     }
   }
 
-  /// Format market cap with K/M/B/T abbreviations
+  /// Format market cap with $ prefix and K/M/B/T abbreviations
   static String formatMarketCap(double marketCap) {
-    if (marketCap >= 1000000000000) {
-      return '\$${(marketCap / 1000000000000).toStringAsFixed(2)}T';
-    } else if (marketCap >= 1000000000) {
-      return '\$${(marketCap / 1000000000).toStringAsFixed(2)}B';
-    } else if (marketCap >= 1000000) {
-      return '\$${(marketCap / 1000000).toStringAsFixed(2)}M';
-    } else if (marketCap >= 1000) {
-      return '\$${(marketCap / 1000).toStringAsFixed(2)}K';
-    } else {
-      return '\$${marketCap.toStringAsFixed(2)}';
-    }
+    return '\$${formatVolume(marketCap)}';
   }
 
   /// Format percentage with sign
@@ -59,14 +49,5 @@ class NumberFormatter {
   static String formatWithCommas(double number) {
     final formatter = NumberFormat('#,###.##');
     return formatter.format(number);
-  }
-
-  /// Format crypto amount (e.g., 0.00123456 BTC)
-  static String formatCryptoAmount(double amount) {
-    if (amount >= 1) {
-      return amount.toStringAsFixed(8);
-    } else {
-      return amount.toStringAsFixed(8);
-    }
   }
 }
