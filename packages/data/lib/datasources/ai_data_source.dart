@@ -62,12 +62,13 @@ class AiDataSource {
     required CoinTickerEntity ticker,
     ChartDataEntity? chartData,
     List<NewsArticleEntity>? news,
+    String languageCode = 'en',
   }) async {
     if (!_isAvailable || !_isInitialized) {
       throw const AiUnavailableError();
     }
 
-    final prompt = _buildPrompt(ticker, chartData, news);
+    final prompt = _buildPrompt(ticker, chartData, news, languageCode);
     dev.log('[AiDataSource] Sending prompt: ${prompt.substring(0, 100)}...');
 
     try {
@@ -101,6 +102,7 @@ class AiDataSource {
     CoinTickerEntity ticker,
     ChartDataEntity? chartData,
     List<NewsArticleEntity>? news,
+    String languageCode,
   ) {
     final buffer = StringBuffer();
     buffer.writeln('Analyze the following cryptocurrency data and provide a JSON response.');
@@ -132,6 +134,10 @@ class AiDataSource {
       }
     }
 
+    final insightLang = languageCode == 'ko'
+        ? 'Write all insight strings in Korean (한국어).'
+        : 'Write all insight strings in English.';
+
     buffer.writeln();
     buffer.writeln('Respond ONLY with a JSON object:');
     buffer.writeln('{');
@@ -139,6 +145,8 @@ class AiDataSource {
     buffer.writeln('  "sellPressure": <float 0.0-1.0>,');
     buffer.writeln('  "insights": ["<insight1>", "<insight2>", "<insight3>", "<insight4>"]');
     buffer.writeln('}');
+    buffer.writeln();
+    buffer.writeln(insightLang);
 
     return buffer.toString();
   }

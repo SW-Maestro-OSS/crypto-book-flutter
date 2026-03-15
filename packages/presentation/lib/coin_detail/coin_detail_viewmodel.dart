@@ -7,6 +7,7 @@ import 'package:presentation/coin_detail/coin_detail_intent.dart';
 import 'package:presentation/coin_detail/coin_detail_side_effect.dart';
 import 'package:presentation/core/mvi/side_effect_mixin.dart';
 import 'package:presentation/core/mvi/websocket_subscription_mixin.dart';
+import 'package:presentation/providers/app_settings_provider.dart';
 import 'package:presentation/providers/usecase_providers.dart';
 
 part 'coin_detail_viewmodel.g.dart';
@@ -190,10 +191,12 @@ class CoinDetailViewModel extends _$CoinDetailViewModel
           );
 
           try {
+            final language = ref.read(appSettingsProvider).language;
             final insight = await aiUseCase.execute(
               ticker: currentState.ticker,
               chartData: currentState.chartData,
               news: currentState.articles,
+              languageCode: language,
             );
             onIntent(CoinDetailIntent.aiAnalysisCompleted(insight));
           } catch (e) {

@@ -10,5 +10,6 @@ abstract interface class AiRepository {
     required CoinTickerEntity ticker,
     ChartDataEntity? chartData,
     List<NewsArticleEntity>? news,
+    String languageCode = 'en',
   });
 }

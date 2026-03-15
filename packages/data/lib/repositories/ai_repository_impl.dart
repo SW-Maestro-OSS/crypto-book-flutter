@@ -20,11 +20,13 @@ class AiRepositoryImpl implements AiRepository {
     required CoinTickerEntity ticker,
     ChartDataEntity? chartData,
     List<NewsArticleEntity>? news,
+    String languageCode = 'en',
   }) {
     return dataSource.analyzeCoin(
       ticker: ticker,
       chartData: chartData,
       news: news,
+      languageCode: languageCode,
     );
   }
 }

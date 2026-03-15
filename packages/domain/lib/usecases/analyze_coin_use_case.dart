@@ -9,6 +9,7 @@ abstract interface class AnalyzeCoinUseCase {
     required CoinTickerEntity ticker,
     ChartDataEntity? chartData,
     List<NewsArticleEntity>? news,
+    String languageCode = 'en',
   });
 }
 
@@ -22,11 +23,13 @@ class AnalyzeCoinUseCaseImpl implements AnalyzeCoinUseCase {
     required CoinTickerEntity ticker,
     ChartDataEntity? chartData,
     List<NewsArticleEntity>? news,
+    String languageCode = 'en',
   }) {
     return repository.analyzeCoin(
       ticker: ticker,
       chartData: chartData,
       news: news,
+      languageCode: languageCode,
     );
   }
 }
