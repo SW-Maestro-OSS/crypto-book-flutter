@@ -28,3 +28,11 @@ export 'routing/app_router.dart';
 
 // Providers
 export 'providers/usecase_providers.dart';
+export 'providers/app_settings_provider.dart';
+export 'providers/app_strings_provider.dart';
+
+// L10n
+export 'core/l10n/app_strings.dart';
+
+// Utils
+export 'core/utils/date_formatter.dart';
