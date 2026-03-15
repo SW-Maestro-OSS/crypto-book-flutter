@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/errors/app_error.dart';
+import 'package:presentation/core/l10n/app_strings.dart';
+import 'package:presentation/providers/app_strings_provider.dart';
 
 /// Widget that displays error messages and recovery options based on AppError
-class ErrorHandler extends StatelessWidget {
+class ErrorHandler extends ConsumerWidget {
   final AppError error;
   final VoidCallback? onRetry;
 
@@ -13,7 +16,9 @@ class ErrorHandler extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final strings = ref.watch(appStringsProvider);
+
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -33,7 +38,7 @@ class ErrorHandler extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              _getSuggestedAction(),
+              _getSuggestedAction(strings),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: Colors.grey,
               ),
@@ -44,7 +49,7 @@ class ErrorHandler extends StatelessWidget {
               ElevatedButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh),
-                label: const Text('다시 시도'),
+                label: Text(strings.retry),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
@@ -65,9 +70,9 @@ class ErrorHandler extends StatelessWidget {
         : Icons.warning_amber_rounded;
   }
 
-  String _getSuggestedAction() {
+  String _getSuggestedAction(AppStrings strings) {
     if (!error.isRecoverable) {
-      return '잠시 후 다시 시도해주세요';
+      return strings.tryAgainLater;
     }
 
     // Check error type and provide specific guidance
@@ -75,17 +80,17 @@ class ErrorHandler extends StatelessWidget {
 
     if (technicalMessage.contains('internet') ||
         technicalMessage.contains('connection')) {
-      return '인터넷 연결 상태를 확인하고 다시 시도해주세요';
+      return strings.checkConnection;
     }
 
     if (technicalMessage.contains('timeout')) {
-      return '네트워크가 불안정합니다. 다시 시도해주세요';
+      return strings.networkUnstable;
     }
 
     if (technicalMessage.contains('not found')) {
-      return '요청하신 정보를 찾을 수 없습니다';
+      return strings.infoNotFound;
     }
 
-    return '아래 버튼을 눌러 다시 시도해주세요';
+    return strings.pressRetry;
   }
 }
