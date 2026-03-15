@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
+import 'package:presentation/core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
@@ -9,12 +10,14 @@ class InsightSection extends StatelessWidget {
   final AiInsightEntity? insight;
   final AiAnalysisStatus aiStatus;
   final VoidCallback onRequestAnalysis;
+  final AppStrings strings;
 
   const InsightSection({
     super.key,
     required this.insight,
     required this.aiStatus,
     required this.onRequestAnalysis,
+    required this.strings,
   });
 
   @override
@@ -40,7 +43,7 @@ class InsightSection extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(
-                'AI Insight',
+                strings.aiInsight,
                 style: AppTypography.labelLarge,
               ),
             ],
@@ -72,14 +75,14 @@ class InsightSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Get AI-powered analysis for this coin',
+            strings.aiPrompt,
             style: AppTypography.bodyMedium,
           ),
           const SizedBox(height: AppSpacing.md),
           ElevatedButton.icon(
             onPressed: onRequestAnalysis,
             icon: const Icon(Icons.auto_awesome, size: 18),
-            label: const Text('Analyze'),
+            label: Text(strings.analyze),
           ),
         ],
       ),
@@ -87,14 +90,14 @@ class InsightSection extends StatelessWidget {
   }
 
   Widget _buildLoadingState() {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.all(AppSpacing.lg),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           children: [
-            CircularProgressIndicator(),
-            SizedBox(height: AppSpacing.md),
-            Text('Analyzing...'),
+            const CircularProgressIndicator(),
+            const SizedBox(height: AppSpacing.md),
+            Text(strings.analyzing),
           ],
         ),
       ),
@@ -131,7 +134,7 @@ class InsightSection extends StatelessWidget {
 
         // Buy vs Sell Pressure
         Text(
-          'Market Pressure',
+          strings.marketPressure,
           style: AppTypography.labelMedium,
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -185,7 +188,7 @@ class InsightSection extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
-                  'Buy ${(insight!.buyPressure * 100).toInt()}%',
+                  '${strings.buy} ${(insight!.buyPressure * 100).toInt()}%',
                   style: AppTypography.bodySmall,
                 ),
               ],
@@ -202,7 +205,7 @@ class InsightSection extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.xs),
                 Text(
-                  'Sell ${(insight!.sellPressure * 100).toInt()}%',
+                  '${strings.sell} ${(insight!.sellPressure * 100).toInt()}%',
                   style: AppTypography.bodySmall,
                 ),
               ],
@@ -226,7 +229,7 @@ class InsightSection extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'AI analysis is not available on this device',
+              strings.aiUnavailable,
               style: AppTypography.bodyMedium,
               textAlign: TextAlign.center,
             ),
@@ -247,14 +250,14 @@ class InsightSection extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Analysis failed',
+            strings.analysisFailed,
             style: AppTypography.bodyMedium,
           ),
           const SizedBox(height: AppSpacing.md),
           OutlinedButton.icon(
             onPressed: onRequestAnalysis,
             icon: const Icon(Icons.refresh, size: 18),
-            label: const Text('Retry'),
+            label: Text(strings.retry),
           ),
         ],
       ),

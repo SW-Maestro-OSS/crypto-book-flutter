@@ -14,6 +14,8 @@ import 'package:presentation/core/widgets/error_handler.dart';
 import 'package:presentation/core/theme/app_spacing.dart';
 import 'package:presentation/core/theme/app_colors.dart';
 import 'package:presentation/core/theme/app_typography.dart';
+import 'package:presentation/core/l10n/app_strings.dart';
+import 'package:presentation/providers/app_strings_provider.dart';
 
 class HomeView extends ConsumerStatefulWidget {
   const HomeView({super.key});
@@ -76,6 +78,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(homeViewModelProvider);
+    final strings = ref.watch(appStringsProvider);
 
     return state.when(
       initial: () => const SizedBox.shrink(),
@@ -98,7 +101,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       HomeIntent.search(query),
                     );
               },
-              hintText: 'Search coins...',
+              hintText: strings.searchCoins,
             ),
 
             // Sort Header
@@ -110,12 +113,13 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       HomeIntent.sort(newSortType),
                     );
               },
+              strings: strings,
             ),
 
             // Coin List
             Expanded(
               child: displayedTickers.isEmpty
-                  ? _buildEmptyState(searchQuery)
+                  ? _buildEmptyState(searchQuery, strings)
                   : ListView.builder(
                       controller: _scrollController,
                       itemCount: displayedTickers.length + 1,
@@ -128,7 +132,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                       AppSpacing.sectionPadding),
                                   child: Center(
                                     child: Text(
-                                      'Scroll down for more...',
+                                      strings.scrollForMore,
                                       style: AppTypography.bodySmall,
                                     ),
                                   ),
@@ -163,7 +167,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
     );
   }
 
-  Widget _buildEmptyState(String searchQuery) {
+  Widget _buildEmptyState(String searchQuery, AppStrings strings) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.sectionPadding),
@@ -177,7 +181,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'No coins found',
+              strings.noCoinsFound,
               style: AppTypography.bodyLarge.copyWith(
                 fontWeight: FontWeight.w600,
               ),

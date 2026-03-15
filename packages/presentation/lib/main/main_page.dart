@@ -6,6 +6,7 @@ import 'package:presentation/settings/setting_view.dart';
 import 'package:presentation/main/main_state.dart';
 import 'package:presentation/main/main_viewmodel.dart';
 import 'package:presentation/main/main_intent.dart';
+import 'package:presentation/providers/app_strings_provider.dart';
 import 'package:presentation/routing/navigation_state.dart';
 
 class MainPage extends ConsumerStatefulWidget {
@@ -45,6 +46,7 @@ class _MainPageState extends ConsumerState<MainPage>
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(mainViewModelProvider);
+    final strings = ref.watch(appStringsProvider);
 
     // Listen to navigation state changes and execute navigation
     ref.listen<MainState>(
@@ -55,15 +57,6 @@ class _MainPageState extends ConsumerState<MainPage>
     );
 
     return Scaffold(
-      // appBar: state.currentTabIndex == 0
-      //     ? AppBar(
-      //         title: const Text('Market'),
-      //         // Connection indicator will be added in Phase 3 completion
-      //         actions: const [
-      //           SizedBox(width: AppSpacing.lg),
-      //         ],
-      //       )
-      //     : null,
       body: SafeArea(
         child: IndexedStack(
           index: state.currentTabIndex,
@@ -80,14 +73,14 @@ class _MainPageState extends ConsumerState<MainPage>
                 MainIntent.changeTab(index),
               );
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.attach_money),
-            label: 'Market',
+            icon: const Icon(Icons.attach_money),
+            label: strings.market,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Setting',
+            icon: const Icon(Icons.settings),
+            label: strings.settings,
           ),
         ],
       ),

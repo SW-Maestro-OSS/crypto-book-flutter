@@ -13,6 +13,8 @@ import 'package:presentation/core/mvi/side_effect_listener.dart';
 import 'package:presentation/core/widgets/error_handler.dart';
 import 'package:presentation/core/theme/app_spacing.dart';
 import 'package:presentation/core/utils/number_formatter.dart';
+import 'package:presentation/core/l10n/app_strings.dart';
+import 'package:presentation/providers/app_strings_provider.dart';
 
 class CoinDetailPage extends ConsumerWidget {
   final String symbol;
@@ -23,6 +25,7 @@ class CoinDetailPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(coinDetailViewModelProvider(symbol));
     final viewModel = ref.read(coinDetailViewModelProvider(symbol).notifier);
+    final strings = ref.watch(appStringsProvider);
 
     return SideEffectListener<CoinDetailSideEffect>(
       sideEffects: viewModel.sideEffects,
@@ -93,6 +96,7 @@ class CoinDetailPage extends ConsumerWidget {
                         CoinDetailIntent.changeTimeframe(timeframe),
                       );
                     },
+                    strings: strings,
                   ),
                 ),
 
@@ -102,7 +106,7 @@ class CoinDetailPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.gridPadding,
                   ),
-                  child: _buildMetricsGrid(ticker),
+                  child: _buildMetricsGrid(ticker, strings),
                 ),
 
                 const SizedBox(height: AppSpacing.sectionSpacing),
@@ -116,6 +120,7 @@ class CoinDetailPage extends ConsumerWidget {
                       const CoinDetailIntent.requestAiAnalysis(),
                     );
                   },
+                  strings: strings,
                 ),
 
                 const SizedBox(height: AppSpacing.sectionSpacing),
@@ -124,6 +129,7 @@ class CoinDetailPage extends ConsumerWidget {
                 ArticleSection(
                   articles: articles ?? [],
                   isLoading: isLoadingNews,
+                  strings: strings,
                 ),
 
                 const SizedBox(height: AppSpacing.sectionSpacing),
@@ -141,7 +147,7 @@ class CoinDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildMetricsGrid(ticker) {
+  Widget _buildMetricsGrid(dynamic ticker, AppStrings strings) {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -151,30 +157,30 @@ class CoinDetailPage extends ConsumerWidget {
       childAspectRatio: 1.5,
       children: [
         MetricCard(
-          label: '24h High',
+          label: strings.high24h,
           value: '\$${NumberFormatter.formatPrice(ticker.high24h)}',
         ),
         MetricCard(
-          label: '24h Low',
+          label: strings.low24h,
           value: '\$${NumberFormatter.formatPrice(ticker.low24h)}',
         ),
         MetricCard(
-          label: '24h Volume',
+          label: strings.volume24h,
           value: NumberFormatter.formatVolume(ticker.volume24h),
         ),
         MetricCard(
-          label: 'Quote Volume',
+          label: strings.quoteVolume,
           value: NumberFormatter.formatVolume(ticker.quoteVolume24h),
         ),
         MetricCard(
-          label: 'Market Cap',
-          value: 'N/A',
-          subtitle: 'Coming soon',
+          label: strings.marketCap,
+          value: strings.na,
+          subtitle: strings.comingSoon,
         ),
         MetricCard(
-          label: 'Circulating Supply',
-          value: 'N/A',
-          subtitle: 'Coming soon',
+          label: strings.circulatingSupply,
+          value: strings.na,
+          subtitle: strings.comingSoon,
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presentation/core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
@@ -8,12 +9,14 @@ class SortHeader extends StatelessWidget {
   final SortType currentSortType;
   final bool isAscending;
   final ValueChanged<SortType> onSortChanged;
+  final AppStrings strings;
 
   const SortHeader({
     super.key,
     required this.currentSortType,
     required this.isAscending,
     required this.onSortChanged,
+    required this.strings,
   });
 
   @override
@@ -39,7 +42,7 @@ class SortHeader extends StatelessWidget {
           Expanded(
             flex: 3,
             child: _SortHeaderItem(
-              label: 'Symbol',
+              label: strings.symbol,
               sortType: SortType.symbol,
               currentSortType: currentSortType,
               isAscending: isAscending,
@@ -50,7 +53,7 @@ class SortHeader extends StatelessWidget {
           Expanded(
             flex: 3,
             child: _SortHeaderItem(
-              label: 'Price',
+              label: strings.price,
               sortType: SortType.price,
               currentSortType: currentSortType,
               isAscending: isAscending,
@@ -62,7 +65,7 @@ class SortHeader extends StatelessWidget {
           Expanded(
             flex: 2,
             child: _SortHeaderItem(
-              label: '24h %',
+              label: strings.change24h,
               sortType: SortType.changePercent,
               currentSortType: currentSortType,
               isAscending: isAscending,

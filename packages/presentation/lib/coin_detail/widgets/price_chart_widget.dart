@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import 'package:presentation/core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
@@ -12,6 +13,7 @@ class PriceChartWidget extends StatelessWidget {
   final ChartTimeframe selectedTimeframe;
   final Function(ChartTimeframe) onTimeframeChanged;
   final bool isLoading;
+  final AppStrings strings;
 
   const PriceChartWidget({
     super.key,
@@ -19,7 +21,19 @@ class PriceChartWidget extends StatelessWidget {
     required this.selectedTimeframe,
     required this.onTimeframeChanged,
     this.isLoading = false,
+    required this.strings,
   });
+
+  String _localizedTimeframeLabel(ChartTimeframe timeframe) {
+    switch (timeframe) {
+      case ChartTimeframe.h24:
+        return strings.get('24h');
+      case ChartTimeframe.d7:
+        return strings.get('7d');
+      case ChartTimeframe.m1:
+        return strings.get('1m');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +77,7 @@ class PriceChartWidget extends StatelessWidget {
                 ),
               ),
               child: Text(
-                timeframe.label,
+                _localizedTimeframeLabel(timeframe),
                 textAlign: TextAlign.center,
                 style: AppTypography.labelLarge.copyWith(
                   color: isSelected ? AppColors.primary : AppColors.textSecondary,
@@ -89,7 +103,7 @@ class PriceChartWidget extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'No chart data available',
+            strings.noChartData,
             style: AppTypography.bodyMedium.copyWith(
               color: AppColors.textSecondary,
             ),

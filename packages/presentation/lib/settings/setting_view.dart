@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:presentation/settings/setting_viewmodel.dart';
 import 'package:presentation/settings/setting_state.dart';
 import 'package:presentation/settings/setting_intent.dart';
+import 'package:presentation/core/l10n/app_strings.dart';
 import 'package:presentation/core/theme/app_colors.dart';
 import 'package:presentation/core/theme/app_spacing.dart';
 import 'package:presentation/core/theme/app_typography.dart';
+import 'package:presentation/core/utils/date_formatter.dart';
 import 'package:presentation/core/widgets/error_handler.dart';
+import 'package:presentation/providers/app_strings_provider.dart';
 
 class SettingView extends ConsumerWidget {
   const SettingView({super.key});
@@ -14,11 +17,12 @@ class SettingView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(settingViewModelProvider);
+    final strings = ref.watch(appStringsProvider);
 
     return Column(
       children: [
         AppBar(
-          title: const Text('Settings'),
+          title: Text(strings.settings),
         ),
         Expanded(
           child: state.when(
@@ -29,26 +33,27 @@ class SettingView extends ConsumerWidget {
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 children: [
                   // Currency Section
-                  _buildSectionTitle('Currency'),
+                  _buildSectionTitle(strings.currency),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildCurrencyOptions(context, ref, currency),
+                  _buildCurrencyOptions(context, ref, currency, strings),
                   const SizedBox(height: AppSpacing.xxl),
 
                   // Language Section
-                  _buildSectionTitle('Language'),
+                  _buildSectionTitle(strings.language),
                   const SizedBox(height: AppSpacing.sm),
-                  _buildLanguageOptions(context, ref, language),
+                  _buildLanguageOptions(context, ref, language, strings),
                   const SizedBox(height: AppSpacing.xxl),
 
                   // Exchange Rate Section (only show if KRW)
                   if (currency == 'KRW') ...[
-                    _buildSectionTitle('Exchange Rate'),
+                    _buildSectionTitle(strings.exchangeRate),
                     const SizedBox(height: AppSpacing.sm),
                     _buildExchangeRateCard(
                       context,
                       ref,
                       exchangeRate,
                       lastUpdated,
+                      strings,
                     ),
                   ],
                 ],
@@ -81,13 +86,14 @@ class SettingView extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     String currentCurrency,
+    AppStrings strings,
   ) {
     return Row(
       children: [
         Expanded(
           child: _buildOptionCard(
             context: context,
-            title: 'Dollar',
+            title: strings.dollar,
             subtitle: 'USD',
             icon: Icons.attach_money,
             isSelected: currentCurrency == 'USD',
@@ -102,7 +108,7 @@ class SettingView extends ConsumerWidget {
         Expanded(
           child: _buildOptionCard(
             context: context,
-            title: 'Won',
+            title: strings.won,
             subtitle: 'KRW',
             icon: Icons.currency_yen,
             isSelected: currentCurrency == 'KRW',
@@ -121,13 +127,14 @@ class SettingView extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     String currentLanguage,
+    AppStrings strings,
   ) {
     return Row(
       children: [
         Expanded(
           child: _buildOptionCard(
             context: context,
-            title: 'English',
+            title: strings.english,
             subtitle: 'EN',
             icon: Icons.language,
             isSelected: currentLanguage == 'en',
@@ -142,7 +149,7 @@ class SettingView extends ConsumerWidget {
         Expanded(
           child: _buildOptionCard(
             context: context,
-            title: 'Korean',
+            title: strings.korean,
             subtitle: 'KO',
             icon: Icons.language,
             isSelected: currentLanguage == 'ko',
@@ -210,14 +217,15 @@ class SettingView extends ConsumerWidget {
     WidgetRef ref,
     exchangeRate,
     DateTime? lastUpdated,
+    AppStrings strings,
   ) {
     final timeAgo = lastUpdated != null
-        ? _getTimeAgo(lastUpdated)
-        : 'Never';
+        ? DateFormatter.timeAgo(lastUpdated, strings)
+        : strings.never;
 
     final rateText = exchangeRate != null
         ? '${exchangeRate.rate.toStringAsFixed(2)} KRW'
-        : 'Loading...';
+        : strings.loading;
 
     return Container(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -249,7 +257,7 @@ class SettingView extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Last updated: $timeAgo',
+                '${strings.lastUpdated}: $timeAgo',
                 style: AppTypography.bodySmall,
               ),
               TextButton.icon(
@@ -259,27 +267,12 @@ class SettingView extends ConsumerWidget {
                       );
                 },
                 icon: const Icon(Icons.refresh, size: AppSpacing.iconSm),
-                label: const Text('Refresh'),
+                label: Text(strings.refresh),
               ),
             ],
           ),
         ],
       ),
     );
-  }
-
-  String _getTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inSeconds < 60) {
-      return 'just now';
-    } else if (difference.inMinutes < 60) {
-      return '${difference.inMinutes}m ago';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours}h ago';
-    } else {
-      return '${difference.inDays}d ago';
-    }
   }
 }

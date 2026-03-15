@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
+import 'package:presentation/core/l10n/app_strings.dart';
+import 'package:presentation/core/utils/date_formatter.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
@@ -8,11 +10,13 @@ import '../../core/theme/app_typography.dart';
 class ArticleSection extends StatelessWidget {
   final List<NewsArticleEntity> articles;
   final bool isLoading;
+  final AppStrings strings;
 
   const ArticleSection({
     super.key,
     required this.articles,
     this.isLoading = false,
+    required this.strings,
   });
 
   @override
@@ -38,7 +42,7 @@ class ArticleSection extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.sm),
               Text(
-                'Related Articles',
+                strings.relatedArticles,
                 style: AppTypography.labelLarge,
               ),
             ],
@@ -58,7 +62,7 @@ class ArticleSection extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Text(
-                  'No articles available',
+                  strings.noArticles,
                   style: AppTypography.bodyMedium,
                 ),
               ),
@@ -104,7 +108,7 @@ class ArticleSection extends StatelessWidget {
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Text(
-                  _getTimeAgo(article.publishedAt),
+                  DateFormatter.timeAgo(article.publishedAt, strings),
                   style: AppTypography.bodySmall,
                 ),
                 if (article.url.isNotEmpty) ...[
@@ -129,18 +133,5 @@ class ArticleSection extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Opening: $url')),
     );
-  }
-
-  String _getTimeAgo(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
-
-    if (difference.inHours < 1) {
-      return '${difference.inMinutes} minutes ago';
-    } else if (difference.inHours < 24) {
-      return '${difference.inHours} hours ago';
-    } else {
-      return '${difference.inDays} days ago';
-    }
   }
 }
