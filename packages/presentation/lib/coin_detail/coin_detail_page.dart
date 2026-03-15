@@ -170,7 +170,7 @@ class CoinDetailPage extends ConsumerWidget {
       crossAxisCount: 2,
       mainAxisSpacing: AppSpacing.gridSpacing,
       crossAxisSpacing: AppSpacing.gridSpacing,
-      childAspectRatio: 1.5,
+      childAspectRatio: 2.2,
       children: [
         MetricCard(
           label: strings.high24h,
@@ -187,16 +187,6 @@ class CoinDetailPage extends ConsumerWidget {
         MetricCard(
           label: strings.quoteVolume,
           value: NumberFormatter.formatVolume(ticker.quoteVolume24h),
-        ),
-        MetricCard(
-          label: strings.marketCap,
-          value: strings.na,
-          subtitle: strings.comingSoon,
-        ),
-        MetricCard(
-          label: strings.circulatingSupply,
-          value: strings.na,
-          subtitle: strings.comingSoon,
         ),
       ],
     );
