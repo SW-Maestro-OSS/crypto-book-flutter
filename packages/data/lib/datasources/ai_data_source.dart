@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer' as dev;
+import 'dart:io' show Platform;
 import 'package:domain/domain.dart';
 import 'package:flutter_local_ai/flutter_local_ai.dart';
 
@@ -72,15 +73,18 @@ class AiDataSource {
     dev.log('[AiDataSource] Sending prompt: ${prompt.substring(0, 100)}...');
 
     try {
+      // Android Gemini Nano: maxOutputTokens 256 제한
+      final maxTokens = Platform.isAndroid ? 256 : 2048;
       final response = await _aiEngine.generateText(
         prompt: prompt,
-        config: GenerationConfig(maxTokens: 256, temperature: 0.7),
+        config: GenerationConfig(maxTokens: maxTokens, temperature: 0.7),
       );
 
       dev.log(
         '[AiDataSource] Response received '
         '(${response.tokenCount} tokens, ${response.generationTimeMs}ms)',
       );
+      dev.log('[AiDataSource] Raw response: ${response.text}');
 
       return _parseResponse(response.text, ticker.baseAsset);
     } catch (e) {
@@ -139,14 +143,9 @@ class AiDataSource {
         : 'Write all insight strings in English.';
 
     buffer.writeln();
-    buffer.writeln('Respond ONLY with a JSON object:');
-    buffer.writeln('{');
-    buffer.writeln('  "buyPressure": <float 0.0-1.0>,');
-    buffer.writeln('  "sellPressure": <float 0.0-1.0>,');
-    buffer.writeln('  "insights": ["<insight1>", "<insight2>", "<insight3>", "<insight4>"]');
-    buffer.writeln('}');
-    buffer.writeln();
     buffer.writeln(insightLang);
+    buffer.writeln('Respond ONLY with a JSON object. No explanation, no markdown, no extra text.');
+    buffer.writeln('{"buyPressure":<0.0-1.0>,"sellPressure":<0.0-1.0>,"insights":["<insight1>","<insight2>"]}');
 
     return buffer.toString();
   }
@@ -157,7 +156,16 @@ class AiDataSource {
       final jsonStart = response.indexOf('{');
       final jsonEnd = response.lastIndexOf('}');
       if (jsonStart == -1 || jsonEnd == -1) {
-        throw const FormatException('No JSON found in response');
+        dev.log('[AiDataSource] No JSON braces found, using plaintext fallback');
+        // AI가 JSON 대신 텍스트로 응답한 경우 — 텍스트 자체를 insight로 사용
+        final trimmed = response.trim();
+        return AiInsightEntity(
+          symbol: symbol,
+          insights: trimmed.isNotEmpty ? [trimmed] : ['Analysis completed'],
+          buyPressure: 0.5,
+          sellPressure: 0.5,
+          generatedAt: DateTime.now(),
+        );
       }
 
       final jsonStr = response.substring(jsonStart, jsonEnd + 1);
