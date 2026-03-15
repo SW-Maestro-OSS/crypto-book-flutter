@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 ///
 /// Features:
 /// - Loads icon from CDN with caching
+/// - Auto-generates icon URL from symbol when imageUrl is not provided
 /// - Fallback to first letter of symbol on colored background
 /// - Shimmer loading effect
 /// - Error handling with fallback
@@ -12,6 +13,15 @@ class CoinIcon extends StatelessWidget {
   final String symbol;
   final String? imageUrl;
   final double size;
+
+  static const String _cdnBaseUrl =
+      'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/32/icon';
+
+  static const List<String> _quoteCurrencies = [
+    'FDUSD', 'BUSD', 'USDT', 'USDC', 'TUSD', 'BIDR',
+    'BTC', 'ETH', 'BNB', 'DAI',
+    'EUR', 'GBP', 'TRY', 'BRL',
+  ];
 
   const CoinIcon({
     super.key,
@@ -22,22 +32,35 @@ class CoinIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: size / 2,
-      backgroundColor: _getColorForSymbol(symbol),
-      child: imageUrl != null
-          ? ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: imageUrl!,
-                width: size,
-                height: size,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => _buildShimmer(),
-                errorWidget: (context, url, error) => _buildFallback(),
-              ),
-            )
-          : _buildFallback(),
+    final url = imageUrl ?? _generateIconUrl(symbol);
+    return SizedBox(
+      width: size,
+      height: size,
+      child: CachedNetworkImage(
+        imageUrl: url,
+        imageBuilder: (context, imageProvider) => CircleAvatar(
+          radius: size / 2,
+          backgroundImage: imageProvider,
+          backgroundColor: Colors.transparent,
+        ),
+        placeholder: (context, url) => _buildShimmer(),
+        errorWidget: (context, url, error) => _buildFallback(),
+      ),
     );
+  }
+
+  static String _generateIconUrl(String symbol) {
+    final base = _extractBaseCurrency(symbol).toLowerCase();
+    return '$_cdnBaseUrl/$base.png';
+  }
+
+  static String _extractBaseCurrency(String symbol) {
+    for (final quote in _quoteCurrencies) {
+      if (symbol.endsWith(quote) && symbol.length > quote.length) {
+        return symbol.substring(0, symbol.length - quote.length);
+      }
+    }
+    return symbol;
   }
 
   /// Shimmer loading effect
@@ -62,15 +85,18 @@ class CoinIcon extends StatelessWidget {
     );
   }
 
-  /// Fallback: First letter of symbol on colored background
   Widget _buildFallback() {
     final firstLetter = symbol.isNotEmpty ? symbol[0].toUpperCase() : '?';
-    return Text(
-      firstLetter,
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: size * 0.5,
-        fontWeight: FontWeight.bold,
+    return CircleAvatar(
+      radius: size / 2,
+      backgroundColor: _getColorForSymbol(symbol),
+      child: Text(
+        firstLetter,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: size * 0.5,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }

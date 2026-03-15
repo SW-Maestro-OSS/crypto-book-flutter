@@ -19,7 +19,11 @@ class CoinIconServiceImpl implements CoinIconService {
   /// - BTC -> BTC (already base)
   String _extractBaseCurrency(String symbol) {
     // Remove common quote currencies
-    final quoteCurrencies = ['USDT', 'BUSD', 'USDC', 'BTC', 'ETH', 'BNB'];
+    final quoteCurrencies = [
+      'FDUSD', 'BUSD', 'USDT', 'USDC', 'TUSD', 'BIDR',
+      'BTC', 'ETH', 'BNB', 'DAI',
+      'EUR', 'GBP', 'TRY', 'BRL',
+    ];
 
     for (final quote in quoteCurrencies) {
       if (symbol.endsWith(quote) && symbol.length > quote.length) {

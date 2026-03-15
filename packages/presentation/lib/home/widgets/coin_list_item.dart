@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:domain/domain.dart';
+import 'package:presentation/core/widgets/coin_icon.dart';
 import 'package:presentation/theme/extensions/context_extensions.dart';
 
 class CoinListItem extends StatelessWidget {
@@ -16,7 +17,11 @@ class CoinListItem extends StatelessWidget {
     final changeColor = context.priceChangeColor(ticker.priceChangePercent24h);
 
     return ListTile(
-      leading: _buildCoinImage(),
+      leading: CoinIcon(
+        symbol: ticker.symbol,
+        imageUrl: ticker.imageUrl?.isNotEmpty == true ? ticker.imageUrl : null,
+        size: 40,
+      ),
       title: Text(
         ticker.symbol,
         style: context.textTheme.titleMedium
@@ -38,34 +43,6 @@ class CoinListItem extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-
-  /// 코인 아이콘 URL 생성 (cryptocurrency-icons 레포지토리)
-  String _getCoinIconUrl() {
-    // BTCUSDT -> BTC -> btc
-    final coinSymbol = ticker.symbol.replaceAll('USDT', '').toLowerCase();
-    return 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/32/icon/$coinSymbol.png';
-  }
-
-  /// 코인 이미지 (cryptocurrency-icons 사용, 실패시 placeholder)
-  Widget _buildCoinImage() {
-    return Builder(
-      builder: (context) {
-        // Entity의 imageUrl이 있으면 우선 사용, 없으면 cryptocurrency-icons 사용
-        final imageUrl = ticker.imageUrl?.isNotEmpty == true
-            ? ticker.imageUrl!
-            : _getCoinIconUrl();
-
-        return CircleAvatar(
-          backgroundImage: NetworkImage(imageUrl),
-          backgroundColor: context.colorScheme.surfaceContainerHighest,
-          onBackgroundImageError: (_, __) {
-            // 이미지 로드 실패시 placeholder가 보임
-          },
-          child: null, // 이미지 로드 중이거나 실패하면 backgroundColor만 보임
-        );
-      },
     );
   }
 
