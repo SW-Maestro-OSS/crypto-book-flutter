@@ -39,8 +39,8 @@ class TickerDTO with TickerDTOMappable {
   CoinTickerEntity toEntity() {
     return CoinTickerEntity(
       symbol: symbol,
-      baseAsset: CoinTickerEntity.extractBaseAsset(symbol),
-      quoteAsset: CoinTickerEntity.extractQuoteAsset(symbol),
+      baseAsset: symbol.baseAsset,
+      quoteAsset: symbol.quoteAsset,
       currentPrice: double.tryParse(currentPrice) ?? 0.0,
       priceChange24h: double.tryParse(priceChange) ?? 0.0,
       priceChangePercent24h: double.tryParse(priceChangePercent) ?? 0.0,

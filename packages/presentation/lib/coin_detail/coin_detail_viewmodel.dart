@@ -137,7 +137,7 @@ class CoinDetailViewModel extends _$CoinDetailViewModel
         orElse: () {},
       );
 
-      final baseAsset = CoinTickerEntity.extractBaseAsset(symbol);
+      final baseAsset = symbol.baseAsset;
       final articles = await newsUseCase.execute(baseAsset);
       onIntent(CoinDetailIntent.newsLoaded(articles));
     } catch (e) {

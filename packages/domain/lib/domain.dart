@@ -1,3 +1,6 @@
+// Extensions
+export 'extensions/symbol_extension.dart';
+
 // Entities
 export 'entities/coin_entity.dart';
 export 'entities/coin_ticker_entity.dart';

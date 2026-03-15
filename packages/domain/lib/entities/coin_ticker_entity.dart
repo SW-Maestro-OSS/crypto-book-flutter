@@ -28,43 +28,6 @@ class CoinTickerEntity {
     this.imageUrl,
   });
 
-  /// Extract base asset from symbol (e.g., "BTCUSDT" -> "BTC")
-  static String extractBaseAsset(String symbol) {
-    // Remove common quote assets (check longer strings first)
-    if (symbol.endsWith('USDT')) {
-      return symbol.substring(0, symbol.length - 4);
-    } else if (symbol.endsWith('USDC')) {
-      return symbol.substring(0, symbol.length - 4);
-    } else if (symbol.endsWith('BUSD')) {
-      return symbol.substring(0, symbol.length - 4);
-    } else if (symbol.endsWith('USD')) {
-      return symbol.substring(0, symbol.length - 3);
-    } else if (symbol.endsWith('BTC')) {
-      return symbol.substring(0, symbol.length - 3);
-    } else if (symbol.endsWith('ETH')) {
-      return symbol.substring(0, symbol.length - 3);
-    }
-    return symbol;
-  }
-
-  /// Extract quote asset from symbol (e.g., "BTCUSDT" -> "USDT")
-  static String extractQuoteAsset(String symbol) {
-    if (symbol.endsWith('USDT')) {
-      return 'USDT';
-    } else if (symbol.endsWith('USDC')) {
-      return 'USDC';
-    } else if (symbol.endsWith('BUSD')) {
-      return 'BUSD';
-    } else if (symbol.endsWith('BTC')) {
-      return 'BTC';
-    } else if (symbol.endsWith('ETH')) {
-      return 'ETH';
-    } else if (symbol.endsWith('USD')) {
-      return 'USD';
-    }
-    return 'UNKNOWN'; // Changed from USDT to UNKNOWN
-  }
-
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
