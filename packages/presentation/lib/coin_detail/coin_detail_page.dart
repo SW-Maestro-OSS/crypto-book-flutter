@@ -13,7 +13,9 @@ import 'package:presentation/core/mvi/side_effect_listener.dart';
 import 'package:presentation/core/widgets/error_handler.dart';
 import 'package:presentation/core/theme/app_spacing.dart';
 import 'package:presentation/core/utils/number_formatter.dart';
+import 'package:presentation/core/utils/price_formatter.dart';
 import 'package:presentation/core/l10n/app_strings.dart';
+import 'package:presentation/providers/app_settings_provider.dart';
 import 'package:presentation/providers/app_strings_provider.dart';
 
 class CoinDetailPage extends ConsumerWidget {
@@ -26,6 +28,7 @@ class CoinDetailPage extends ConsumerWidget {
     final state = ref.watch(coinDetailViewModelProvider(symbol));
     final viewModel = ref.read(coinDetailViewModelProvider(symbol).notifier);
     final strings = ref.watch(appStringsProvider);
+    final appSettings = ref.watch(appSettingsProvider);
 
     return SideEffectListener<CoinDetailSideEffect>(
       sideEffects: viewModel.sideEffects,
@@ -52,6 +55,7 @@ class CoinDetailPage extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: true,
+          forceMaterialTransparency: true,
           title: Text(symbol),
           actions: [
             IconButton(
@@ -97,6 +101,8 @@ class CoinDetailPage extends ConsumerWidget {
                       );
                     },
                     strings: strings,
+                    currency: appSettings.currency,
+                    exchangeRate: appSettings.exchangeRate,
                   ),
                 ),
 
@@ -106,7 +112,7 @@ class CoinDetailPage extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(
                     horizontal: AppSpacing.gridPadding,
                   ),
-                  child: _buildMetricsGrid(ticker, strings),
+                  child: _buildMetricsGrid(ticker, strings, appSettings),
                 ),
 
                 const SizedBox(height: AppSpacing.sectionSpacing),
@@ -147,7 +153,17 @@ class CoinDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildMetricsGrid(dynamic ticker, AppStrings strings) {
+  Widget _buildMetricsGrid(
+    dynamic ticker,
+    AppStrings strings,
+    AppSettings appSettings,
+  ) {
+    String formatPrice(double price) => PriceFormatter.format(
+          priceInUSD: price,
+          currency: appSettings.currency,
+          exchangeRate: appSettings.exchangeRate,
+        );
+
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -158,11 +174,11 @@ class CoinDetailPage extends ConsumerWidget {
       children: [
         MetricCard(
           label: strings.high24h,
-          value: '\$${NumberFormatter.formatPrice(ticker.high24h)}',
+          value: formatPrice(ticker.high24h),
         ),
         MetricCard(
           label: strings.low24h,
-          value: '\$${NumberFormatter.formatPrice(ticker.low24h)}',
+          value: formatPrice(ticker.low24h),
         ),
         MetricCard(
           label: strings.volume24h,

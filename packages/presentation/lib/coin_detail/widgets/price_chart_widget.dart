@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:domain/domain.dart';
 import 'package:intl/intl.dart';
+import 'package:domain/entities/exchange_rate_entity.dart';
 import 'package:presentation/core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
@@ -14,6 +15,8 @@ class PriceChartWidget extends StatelessWidget {
   final Function(ChartTimeframe) onTimeframeChanged;
   final bool isLoading;
   final AppStrings strings;
+  final String currency;
+  final ExchangeRateEntity? exchangeRate;
 
   const PriceChartWidget({
     super.key,
@@ -22,6 +25,8 @@ class PriceChartWidget extends StatelessWidget {
     required this.onTimeframeChanged,
     this.isLoading = false,
     required this.strings,
+    this.currency = 'USD',
+    this.exchangeRate,
   });
 
   String _localizedTimeframeLabel(ChartTimeframe timeframe) {
@@ -113,14 +118,27 @@ class PriceChartWidget extends StatelessWidget {
     );
   }
 
+  double get _rateMultiplier {
+    if (currency == 'KRW' && exchangeRate != null) {
+      return exchangeRate!.rate;
+    }
+    return 1.0;
+  }
+
   Widget _buildChart() {
     if (chartData == null || chartData!.isEmpty) {
       return _buildEmptyChart();
     }
 
+    final multiplier = _rateMultiplier;
     final spots = chartData!.dataPoints.asMap().entries.map((entry) {
-      return FlSpot(entry.key.toDouble(), entry.value.price);
+      return FlSpot(entry.key.toDouble(), entry.value.price * multiplier);
     }).toList();
+
+    final minPrice = chartData!.minPrice * multiplier;
+    final maxPrice = chartData!.maxPrice * multiplier;
+    final priceRange = chartData!.priceRange * multiplier;
+    final reservedSize = currency == 'KRW' ? 80.0 : 50.0;
 
     return Padding(
       padding: const EdgeInsets.only(
@@ -133,7 +151,7 @@ class PriceChartWidget extends StatelessWidget {
           gridData: FlGridData(
             show: true,
             drawVerticalLine: false,
-            horizontalInterval: chartData!.priceRange / 5,
+            horizontalInterval: priceRange / 5,
             getDrawingHorizontalLine: (value) {
               return FlLine(
                 color: AppColors.chartGrid,
@@ -160,8 +178,8 @@ class PriceChartWidget extends StatelessWidget {
             leftTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                reservedSize: 50,
-                interval: chartData!.priceRange / 4,
+                reservedSize: reservedSize,
+                interval: priceRange / 4,
                 getTitlesWidget: _getLeftTitles,
               ),
             ),
@@ -172,8 +190,8 @@ class PriceChartWidget extends StatelessWidget {
           ),
           minX: 0,
           maxX: (chartData!.dataPoints.length - 1).toDouble(),
-          minY: chartData!.minPrice * 0.999,
-          maxY: chartData!.maxPrice * 1.001,
+          minY: minPrice * 0.999,
+          maxY: maxPrice * 1.001,
           lineBarsData: [
             LineChartBarData(
               spots: spots,
@@ -195,8 +213,16 @@ class PriceChartWidget extends StatelessWidget {
               getTooltipItems: (touchedSpots) {
                 return touchedSpots.map((spot) {
                   final dataPoint = chartData!.dataPoints[spot.x.toInt()];
+                  final price = dataPoint.price * _rateMultiplier;
+                  final String formattedPrice;
+                  if (currency == 'KRW') {
+                    final formatter = NumberFormat('#,###', 'ko_KR');
+                    formattedPrice = '₩${formatter.format(price.toInt())}';
+                  } else {
+                    formattedPrice = '\$${price.toStringAsFixed(2)}';
+                  }
                   return LineTooltipItem(
-                    '\$${dataPoint.price.toStringAsFixed(2)}\n${_formatTimestamp(dataPoint.timestamp)}',
+                    '$formattedPrice\n${_formatTimestamp(dataPoint.timestamp)}',
                     const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -241,8 +267,15 @@ class PriceChartWidget extends StatelessWidget {
   }
 
   Widget _getLeftTitles(double value, TitleMeta meta) {
+    final String formattedPrice;
+    if (currency == 'KRW') {
+      final formatter = NumberFormat('#,###', 'ko_KR');
+      formattedPrice = '₩${formatter.format(value.toInt())}';
+    } else {
+      formattedPrice = '\$${value.toStringAsFixed(0)}';
+    }
     return Text(
-      '\$${value.toStringAsFixed(0)}',
+      formattedPrice,
       style: AppTypography.bodySmall.copyWith(
         fontSize: 10,
       ),
