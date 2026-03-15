@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:domain/domain.dart';
 import 'package:presentation/home/home_state.dart';
@@ -51,24 +50,17 @@ class HomeViewModel extends _$HomeViewModel
 
   Future<void> _handleLoad() async {
     state = const HomeState.loading();
-    debugPrint('[HomeViewModel] _handleLoad started');
 
     try {
       final useCase = ref.read(subscribeCoinTickerUseCaseProvider);
-      debugPrint('[HomeViewModel] Got useCase, calling execute...');
       final tickerStream = useCase.execute([]);
-      debugPrint('[HomeViewModel] Got stream, subscribing...');
 
       _tickerSubscription = tickerStream.listen(
         (tickers) {
-          debugPrint('[ViewModel] Received ${tickers.length} tickers from UseCase');
-
           final sortedTickers = List<CoinTickerEntity>.from(tickers);
           sortedTickers
               .sort((a, b) => b.quoteVolume24h.compareTo(a.quoteVolume24h));
           final top30 = sortedTickers.take(30).toList();
-
-          debugPrint('[ViewModel] Top 30 by quoteVolume: ${top30.length} tickers');
 
           onIntent(HomeIntent.tickerUpdated(top30));
         },
