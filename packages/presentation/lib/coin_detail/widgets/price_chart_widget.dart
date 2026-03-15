@@ -7,6 +7,7 @@ import 'package:presentation/core/l10n/app_strings.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_typography.dart';
+import '../../core/utils/date_formatter.dart';
 
 /// Interactive price chart widget using fl_chart
 class PriceChartWidget extends StatelessWidget {
@@ -272,7 +273,8 @@ class PriceChartWidget extends StatelessWidget {
       final formatter = NumberFormat('#,###', 'ko_KR');
       formattedPrice = '₩${formatter.format(value.toInt())}';
     } else {
-      formattedPrice = '\$${value.toStringAsFixed(0)}';
+      final decimals = value >= 1000 ? 0 : value >= 1 ? 2 : 4;
+      formattedPrice = '\$${value.toStringAsFixed(decimals)}';
     }
     return Text(
       formattedPrice,
@@ -283,23 +285,10 @@ class PriceChartWidget extends StatelessWidget {
   }
 
   String _formatBottomLabel(DateTime timestamp) {
-    switch (selectedTimeframe) {
-      case ChartTimeframe.h24:
-        return DateFormat('HH:mm').format(timestamp);
-      case ChartTimeframe.d7:
-        return DateFormat('MM/dd').format(timestamp);
-      case ChartTimeframe.m1:
-        return DateFormat('MM/dd').format(timestamp);
-    }
+    return DateFormatter.formatChartLabel(timestamp, selectedTimeframe);
   }
 
   String _formatTimestamp(DateTime timestamp) {
-    switch (selectedTimeframe) {
-      case ChartTimeframe.h24:
-        return DateFormat('MMM dd HH:mm').format(timestamp);
-      case ChartTimeframe.d7:
-      case ChartTimeframe.m1:
-        return DateFormat('MMM dd, yyyy').format(timestamp);
-    }
+    return DateFormatter.formatChartTimestamp(timestamp, selectedTimeframe);
   }
 }
