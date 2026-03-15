@@ -74,7 +74,7 @@ class AiDataSource {
     try {
       final response = await _aiEngine.generateText(
         prompt: prompt,
-        config: GenerationConfig(maxTokens: 500, temperature: 0.7),
+        config: GenerationConfig(maxTokens: 256, temperature: 0.7),
       );
 
       dev.log(
