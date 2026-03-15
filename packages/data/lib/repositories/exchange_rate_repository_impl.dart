@@ -25,6 +25,13 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
         await cacheDataSource.cacheExchangeRate(dto);
         return dto.toEntity();
       }
+
+      // dto가 null이면 (주말/공휴일 등 데이터 없음) 캐시 → fallback 순서로 시도
+      final cachedDto = await cacheDataSource.getCachedExchangeRate(currencyCode);
+      if (cachedDto != null) {
+        return cachedDto.toEntity();
+      }
+      return _getFallbackRate(currencyCode);
     } on ApiRateLimitError catch (e) {
       // 2. Rate limit 시 캐시 시도
       print('Rate limit exceeded, trying cache: ${e.technicalMessage}');
